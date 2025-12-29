@@ -12,8 +12,9 @@
     "prepare": "husky"
   },
   "peerDependencies": {
-    "react": ">19 <= 20",
-    "react-dom": " >19 <= 20"
+    "react": "=>19 <= 20",
+    "react-dom": " =>19 <= 20",
+    "react-konva-utils": "^2.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
@@ -29,6 +30,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.7.4",
+    "react-konva-utils": "^2.0.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
     "vite": "npm:rolldown-vite@7.2.5"
@@ -37,13 +39,16 @@
     "vite": "npm:rolldown-vite@7.2.5"
   },
   "dependencies": {
-    "konva": "^10.0.12",
-    "react-konva": "^19.2.1",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tailwindcss/vite": "^4.1.18",
     "clsx": "^2.1.1",
+    "konva": "^10.0.12",
     "lucide-react": "^0.562.0",
     "react-colorful": "^5.6.1",
+    "react-konva": "^19.2.1",
+    "react-konva-utils": "^2.0.0",
+    "react-router": "^7.11.0",
+    "react-router-dom": "^7.11.0",
     "tailwindcss": "^4.1.18"
   }
 }
