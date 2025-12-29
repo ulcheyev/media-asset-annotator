@@ -1,0 +1,60 @@
+import type { MediaType } from '../../types/intern/media.ts';
+import type { Annotation } from '../../types/intern/annotation.ts';
+import { Constants } from '../../utils/Constants.ts';
+import TextAnnotationShape from '../annotation/TextAnnotationShape.tsx';
+import PolylineAnnotationShape from '../annotation/PolylineAnnotation';
+
+interface Props {
+  annotations: Annotation[];
+  mediaType: MediaType;
+  sceneWidth: number;
+  sceneHeight: number;
+  currentTime: number;
+  onUpdate: (updated: Annotation) => void;
+  selectedId?: string | null;
+  onSelect: (annotationId: string) => void;
+}
+
+export const AnnotationsLayer = ({
+  annotations,
+  mediaType,
+  currentTime,
+  onUpdate,
+  selectedId,
+  onSelect,
+}: Props) => {
+  const visible = annotations.filter((a) => {
+    if (mediaType === Constants.IMAGE_ASSET_TYPE_LABEL) return true;
+    if (a.time.start == null && a.time.end == null) return true;
+    return a.time.start >= currentTime && a.time.end >= currentTime;
+  });
+  return (
+    <>
+      {visible.map((a) => {
+        if (a.kind === 'polyline') {
+          return (
+            <PolylineAnnotationShape
+              key={a.id}
+              annotation={a}
+              isSelected={a.id === selectedId}
+              onSelect={() => onSelect(a.id)}
+              onUpdate={onUpdate}
+            />
+          );
+        }
+        if (a.kind === 'text') {
+          return (
+            <TextAnnotationShape
+              annotation={a}
+              isSelected={a.id === selectedId}
+              onSelect={() => onSelect(a.id)}
+              key={a.id}
+              onUpdate={onUpdate}
+            />
+          );
+        }
+        return null;
+      })}
+    </>
+  );
+};
