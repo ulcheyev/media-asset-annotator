@@ -20,7 +20,7 @@ export const getTextAnnotationFromAnnotationData = (
   const textStyle = {
     color: annotationData.color ?? Constants.TEXT_DEFAULT_COLOR,
     opacity: annotationData.opacity ?? Constants.TEXT_DEFAULT_OPACITY,
-    fill: annotationData.fill ?? Constants.TEXT_DEFAULT_FILL,
+    fill: annotationData.color ?? Constants.TEXT_DEFAULT_FILL,
     strokeWidth: annotationData.strokeWidth ?? Constants.TEXT_DEFAULT_STROKE_WIDTH,
   };
   const firstPoint = denormalizePoint(
@@ -29,6 +29,7 @@ export const getTextAnnotationFromAnnotationData = (
     mediaAssetHeight,
   );
   const fontSize = (annotationData.fontSize ?? Constants.TEXT_DEFAULT_FONT_SIZE) * mediaAssetHeight;
+  const fontWeight = annotationData.fontWeight ?? Constants.TEXT_DEFAULT_FONT_WEIGHT;
   return {
     kind: 'text',
     id: annotationData.id,
@@ -37,6 +38,7 @@ export const getTextAnnotationFromAnnotationData = (
     y: firstPoint.y,
     text: annotationData.text ?? '',
     fontSize: fontSize,
+    fontWeight: fontWeight,
     time: timeRange,
     style: textStyle,
   };

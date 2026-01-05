@@ -4,6 +4,7 @@ import { Constants } from '../../utils/Constants.ts';
 import TextAnnotationShape from '../annotation/TextAnnotationShape.tsx';
 import PolylineAnnotationShape from '../annotation/PolylineAnnotation';
 
+
 interface Props {
   annotations: Annotation[];
   mediaType: MediaType;
@@ -11,6 +12,7 @@ interface Props {
   sceneHeight: number;
   currentTime: number;
   onUpdate: (updated: Annotation) => void;
+  isEditing: boolean;
   selectedId?: string | null;
   onSelect: (annotationId: string) => void;
 }
@@ -20,6 +22,7 @@ export const AnnotationsLayer = ({
   mediaType,
   currentTime,
   onUpdate,
+    isEditing,
   selectedId,
   onSelect,
 }: Props) => {
@@ -35,6 +38,7 @@ export const AnnotationsLayer = ({
           return (
             <PolylineAnnotationShape
               key={a.id}
+              isEditing={isEditing}
               annotation={a}
               isSelected={a.id === selectedId}
               onSelect={() => onSelect(a.id)}
@@ -46,6 +50,7 @@ export const AnnotationsLayer = ({
           return (
             <TextAnnotationShape
               annotation={a}
+              isEditing={isEditing}
               isSelected={a.id === selectedId}
               onSelect={() => onSelect(a.id)}
               key={a.id}
