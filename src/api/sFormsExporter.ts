@@ -9,6 +9,7 @@ const NS = {
   hasAnnotation: 'http://onto.fel.cvut.cz/ontologies/form/media/has-annotation',
   hasText: 'http://onto.fel.cvut.cz/ontologies/form/media/annotation/has-text',
   hasFontSize: 'http://onto.fel.cvut.cz/ontologies/form/media/annotation/has-font-size',
+  hasFontWeight: 'http://onto.fel.cvut.cz/ontologies/form/media/annotation/has-font-weight',
   annotationType: 'http://onto.fel.cvut.cz/ontologies/form/media/annotation/has-annotation-type',
   startTime: 'http://onto.fel.cvut.cz/ontologies/form/media/annotation/has-start-time',
   endTime: 'http://onto.fel.cvut.cz/ontologies/form/media/annotation/has-end-time',
@@ -67,6 +68,7 @@ export const exportAsSFormsObject = (
           ...(a.kind === 'text' && {
             [NS.hasText]: a.text,
             [NS.hasFontSize]: a.fontSize / containerHeight,
+            [NS.hasFontWeight]: a.fontWeight
           }),
           ...(a.style?.strokeWidth && {
             [NS.strokeWidth]: String(a.style.strokeWidth),

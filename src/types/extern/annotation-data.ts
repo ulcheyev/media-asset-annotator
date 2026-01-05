@@ -13,4 +13,6 @@ export type AnnotationData = {
   strokeWidth?: number;
   text?: string;
   fontSize?: number;
+  fontWeight?: number;
 };
+
