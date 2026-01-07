@@ -1,111 +1,96 @@
 import * as Separator from '@radix-ui/react-separator';
-import type {Annotation, AnnotationPatch} from '../../types/intern/annotation';
+import {useEditor} from '../context/editor/useEditor';
 
-import AnnotationList from './AnnotationList';
-import StyleControls from './StyleControls';
-import { Commands, type CommandKey } from './Commands';
-import { Tools, type Tool } from './Tools';
+import AnnotationList from './styleControls/AnnotationList';
+import StyleControls from './styleControls/StyleControls';
+import {Tools} from './tools/Tools';
+import type {CommandKey} from "./commands/commands.items";
+import {Commands} from "./commands/Commands";
 
-interface ToolboxProps {
-    isEditing: boolean;
+export const Toolbox = () => {
+  const {
+    annotations,
+    selectedId,
+    isEditing,
+    activeTool,
 
-    activeTool: Tool;
-    annotations: Annotation[];
-    selectedAnnotationId: string | null;
+    setEditing,
+    setActiveTool,
+    selectAnnotation,
+    updateAnnotation,
+    removeSelected,
+    undo,
+    redo,
+    save,
+  } = useEditor();
 
-    onToggleEdit: () => void;
-    onToolChange: (tool: Tool) => void;
-    onSelectAnnotation: (id: string) => void;
-    onUpdateAnnotationStyle: (
-        id: string,
-        patch: AnnotationPatch,
-    ) => void;
+  const selectedAnnotation = annotations.find(a => a.id === selectedId) ?? null;
 
-    onUndo: () => void;
-    onRedo: () => void;
-    onDelete: () => void;
-    onSave: () => void;
-}
+  const handleCommand = (cmd: CommandKey) => {
+    switch (cmd) {
+      case 'edit':
+        setEditing(!isEditing);
+        break;
+      case 'undo':
+        undo();
+        break;
+      case 'redo':
+        redo();
+        break;
+      case 'delete':
+        removeSelected();
+        break;
+      case 'save':
+        save();
+        break;
+    }
+  };
 
-export const Toolbox = ({
-                            isEditing,
-                            activeTool,
-                            annotations,
-                            selectedAnnotationId,
-                            onToggleEdit,
-                            onToolChange,
-                            onSelectAnnotation,
-                            onUpdateAnnotationStyle,
-                            onUndo,
-                            onRedo,
-                            onDelete,
-                            onSave,
-                        }: ToolboxProps) => {
-    const selectedAnnotation = annotations.find(
-        (a) => a.id === selectedAnnotationId,
-    );
+  return (
+      <div className="bg-neutral-900 text-white flex flex-col h-full overflow-hidden">
+        {/* Header */}
+        <div className="shrink-0 border-b border-neutral-700">
+          <div className="px-4 py-3 font-semibold border-b border-neutral-700 text-center">
+            Annotation Toolbox
+          </div>
 
-    const handleCommand = (cmd: CommandKey) => {
-        switch (cmd) {
-            case 'edit':
-                onToggleEdit();
-                break;
-            case 'undo':
-                onUndo();
-                break;
-            case 'redo':
-                onRedo();
-                break;
-            case 'delete':
-                onDelete();
-                break;
-            case 'save':
-                onSave();
-                break;
-        }
-    };
-
-    return (
-        <div className="bg-neutral-900 text-white flex flex-col h-full overflow-hidden">
-            {/* Header */}
-            <div className="px-4 py-3 font-semibold border-b border-neutral-700 text-center">
-                Annotation Toolbox
-            </div>
-
-            <div className="flex-0 border-b border-neutral-700">
-                <Commands isEditing={isEditing} onCommand={handleCommand} />
-                <Tools
-                    activeTool={activeTool}
-                    isEditing={isEditing}
-                    onToolChange={onToolChange}
-                />
-            </div>
-
-            <div className={"flex-2"}>
-                {selectedAnnotation && isEditing ? (
-                    <StyleControls
-                        annotation={selectedAnnotation}
-                        onChange={(style) =>
-                            onUpdateAnnotationStyle(selectedAnnotation.id, style)
-                        }
-                    />
-                ) : (
-                    <div className="px-4 py-3 text-neutral-500 text text-center">
-                        Enable edit mode and select an annotation to adjust its style.
-                    </div>
-                )}
-            </div>
-
-
-            <Separator.Root className="h-px bg-neutral-700" />
-            <div className={"flex-1"}>
-                <AnnotationList
-                    annotations={annotations}
-                    selectedId={selectedAnnotationId}
-                    onSelect={onSelectAnnotation}
-                />
-            </div>
-
+          {/* Commands + Tools */}
+          <div className="border-b border-neutral-700">
+            <Commands isEditing={isEditing} onCommand={handleCommand}/>
+            <Tools
+                activeTool={activeTool}
+                isEditing={isEditing}
+                onToolChange={setActiveTool}
+            />
+          </div>
         </div>
-    );
-};
+
+          {/* Style controls */}
+        <div className="flex-1 min-h-0 border-b border-neutral-700">
+          {selectedAnnotation && isEditing ? (
+            <StyleControls
+                    annotation={selectedAnnotation}
+                    onChange={(patch) =>
+                        updateAnnotation(selectedAnnotation.id, patch)
+                    }
+                />
+            ) : (
+              <div className="h-full flex items-center justify-center px-4 text-sm text-neutral-500 text-center">
+                Enable edit mode and select an annotation to adjust its style.
+              </div>
+          )}
+        </div>
+
+        <Separator.Root className="h-px bg-neutral-700"/>
+
+        {/* Annotation list */}
+        <div className="shrink-0 h-60">
+          <AnnotationList
+            annotations={annotations}
+                selectedId={selectedId}
+                onSelect={selectAnnotation}
+            />
+          </div>
+        </div>
+        );
+        };

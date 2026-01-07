@@ -1,7 +1,7 @@
-import type { MediaType } from '../../types/intern/media.ts';
+import type {MediaType} from '../../types/intern/media.ts';
 
 export const mockVideoMediaAsset = {
   id: '1',
-  type: 'video' as MediaType,
-  src: 'https://videos.pexels.com/video-files/855029/855029-hd_1920_1080_30fps.mp4',
+  type: 'image' as MediaType,
+  src: 'https://images.pexels.com/photos/35499838/pexels-photo-35499838/free-photo-of-adventurer-descending-into-abandoned-industrial-site.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
 };

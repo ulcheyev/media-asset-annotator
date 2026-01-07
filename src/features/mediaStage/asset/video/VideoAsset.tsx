@@ -1,127 +1,132 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
-import VideoControls from './VideoControls';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import VideoControls from './videoControls/VideoControls';
 
-import type { MediaAsset } from '../../../../types/intern/media';
-import type { Annotation } from '../../../../types/intern/annotation';
-import type { TimeInterval } from './VideoControls';
+import type {MediaAsset, MediaLayout} from '../../../../types/intern/media';
+import type { Annotation, TimeRange } from '../../../../types/intern/annotation';
 
-import { clamp } from './videoTime.utils';
+import { clamp } from '../../../../utils/videoTime.utils';
+import { usePlayback } from '../../../context/playback/usePlayback';
 
 interface VideoAssetProps {
-    asset: MediaAsset;
-    selectedAnnotation?: Annotation;
-    onUpdateAnnotation?: (annotation: Annotation) => void;
-    onTimeUpdate?: (time: number) => void;
-    isEditing?: boolean;
-    children?: React.ReactNode;
+  asset: MediaAsset;
+  layout: MediaLayout;
+  selectedAnnotation?: Annotation;
+  onUpdateAnnotation?: (annotation: Annotation) => void;
+  isEditing?: boolean;
+  children?: (size: { w: number; h: number, scaleX: number, scaleY: number }) => React.ReactNode;
 }
 
 export default function VideoAsset({
-                                       asset,
-                                       selectedAnnotation,
-                                       onUpdateAnnotation,
-                                       onTimeUpdate,
-                                       isEditing,
-                                       children,
+                                     asset,
+                                     layout,
+                                     selectedAnnotation,
+                                     onUpdateAnnotation,
+                                     isEditing,
+                                     children,
                                    }: VideoAssetProps) {
-    /* ---------------- refs ---------------- */
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [viewportSize, setViewportSize] = useState<{
+    w: number;
+    h: number;
+  } | null>(null);
 
-    const videoRef = useRef<HTMLVideoElement>(null);
+  const { duration, setDuration, cursor, setTime } = usePlayback();
 
-    /* ---------------- state ---------------- */
+  /* ---------------- lifecycle ---------------- */
 
-    const [duration, setDuration] = useState(0);
-    const [currentTime, setCurrentTime] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(false);
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
 
-    /* ---------------- video sync ---------------- */
+    const handleLoaded = () => {
+      setDuration(video.duration);
+      setViewportSize({
+        w: video.clientWidth,
+        h: video.clientHeight,
+      });
+    };
 
-    useEffect(() => {
-        const video = videoRef.current;
-        if (!video) return;
+    const handleTimeUpdate = () => {
+      setTime(video.currentTime);
+    };
 
-        const handleLoaded = () => setDuration(video.duration);
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
 
-        const handleTimeUpdate = () => {
-            const time = video.currentTime;
-            setCurrentTime(time);
-            onTimeUpdate?.(time);
-        };
+    video.addEventListener('loadedmetadata', handleLoaded);
+    video.addEventListener('timeupdate', handleTimeUpdate);
+    video.addEventListener('play', handlePlay);
+    video.addEventListener('pause', handlePause);
 
-        const handlePlay = () => setIsPlaying(true);
-        const handlePause = () => setIsPlaying(false);
+    return () => {
+      video.removeEventListener('loadedmetadata', handleLoaded);
+      video.removeEventListener('timeupdate', handleTimeUpdate);
+      video.removeEventListener('play', handlePlay);
+      video.removeEventListener('pause', handlePause);
+    };
+  }, [setDuration, setTime]);
 
-        video.addEventListener('loadedmetadata', handleLoaded);
-        video.addEventListener('timeupdate', handleTimeUpdate);
-        video.addEventListener('play', handlePlay);
-        video.addEventListener('pause', handlePause);
+  /* ---------------- playback controls ---------------- */
 
-        return () => {
-            video.removeEventListener('loadedmetadata', handleLoaded);
-            video.removeEventListener('timeupdate', handleTimeUpdate);
-            video.removeEventListener('play', handlePlay);
-            video.removeEventListener('pause', handlePause);
-        };
-    }, [onTimeUpdate]);
+  const play = useCallback(() => {
+    videoRef.current?.play();
+  }, []);
 
-    /* ---------------- control API ---------------- */
+  const pause = useCallback(() => {
+    videoRef.current?.pause();
+  }, []);
 
-    const play = useCallback(() => {
-        videoRef.current?.play();
-    }, []);
+  const seek = useCallback(
+      (time: number) => {
+        if (!videoRef.current) return;
+        videoRef.current.currentTime = clamp(time, 0, duration);
+      },
+      [duration],
+  );
 
-    const pause = useCallback(() => {
-        videoRef.current?.pause();
-    }, []);
+  const updateAnnotationInterval = useCallback(
+      (interval: TimeRange) => {
+        if (!selectedAnnotation || !onUpdateAnnotation) return;
+        onUpdateAnnotation({
+          ...selectedAnnotation,
+          time: interval,
+        });
+      },
+      [selectedAnnotation, onUpdateAnnotation],
+  );
 
-    const seek = useCallback(
-        (time: number) => {
-            if (!videoRef.current) return;
-            videoRef.current.currentTime = clamp(time, 0, duration);
-        },
-        [duration],
-    );
+  /* ---------------- render ---------------- */
 
-    const updateAnnotationInterval = useCallback(
-        (interval: TimeInterval) => {
-            if (!selectedAnnotation || !onUpdateAnnotation) return;
+  return (
+      <div className="flex flex-col w-full h-full">
+        {/* VIDEO VIEWPORT */}
+        <div className="relative flex-1 bg-black overflow-hidden flex items-center justify-center">
+          <video
+              ref={videoRef}
+              src={asset.src}
+              className="max-w-full max-h-full object-contain"
+              controls={false}
+          />
 
-            onUpdateAnnotation({
-                ...selectedAnnotation,
-                time: interval,
-            });
-        },
-        [selectedAnnotation, onUpdateAnnotation],
-    );
-
-    /* ---------------- render ---------------- */
-
-    return (
-        <div className="flex flex-col w-full h-full">
-            {/* VIDEO VIEWPORT */}
-            <div className="relative flex-1 bg-black overflow-hidden">
-                <video
-                    ref={videoRef}
-                    src={asset.src}
-                    controls={false}
-                />
-                {children}
-            </div>
-
-            {/* CONTROLS */}
-            {duration > 0 && (
-                <VideoControls
-                    isEditing={isEditing}
-                    duration={duration}
-                    currentTime={currentTime}
-                    isPlaying={isPlaying}
-                    selectedAnnotation={selectedAnnotation ?? null}
-                    onPlay={play}
-                    onPause={pause}
-                    onSeek={seek}
-                    onUpdateAnnotationTime={updateAnnotationInterval}
-                />
-            )}
+          {/* CANVAS OVERLAY — only when size is known */}
+          {viewportSize && children?.({ w: layout.width, h: layout.height, scaleX: layout.scale, scaleY: layout.scale})}
         </div>
-    );
+
+        {/* CONTROLS */}
+        {duration > 0 && (
+            <VideoControls
+                isEditing={isEditing}
+                duration={duration}
+                currentTime={cursor.t}
+                isPlaying={isPlaying}
+                selectedAnnotation={selectedAnnotation ?? null}
+                onPlay={play}
+                onPause={pause}
+                onSeek={seek}
+                onUpdateAnnotationTime={updateAnnotationInterval}
+            />
+        )}
+      </div>
+  );
 }

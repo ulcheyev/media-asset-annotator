@@ -1,12 +1,12 @@
-import type { AnnotationData } from '../extern/annotation-data';
-import type { PolylineAnnotation, TextAnnotation, TimeRange } from '../intern/annotation';
-import { Constants } from '../../utils/Constants';
+import type {AnnotationData} from '../extern/annotationData.ts';
+import type {PolylineAnnotation, TextAnnotation, TimeRange} from '../intern/annotation';
+import {Constants} from '../../utils/Constants';
 import {
-  denormalizePoint,
-  denormalizePoints,
-  getFirstPoint,
-  getPointsFromStringPoints,
-} from '../../utils/geometryUtils';
+    denormalizePoint,
+    denormalizePoints,
+    getFirstPoint,
+    getPointsFromStringPoints,
+} from '../../utils/geometry.utils.ts';
 
 export const getTextAnnotationFromAnnotationData = (
   annotationData: AnnotationData,
