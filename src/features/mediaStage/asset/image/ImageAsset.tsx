@@ -5,12 +5,7 @@ interface ImageAssetProps {
   asset: MediaAsset;
   layout: MediaLayout;
   setLayout: (layout: MediaLayout) => void;
-  children: (viewport: {
-    w: number;
-    h: number;
-    scaleX: number;
-    scaleY: number;
-  }) => React.ReactNode;
+  children: (viewport: { w: number; h: number; scaleX: number; scaleY: number }) => React.ReactNode;
 }
 
 export default function ImageAsset({ asset, layout, setLayout, children }: ImageAssetProps) {

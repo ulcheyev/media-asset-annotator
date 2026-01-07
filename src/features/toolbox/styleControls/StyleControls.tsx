@@ -18,10 +18,7 @@ const StyleControls = ({ annotation, onChange }: StyleControlsProps) => {
     <ScrollArea.Root className="h-full">
       <ScrollArea.Viewport className="h-full overflow-x-hidden">
         <div className="flex flex-col gap-5 p-5">
-          <BaseStyleControls
-            annotation={annotation}
-            onChange={onChange}
-          />
+          <BaseStyleControls annotation={annotation} onChange={onChange} />
 
           {isPolyline && <PolylineStyleControls annotation={annotation} onChange={onChange} />}
 
