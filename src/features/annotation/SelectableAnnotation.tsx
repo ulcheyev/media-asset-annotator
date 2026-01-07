@@ -1,7 +1,7 @@
-import {useCallback, useEffect, useRef} from 'react';
-import {Transformer} from 'react-konva';
+import { useCallback, useEffect, useRef } from 'react';
+import { Transformer } from 'react-konva';
 import Konva from 'konva';
-import type {Box} from 'konva/lib/shapes/Transformer';
+import type { Box } from 'konva/lib/shapes/Transformer';
 
 interface SelectableAnnotationProps {
   isSelected: boolean;

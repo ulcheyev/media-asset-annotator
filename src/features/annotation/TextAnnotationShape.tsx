@@ -1,9 +1,9 @@
-import {Text} from 'react-konva';
-import {useRef} from 'react';
-import type {Annotation, TextAnnotation} from '../../types/intern/annotation.ts';
+import { Text } from 'react-konva';
+import { useRef } from 'react';
+import type { Annotation, TextAnnotation } from '../../types/intern/annotation.ts';
 import Konva from 'konva';
 import SelectableAnnotation from './SelectableAnnotation.tsx';
-import {Constants} from '../../utils/Constants.ts';
+import { Constants } from '../../utils/Constants.ts';
 
 interface EditableTextProps {
   annotation: TextAnnotation;

@@ -1,4 +1,4 @@
-import {formatTime, toPercent} from '../../../../../utils/videoTime.utils.ts';
+import { formatTime, toPercent } from '../../../../../utils/videoTime.utils.ts';
 
 interface Props {
   time: number;

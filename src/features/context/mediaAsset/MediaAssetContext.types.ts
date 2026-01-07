@@ -1,11 +1,11 @@
-import type {MediaAsset, MediaLayout} from "../../../types/intern/media.ts";
+import type { MediaAsset, MediaLayout } from '../../../types/intern/media.ts';
 
 export interface MediaAssetState {
-    asset: MediaAsset | null;
+  asset: MediaAsset | null;
 
-    layout: MediaLayout;
-    setLayout: (l: MediaLayout) => void;
+  layout: MediaLayout;
+  setLayout: (l: MediaLayout) => void;
 
-    loading: boolean;
-    error: string | null;
+  loading: boolean;
+  error: string | null;
 }

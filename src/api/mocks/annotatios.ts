@@ -1,4 +1,4 @@
-import type {AnnotationData} from '../../types/extern/annotationData.ts';
+import type { AnnotationData } from '../../types/extern/annotationData.ts';
 
 export const mockAnnotations: AnnotationData[] = [
   {

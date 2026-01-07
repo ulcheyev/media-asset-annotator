@@ -1,7 +1,11 @@
-import type {ToolContextInterface, ToolControllerTimeContext, ToolStrategy} from './ToolContextInterface';
-import type {Point} from '../../../types/geometry';
-import type {EditorMutators} from "../../context/editor/EditorContext.types.ts";
-import type {Annotation, AnnotationPatch} from "../../../types/intern/annotation.ts";
+import type {
+  ToolContextInterface,
+  ToolControllerTimeContext,
+  ToolStrategy,
+} from './ToolContextInterface';
+import type { Point } from '../../../types/geometry';
+import type { EditorMutators } from '../../context/editor/EditorContext.types.ts';
+import type { Annotation, AnnotationPatch } from '../../../types/intern/annotation.ts';
 
 export class ToolController implements ToolContextInterface {
   private activeTool: ToolStrategy | null = null;
@@ -30,7 +34,7 @@ export class ToolController implements ToolContextInterface {
   /* ---------------- pointer events ---------------- */
 
   onPointerDown(point: Point) {
-    this.activeTool?.onPointerDown(point,this);
+    this.activeTool?.onPointerDown(point, this);
   }
 
   onPointerMove(point: Point) {
@@ -39,7 +43,7 @@ export class ToolController implements ToolContextInterface {
 
   onPointerUp(point: Point) {
     this.activeTool?.onPointerUp(point, this);
-    this.onFinish()
+    this.onFinish();
   }
 
   /* ---------------- ToolContextInterface ---------------- */
@@ -64,8 +68,7 @@ export class ToolController implements ToolContextInterface {
     this.time = timeContext;
   }
 
-  getTimeContext() : ToolControllerTimeContext {
-    return this.time
+  getTimeContext(): ToolControllerTimeContext {
+    return this.time;
   }
-
 }

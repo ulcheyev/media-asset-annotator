@@ -1,6 +1,6 @@
-import type {AnnotationPatch, TextAnnotation} from '../../../types/intern/annotation.ts';
-import {ControlSlider} from './BaseStyleControls.tsx';
-import {Constants} from '../../../utils/Constants.ts';
+import type { AnnotationPatch, TextAnnotation } from '../../../types/intern/annotation.ts';
+import { ControlSlider } from './BaseStyleControls.tsx';
+import { Constants } from '../../../utils/Constants.ts';
 
 interface TextControlsProps {
   textAnnotation: TextAnnotation;
