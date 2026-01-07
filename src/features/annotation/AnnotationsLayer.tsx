@@ -1,6 +1,6 @@
-import type {MediaType} from '../../types/intern/media.ts';
-import type {Annotation} from '../../types/intern/annotation.ts';
-import {Constants} from '../../utils/Constants.ts';
+import type { MediaType } from '../../types/intern/media.ts';
+import type { Annotation } from '../../types/intern/annotation.ts';
+import { Constants } from '../../utils/Constants.ts';
 import TextAnnotationShape from './TextAnnotationShape.tsx';
 import PolylineAnnotationShape from './PolylineAnnotation.tsx';
 
@@ -25,7 +25,6 @@ export const AnnotationsLayer = ({
   selectedId,
   onSelect,
 }: Props) => {
-
   // @ts-ignore
   // TODO preview with annotations
   const visible = annotations.filter((a) => {

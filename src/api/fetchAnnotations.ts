@@ -1,5 +1,5 @@
-import type {AnnotationData} from '../types/extern/annotationData.ts';
-import {mockAnnotations} from './mocks/annotatios';
+import type { AnnotationData } from '../types/extern/annotationData.ts';
+import { mockAnnotations } from './mocks/annotatios';
 
 const ANNOTATIONS_FETCH_API_URL = import.meta.env.VITE_ANNOTATIONS_FETCH_API_URL as string;
 

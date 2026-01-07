@@ -1,4 +1,4 @@
-import type {AnnotationDataType} from '../extern/annotationData.ts';
+import type { AnnotationDataType } from '../extern/annotationData.ts';
 
 export type TimeRange = {
   start: number;
@@ -37,6 +37,7 @@ export type TextAnnotation = BaseAnnotation & {
 export type Annotation = PolylineAnnotation | TextAnnotation;
 
 export type AnnotationPatch = {
+  label?: string,
   style?: Partial<Annotation['style']>;
   text?: string;
   time?: Annotation['time'];

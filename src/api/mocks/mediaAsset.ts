@@ -1,4 +1,4 @@
-import type {MediaType} from '../../types/intern/media.ts';
+import type { MediaType } from '../../types/intern/media.ts';
 
 export const mockVideoMediaAsset = {
   id: '1',

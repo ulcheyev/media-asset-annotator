@@ -1,6 +1,6 @@
-import type {MediaAsset} from '../../types/intern/media.ts';
-import type {Annotation} from '../../types/intern/annotation.ts';
-import {normalizePoints} from '../../utils/geometry.utils.ts';
+import type { MediaAsset } from '../../types/intern/media.ts';
+import type { Annotation } from '../../types/intern/annotation.ts';
+import { normalizePoints } from '../../utils/geometry.utils.ts';
 
 const NS = {
   asset: 'http://onto.fel.cvut.cz/ontologies/form/media/asset',
@@ -73,8 +73,6 @@ export const exportAsSFormsObject = (
             [NS.strokeWidth]: String(a.style.strokeWidth),
             [NS.fillColor]: a.style?.fill ?? 'none',
           }),
-
-
         };
       })
       .filter(Boolean),

@@ -1,4 +1,4 @@
-import {Pause, Play} from 'lucide-react';
+import { Pause, Play } from 'lucide-react';
 
 interface Props {
   isPlaying: boolean;

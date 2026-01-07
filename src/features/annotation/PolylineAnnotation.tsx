@@ -1,8 +1,8 @@
-import type {Annotation, PolylineAnnotation} from '../../types/intern/annotation';
-import {Line} from 'react-konva';
+import type { Annotation, PolylineAnnotation } from '../../types/intern/annotation';
+import { Line } from 'react-konva';
 import Konva from 'konva';
 import SelectableAnnotation from './SelectableAnnotation.tsx';
-import {useRef} from 'react';
+import { useRef } from 'react';
 
 interface PolylineAnnotationProps {
   annotation: PolylineAnnotation;

@@ -1,5 +1,5 @@
-import type {MediaAsset} from '../types/intern/media';
-import {mockVideoMediaAsset} from './mocks/mediaAsset.ts';
+import type { MediaAsset } from '../types/intern/media';
+import { mockVideoMediaAsset } from './mocks/mediaAsset.ts';
 
 export const fetchMediaAsset = async (mediaAssetId: string): Promise<MediaAsset> => {
   if (import.meta.env.DEV) {

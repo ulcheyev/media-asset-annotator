@@ -1,5 +1,5 @@
-import {Constants} from './Constants.ts';
-import type {TimeRange} from "../types/intern/annotation.ts";
+import { Constants } from './Constants.ts';
+import type { TimeRange } from '../types/intern/annotation.ts';
 
 export const formatTime = (t: number) => {
   const m = Math.floor(t / 60);
@@ -7,19 +7,15 @@ export const formatTime = (t: number) => {
   return `${m}:${s.toString().padStart(2, '0')}`;
 };
 
-export const toPercent = (t: number, duration: number) =>
-    `${(t / duration) * 100}%`;
+export const toPercent = (t: number, duration: number) => `${(t / duration) * 100}%`;
 
-export const getTimeFromClientX = (
-    x: number,
-    rect: DOMRect,
-    duration: number,
-) => ((x - rect.left) / rect.width) * duration;
+export const getTimeFromClientX = (x: number, rect: DOMRect, duration: number) =>
+  ((x - rect.left) / rect.width) * duration;
 
 export function computeNextInterval(
-    mode: 'move' | 'start' | 'end',
-    t: number,
-    interval: TimeRange,
+  mode: 'move' | 'start' | 'end',
+  t: number,
+  interval: TimeRange,
 ): TimeRange {
   if (mode === 'move') {
     const len = interval.end - interval.start;
@@ -35,11 +31,11 @@ export function computeNextInterval(
 
 export const isValidInterval = (interval: TimeRange, duration: number) => {
   return (
-      interval.start >= 0 &&
-      interval.end <= duration &&
-      interval.end - interval.start >= Constants.ANNOTATION_MIN_DURATION
+    interval.start >= 0 &&
+    interval.end <= duration &&
+    interval.end - interval.start >= Constants.ANNOTATION_MIN_DURATION
   );
-}
+};
 
 export const clamp = (value: number, min: number, max: number) =>
-    Math.max(min, Math.min(max, value));
+  Math.max(min, Math.min(max, value));

@@ -1,14 +1,13 @@
-import {useParams} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-import {PlaybackProvider} from '../features/context/playback/PlaybackProvider';
-import {MediaAssetProvider} from '../features/context/mediaAsset/MediaAssetProvider';
-import {EditorProvider} from '../features/context/editor/EditorProvider';
-import {useMediaAsset} from '../features/context/mediaAsset/useMediaAsset';
+import { PlaybackProvider } from '../features/context/playback/PlaybackProvider';
+import { MediaAssetProvider } from '../features/context/mediaAsset/MediaAssetProvider';
+import { EditorProvider } from '../features/context/editor/EditorProvider';
+import { useMediaAsset } from '../features/context/mediaAsset/useMediaAsset';
 
-import {MediaStage} from '../features/mediaStage/MediaStage';
-import {Toolbox} from '../features/toolbox/ToolBox';
-import {ResponsiveScene} from '../features/mediaStage/ResponsiveScene';
-
+import { MediaStage } from '../features/mediaStage/MediaStage';
+import { Toolbox } from '../features/toolbox/ToolBox';
+import { ResponsiveScene } from '../features/mediaStage/ResponsiveScene';
 
 export const MediaAssetAnnotatorLayout = () => {
   const { asset, setLayout, loading, error } = useMediaAsset();
@@ -18,22 +17,21 @@ export const MediaAssetAnnotatorLayout = () => {
   if (!asset) return <div className="p-4 text-red-600">Media not found</div>;
 
   return (
-      <div className="w-full h-full flex">
-        {/* Media */}
-        <div className="w-8/10 h-full bg-black">
-          <ResponsiveScene onLayoutChange={setLayout}>
-            <MediaStage/>
-          </ResponsiveScene>
-        </div>
-
-        {/* Toolbox */}
-        <div className="basis-2/10 flex-shrink-0 h-full border-l-white border-2">
-          <Toolbox/>
-        </div>
+    <div className="w-full h-full flex">
+      {/* Media */}
+      <div className="w-8/10 h-full bg-black">
+        <ResponsiveScene onLayoutChange={setLayout}>
+          <MediaStage />
+        </ResponsiveScene>
       </div>
+
+      {/* Toolbox */}
+      <div className="basis-2/10 flex-shrink-0 h-full border-l-white border-2">
+        <Toolbox />
+      </div>
+    </div>
   );
 };
-
 
 export const MediaAssetAnnotatorPage = () => {
   const { mediaAssetId } = useParams<{ mediaAssetId: string }>();
@@ -43,12 +41,12 @@ export const MediaAssetAnnotatorPage = () => {
   }
 
   return (
-      <PlaybackProvider>
-        <MediaAssetProvider mediaAssetId={mediaAssetId}>
-          <EditorProvider>
-            <MediaAssetAnnotatorLayout />
-          </EditorProvider>
-        </MediaAssetProvider>
-      </PlaybackProvider>
+    <PlaybackProvider>
+      <MediaAssetProvider mediaAssetId={mediaAssetId}>
+        <EditorProvider>
+          <MediaAssetAnnotatorLayout />
+        </EditorProvider>
+      </MediaAssetProvider>
+    </PlaybackProvider>
   );
 };

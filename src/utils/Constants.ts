@@ -30,7 +30,7 @@ export class Constants {
   static DEFAULT_FONT_FAMILY = 'sans-serif';
   static MIN_FONT_SIZE = 8;
   static MAX_FONT_SIZE = 72;
-  static IMAGE_SCALE = 2
+  static IMAGE_SCALE = 2;
 
   // Polyline
   static POLYLINE_DEFAULT_COLOR = 'red';
