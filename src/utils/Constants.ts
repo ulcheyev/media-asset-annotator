@@ -2,7 +2,7 @@ export class Constants {
   // Media types
   static VIDEO_ASSET_TYPE_LABEL = 'video';
   static IMAGE_ASSET_TYPE_LABEL = 'image';
-
+  static ANNOTATION_MIN_DURATION = 2;
   //Annotation types
   static POLYLINE_TYPE_LABEL = 'polyline';
   static TEXT_TYPE_LABEL = 'text';
@@ -12,29 +12,30 @@ export class Constants {
   static DEFAULT_SCENE_HEIGHT = 540;
   static SELECT_TOOL_LABEL = 'select';
   static RECT_TOOL_LABEL = 'rect';
-  static TEXT_TOOL_LABEL =  'text';
-  static DRAW_TOOL_LABEL =  'polyline';
-  static POLYGON_TOOL_LABEL =  'polygon';
+  static TEXT_TOOL_LABEL = 'text';
+  static DRAW_TOOL_LABEL = 'polyline';
+  static POLYGON_TOOL_LABEL = 'polygon';
   static EDIT_COMMAND_LABEL = 'edit';
-  static  UNDO_COMMAND_LABEL = 'undo';
+  static UNDO_COMMAND_LABEL = 'undo';
   static REDO_COMMAND_LABEL = 'redo';
-  static  DELETE_COMMAND_LABEL = 'delete';
-  static  SAVE_COMMAND_LABEL = 'save';
+  static DELETE_COMMAND_LABEL = 'delete';
+  static SAVE_COMMAND_LABEL = 'save';
   // Text
-  static TEXT_DEFAULT_FONT_SIZE = 12;
-  static TEXT_DEFAULT_FONT_WEIGHT = 150;
-  static TEXT_DEFAULT_COLOR = 'white';
+  static TEXT_DEFAULT_FONT_SIZE = 25;
+  static TEXT_DEFAULT_FONT_WEIGHT = 300;
+  static TEXT_DEFAULT_COLOR = 'red';
   static TEXT_DEFAULT_STROKE_WIDTH = 1;
-  static TEXT_DEFAULT_OPACITY = 0;
+  static TEXT_DEFAULT_OPACITY = 1;
   static TEXT_DEFAULT_FILL = 'none';
-  static DEFAULT_FONT_FAMILY= 'sans-serif';
+  static DEFAULT_FONT_FAMILY = 'sans-serif';
   static MIN_FONT_SIZE = 8;
-    static MAX_FONT_SIZE = 72;
+  static MAX_FONT_SIZE = 72;
+  static IMAGE_SCALE = 2
 
   // Polyline
   static POLYLINE_DEFAULT_COLOR = 'red';
-  static POLYLINE_DEFAULT_STROKE_WIDTH = 12;
-  static POLYLINE_DEFAULT_OPACITY = 0;
+  static POLYLINE_DEFAULT_STROKE_WIDTH = 7;
+  static POLYLINE_DEFAULT_OPACITY = 100;
   static POLYLINE_DEFAULT_FILL = 'none';
   static MAX_STROKE_WIDTH = 50;
 

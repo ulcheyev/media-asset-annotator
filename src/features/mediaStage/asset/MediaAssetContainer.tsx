@@ -1,63 +1,76 @@
-import type { MediaAsset } from '../../../types/intern/media';
-import { Constants } from '../../../utils/Constants';
-import VideoAsset from './video/VideoAsset';
-import type { Annotation } from '../../../types/intern/annotation';
+import {StageSurface} from "../StageSurface.tsx";
+import {Constants} from "../../../utils/Constants.ts";
+import VideoAsset from "./video/VideoAsset.tsx";
+import type {ToolController} from "../../toolbox/toolsContext/ToolController.ts";
+import type {Annotation} from "../../../types/intern/annotation.ts";
+import type {MediaAsset, MediaLayout} from "../../../types/intern/media.ts";
+import ImageAsset from "./image/ImageAsset.tsx";
 
 interface MediaAssetContainerProps {
     asset: MediaAsset;
-    selectedAnnotation?: Annotation;
-    onUpdateAnnotation?: (annotation: Annotation) => void;
-    isEditing?: boolean;
-    width: number;
-    height: number;
-    scale: number;
-    onTimeUpdate?: () => void;
-    children?: React.ReactNode;
+    layout: MediaLayout;
+    setLayout: (layout: MediaLayout) => void,
+    annotations: Annotation[];
+    selectedId: string | null;
+    isEditing: boolean;
+    currentTime: number;
+    toolController: ToolController;
+    onUpdateAnnotation: (a: Annotation) => void;
+    onSelectAnnotation: (id: string | null) => void;
 }
 
-export const MediaAssetContainer = ({
-                                        asset,
-                                        selectedAnnotation,
-                                        onUpdateAnnotation,
-    isEditing,
-                                        width,
-                                        height,
-                                        scale,
-                                        onTimeUpdate,
-                                        children,
-                                    }: MediaAssetContainerProps) => {
-    const viewportStyle: React.CSSProperties = {
-        width: width * scale,
-        height: height * scale,
-        position: 'relative',
-    };
+export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
+    const {
+        asset,
+        layout,
+        setLayout,
+        annotations,
+        selectedId,
+        isEditing,
+        currentTime,
+        toolController,
+        onUpdateAnnotation,
+        onSelectAnnotation,
+    } = props;
+
+    const surface = (size: { w: number; h: number, scaleX: number, scaleY: number}) => (
+        <StageSurface
+            width={layout.width}
+            height={layout.height}
+            scaleX={size.scaleX}
+            scaleY={size.scaleY}
+            annotations={annotations}
+            selectedId={selectedId}
+            isEditing={isEditing}
+            currentTime={currentTime}
+            mediaType={asset.type}
+            onSelect={onSelectAnnotation}
+            onUpdate={onUpdateAnnotation}
+            onPointerDown={(p) => toolController.onPointerDown(p)}
+            onPointerMove={(p) => toolController.onPointerMove(p)}
+            onPointerUp={(p) => toolController.onPointerUp(p)}
+        />
+    );
 
     if (asset.type === Constants.IMAGE_ASSET_TYPE_LABEL) {
-        return (
-            <div style={viewportStyle}>
-                <img
-                    src={asset.src}
-                    draggable={false}
-                    className="w-full h-full object-contain"
-                    alt=""
-                />
-                {children}
-            </div>
-        );
+        return <ImageAsset
+            asset={asset}
+            setLayout={setLayout}
+            layout={layout}
+       >{surface}</ImageAsset>;
     }
 
     if (asset.type === Constants.VIDEO_ASSET_TYPE_LABEL) {
         return (
-                    <VideoAsset
-                        isEditing={isEditing}
-                        asset={asset}
-                        selectedAnnotation={selectedAnnotation}
-                        onUpdateAnnotation={onUpdateAnnotation}
-                        onTimeUpdate={onTimeUpdate}
-                    >
-                        {children}
-                    </VideoAsset>
-
+            <VideoAsset
+                layout={layout}
+                asset={asset}
+                isEditing={isEditing}
+                selectedAnnotation={annotations.find((a) => a.id === selectedId)}
+                onUpdateAnnotation={onUpdateAnnotation}
+            >
+                {surface}
+            </VideoAsset>
         );
     }
 

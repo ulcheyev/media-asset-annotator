@@ -1,0 +1,213 @@
+import {useEffect, useRef, useState} from 'react';
+import {EditorContext} from './EditorContext';
+import type {EditorState} from './EditorContext.types';
+import {usePlayback} from '../playback/usePlayback';
+
+import type {Annotation, AnnotationPatch} from '../../../types/intern/annotation';
+import {Constants} from '../../../utils/Constants';
+
+import {ToolController} from '../../toolbox/toolsContext/ToolController';
+import {ToolRegistry} from '../../toolbox/toolsContext/ToolRegistry';
+import {exportAsSFormsObject} from "../../../api/exporters/sFormsExporter.ts";
+import {useMediaAsset} from "../mediaAsset/useMediaAsset.ts";
+import {
+    getPolylineAnnotationFromAnnotationData,
+    getTextAnnotationFromAnnotationData
+} from "../../../types/mapper/annotationMapper.ts";
+import {fetchAnnotations} from "../../../api/fetchAnnotations.ts";
+import type {Tool} from "../../toolbox/tools/tools.items.tsx";
+
+
+export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
+    const [selectedId, setSelectedId] = useState<string | null>(null);
+    const [isEditing, setIsEditing] = useState(false);
+    const [annotations, setAnnotations] = useState<Annotation[]>([]);
+    const [activeTool, setActiveTool] = useState<Tool>(
+        Constants.SELECT_TOOL_LABEL as Tool
+    );
+    const {asset, layout} = useMediaAsset()
+    const { cursor, duration } = usePlayback();
+
+
+    const addAnnotation = (a: Annotation) => {
+        setAnnotations(prev => [...prev, a]);
+    };
+
+    const updateAnnotation = (id: string, patch: AnnotationPatch) => {
+        setAnnotations(prev =>
+            prev.map(a =>
+                a.id === id
+                    ? {
+                        ...a,
+                        ...patch,
+                        style: patch.style
+                            ? { ...a.style, ...patch.style }
+                            : a.style,
+                    }
+                    : a
+            )
+        );
+    };
+
+    const removeAnnotation = (id: string) => {
+        setAnnotations(prev => prev.filter(a => a.id !== id));
+        setSelectedId(prev => (prev === id ? null : prev));
+    };
+
+    const removeSelected = () => {
+        if (selectedId) removeAnnotation(selectedId);
+    };
+
+    const selectAnnotation = (id: string | null) => {
+        setSelectedId(id);
+    };
+
+    const save = () => {
+        if (!asset) return;
+
+        const result = exportAsSFormsObject(
+            asset,
+            layout.width,
+            layout.height,
+            annotations
+        );
+
+        console.log(result);
+    };
+
+    const undo = () => {
+        console.warn('Undo not implemented yet');
+    };
+
+    const redo = () => {
+        console.warn('Redo not implemented yet');
+    };
+
+    const setEditing = (v: boolean) => {
+        setIsEditing(v);
+        if (!v) setSelectedId(null);
+    };
+
+    /* ---------------- tool controller ---------------- */
+
+    const toolControllerRef = useRef<ToolController | null>(null);
+    const toolRegistryRef = useRef<ToolRegistry | null>(null);
+
+    // initialize once
+
+    useEffect(() => {
+        if (!asset) return;
+
+        const loadAnnotations = async () => {
+            if(!asset || !asset.id) return
+            const data = await fetchAnnotations(asset.id);
+
+            const mapped = data
+                .map(a => {
+                    switch (a.type) {
+                        case Constants.TEXT_TYPE_LABEL:
+                            return getTextAnnotationFromAnnotationData(
+                                a,
+                                layout.width,
+                                layout.height
+                            );
+                        case Constants.POLYLINE_TYPE_LABEL:
+                            return getPolylineAnnotationFromAnnotationData(
+                                a,
+                                layout.width,
+                                layout.height
+                            );
+                        default:
+                            return null;
+                    }
+                })
+                .filter((a): a is Annotation => a !== null);
+
+            setAnnotations(mapped);
+            setSelectedId(null);
+            setIsEditing(false);
+        };
+
+        loadAnnotations();
+    }, [asset]);
+
+
+
+    useEffect(() => {
+        toolControllerRef.current = new ToolController(
+            {
+            addAnnotation,
+            updateAnnotation,
+            removeAnnotation,
+            selectAnnotation,
+        },
+            () => {
+            setActiveTool(Constants.SELECT_TOOL_LABEL as Tool);
+        }
+            );
+
+        toolRegistryRef.current = new ToolRegistry(
+            toolControllerRef.current
+        );
+
+        return () => {
+            toolControllerRef.current?.onEditingDisabled();
+            toolControllerRef.current = null;
+            toolRegistryRef.current = null;
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!toolControllerRef.current || !toolRegistryRef.current) return;
+
+        const tool = toolRegistryRef.current.get(activeTool);
+        toolControllerRef.current.setTool(tool);
+    }, [activeTool]);
+
+    useEffect(() => {
+        if (!isEditing) {
+            toolControllerRef.current!.onEditingDisabled();
+        }
+    }, [isEditing]);
+
+    useEffect(() => {
+        toolControllerRef.current?.setTimeContext({
+            currentTime: cursor.t,
+            duration,
+        });
+    }, [cursor.t, duration]);
+
+
+    const getToolController = () => toolControllerRef.current!;
+
+    /* ---------------- context value ---------------- */
+
+    const value: EditorState = {
+        annotations,
+        selectedId,
+        isEditing,
+        activeTool,
+
+        getToolController,
+        setActiveTool,
+
+        setEditing,
+        selectAnnotation,
+
+        addAnnotation,
+        updateAnnotation,
+        removeAnnotation,
+        removeSelected,
+        save,
+        undo,
+        redo,
+
+        setAnnotations, // intentional escape hatch
+    };
+
+    return (
+        <EditorContext.Provider value={value}>
+            {children}
+        </EditorContext.Provider>
+    );
+};

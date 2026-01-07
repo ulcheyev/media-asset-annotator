@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
-import { Constants } from '../../utils/Constants';
-import type { MediaLayout } from '../../types/intern/media';
+import {useEffect, useRef} from 'react';
+import {Constants} from '../../utils/Constants';
+import type {MediaLayout} from '../../types/intern/media';
 
 interface ResponsiveSceneProps {
   children: React.ReactNode;
