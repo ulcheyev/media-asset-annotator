@@ -37,7 +37,7 @@ export type TextAnnotation = BaseAnnotation & {
 export type Annotation = PolylineAnnotation | TextAnnotation;
 
 export type AnnotationPatch = {
-  label?: string,
+  label?: string;
   style?: Partial<Annotation['style']>;
   text?: string;
   time?: Annotation['time'];
