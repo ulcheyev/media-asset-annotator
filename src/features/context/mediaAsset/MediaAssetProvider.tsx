@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import { MediaAssetContext } from './MediaAssetContext';
-import type { MediaAsset, MediaLayout } from '../../../types/intern/media.ts';
+import type {MediaAsset, MediaAssetSource, MediaLayout} from '../../../types/intern/media.ts';
 import { Constants } from '../../../utils/Constants.ts';
 import { fetchMediaAsset } from '../../../api/fetchMediaAsset.ts';
+import {getMediaKindFromSource} from "../../../utils/mediaAsset.utils.ts";
 
 export const MediaAssetProvider = ({
-  mediaAssetId,
+  source,
   children,
 }: {
-  mediaAssetId: string;
+  source: MediaAssetSource;
   children: React.ReactNode;
 }) => {
   const [asset, setAsset] = useState<MediaAsset | null>(null);
@@ -28,9 +29,21 @@ export const MediaAssetProvider = ({
         setLoading(true);
         setError(null);
 
-        const asset = await fetchMediaAsset(mediaAssetId);
-        if (cancelled) return;
+        let asset: MediaAsset;
 
+        if (source.type === 'backend') {
+          asset = await fetchMediaAsset(source.id);
+        } else {
+          const kind = getMediaKindFromSource(source.url);
+          if(kind === "unknown") {
+            throw new Error('Unsupported media type');
+          }
+          asset = {
+            id: 'external-' + source.url,
+            src: source.url,
+            type: kind,
+          };
+        }
         setAsset(asset);
       } catch (e) {
         console.error(e);
@@ -48,7 +61,7 @@ export const MediaAssetProvider = ({
     return () => {
       cancelled = true;
     };
-  }, [mediaAssetId]);
+  }, [source]);
 
   return (
     <MediaAssetContext.Provider
