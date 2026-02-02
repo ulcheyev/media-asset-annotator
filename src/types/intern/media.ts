@@ -13,6 +13,4 @@ export type MediaLayout = {
   scale: number;
 };
 
-export type MediaAssetSource =
-    | { type: 'backend'; id: string }
-    | { type: 'external'; url: string };
+export type MediaAssetSource = { type: 'backend'; id: string } | { type: 'external'; url: string };
