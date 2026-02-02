@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { MediaAssetContext } from './MediaAssetContext';
-import type {MediaAsset, MediaAssetSource, MediaLayout} from '../../../types/intern/media.ts';
+import type { MediaAsset, MediaAssetSource, MediaLayout } from '../../../types/intern/media.ts';
 import { Constants } from '../../../utils/Constants.ts';
 import { fetchMediaAsset } from '../../../api/fetchMediaAsset.ts';
-import {getMediaKindFromSource} from "../../../utils/mediaAsset.utils.ts";
+import { getMediaKindFromSource } from '../../../utils/mediaAsset.utils.ts';
 
 export const MediaAssetProvider = ({
   source,
@@ -35,7 +35,7 @@ export const MediaAssetProvider = ({
           asset = await fetchMediaAsset(source.id);
         } else {
           const kind = getMediaKindFromSource(source.url);
-          if(kind === "unknown") {
+          if (kind === 'unknown') {
             throw new Error('Unsupported media type');
           }
           asset = {

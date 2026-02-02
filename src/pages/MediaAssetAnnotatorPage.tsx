@@ -1,4 +1,3 @@
-import { useParams } from 'react-router-dom';
 
 import { PlaybackProvider } from '../features/context/playback/PlaybackProvider';
 import { MediaAssetProvider } from '../features/context/mediaAsset/MediaAssetProvider';
@@ -8,8 +7,8 @@ import { useMediaAsset } from '../features/context/mediaAsset/useMediaAsset';
 import { MediaStage } from '../features/mediaStage/MediaStage';
 import { Toolbox } from '../features/toolbox/ToolBox';
 import { ResponsiveScene } from '../features/mediaStage/ResponsiveScene';
-import {useSearchParams} from "react-router-dom";
-import type {MediaAssetSource} from "../types/intern/media.ts";
+import { useSearchParams } from 'react-router-dom';
+import type { MediaAssetSource } from '../types/intern/media.ts';
 
 export const MediaAssetAnnotatorLayout = () => {
   const { asset, setLayout, loading, error } = useMediaAsset();
@@ -36,24 +35,20 @@ export const MediaAssetAnnotatorLayout = () => {
 };
 
 export const MediaAssetAnnotatorPage = () => {
-    const [searchParams] = useSearchParams();
-    const id = searchParams.get('id');
-    const url = searchParams.get('url');
-    let source: MediaAssetSource | null = null;
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get('id');
+  const url = searchParams.get('url');
+  let source: MediaAssetSource | null = null;
 
-    if (id) {
-        source = { type: 'backend', id };
-    } else if (url) {
-        source = { type: 'external', url };
-    }
+  if (id) {
+    source = { type: 'backend', id };
+  } else if (url) {
+    source = { type: 'external', url };
+  }
 
-    if (!source) {
-        return (
-            <div className="p-4 text-red-600">
-                Missing ?id or ?url parameter
-            </div>
-        );
-    }
+  if (!source) {
+    return <div className="p-4 text-red-600">Missing ?id or ?url parameter</div>;
+  }
 
   return (
     <PlaybackProvider>
