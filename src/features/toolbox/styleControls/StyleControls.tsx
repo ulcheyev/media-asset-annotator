@@ -20,8 +20,20 @@ const StyleControls = ({ annotation, onChange, onCommit }: StyleControlsProps) =
       <ScrollArea.Viewport className="h-full overflow-x-hidden">
         <div className="flex flex-col gap-5 p-5">
           <BaseStyleControls annotation={annotation} onChange={onChange} onCommit={onCommit} />
-          {isPolyline && <PolylineStyleControls annotation={annotation} onChange={onChange} onCommit={onCommit}/>}
-          {isText && <CustomTextControls textAnnotation={annotation} onChange={onChange} onCommit={onCommit}/>}
+          {isPolyline && (
+            <PolylineStyleControls
+              annotation={annotation}
+              onChange={onChange}
+              onCommit={onCommit}
+            />
+          )}
+          {isText && (
+            <CustomTextControls
+              textAnnotation={annotation}
+              onChange={onChange}
+              onCommit={onCommit}
+            />
+          )}
         </div>
       </ScrollArea.Viewport>
 

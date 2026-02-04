@@ -1,8 +1,8 @@
-import type {AnnotationPatch, PolylineAnnotation} from '../../../types/intern/annotation.ts';
+import type { AnnotationPatch, PolylineAnnotation } from '../../../types/intern/annotation.ts';
 import { ControlSlider } from './BaseStyleControls.tsx';
 import { Constants } from '../../../utils/Constants.ts';
 import * as Popover from '@radix-ui/react-popover';
-import {ColorPicker} from "./ColorPicker.tsx";
+import { ColorPicker } from './ColorPicker.tsx';
 
 interface PolylineStyleControlsProps {
   annotation: PolylineAnnotation;
@@ -10,7 +10,7 @@ interface PolylineStyleControlsProps {
   onCommit: (before: PolylineAnnotation, after: PolylineAnnotation) => void;
 }
 
-const PolylineStyleControls = ({ annotation, onChange, onCommit}: PolylineStyleControlsProps) => {
+const PolylineStyleControls = ({ annotation, onChange, onCommit }: PolylineStyleControlsProps) => {
   const strokeWidth = annotation.style.strokeWidth ?? 1;
   const fill = annotation.style.fill ?? 'transparent';
   return (
@@ -26,10 +26,12 @@ const PolylineStyleControls = ({ annotation, onChange, onCommit}: PolylineStyleC
             style: { strokeWidth: v },
           })
         }
-        onCommit={(before, after) => onCommit(
+        onCommit={(before, after) =>
+          onCommit(
             { ...annotation, style: { ...annotation.style, strokeWidth: before } },
             { ...annotation, style: { ...annotation.style, strokeWidth: after } },
-        )}
+          )
+        }
       />
       {/* Color */}
       <div className="flex items-center justify-between">
@@ -49,10 +51,16 @@ const PolylineStyleControls = ({ annotation, onChange, onCommit}: PolylineStyleC
               align="start"
               className="p-3 bg-neutral-900 rounded shadow-xl z-50"
             >
-                <ColorPicker color={fill} onPreview={(c) => onChange({ style: { fill: c } })} onCommit={(before, after) =>  onCommit(
+              <ColorPicker
+                color={fill}
+                onPreview={(c) => onChange({ style: { fill: c } })}
+                onCommit={(before, after) =>
+                  onCommit(
                     { ...annotation, style: { ...annotation.style, fill: before } },
                     { ...annotation, style: { ...annotation.style, fill: after } },
-                )}/>
+                  )
+                }
+              />
             </Popover.Content>
           </Popover.Portal>
         </Popover.Root>

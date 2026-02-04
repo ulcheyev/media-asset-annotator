@@ -10,7 +10,7 @@ export const MediaStage = () => {
     selectedId,
     isEditing,
     updateAnnotation,
-      commitAnnotation,
+    commitAnnotation,
     selectAnnotation,
     getToolController,
   } = useEditor();

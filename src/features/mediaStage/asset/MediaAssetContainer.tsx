@@ -2,7 +2,7 @@ import { StageSurface } from '../StageSurface.tsx';
 import { Constants } from '../../../utils/Constants.ts';
 import VideoAsset from './video/VideoAsset.tsx';
 import type { ToolController } from '../../toolbox/toolsContext/ToolController.ts';
-import type {Annotation} from '../../../types/intern/annotation.ts';
+import type { Annotation } from '../../../types/intern/annotation.ts';
 import type { MediaAsset, MediaLayout } from '../../../types/intern/media.ts';
 import ImageAsset from './image/ImageAsset.tsx';
 
@@ -30,14 +30,13 @@ export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
     annotations,
     selectedId,
     isEditing,
-      isActive,
+    isActive,
     setActive,
     currentTime,
     toolController,
     onUpdateAnnotation,
     onCommitAnnotation,
     onSelectAnnotation,
-
   } = props;
 
   const surface = (size: { w: number; h: number; scaleX: number; scaleY: number }) => (

@@ -17,7 +17,7 @@ export const Toolbox = () => {
     setActiveTool,
     selectAnnotation,
     updateAnnotation,
-      commitAnnotation,
+    commitAnnotation,
     removeSelected,
     undo,
     redo,

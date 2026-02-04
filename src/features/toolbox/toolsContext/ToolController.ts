@@ -6,8 +6,8 @@ import type {
 import type { Point } from '../../../types/geometry';
 import type { EditorMutators } from '../../context/editor/EditorContext.types.ts';
 import type { Annotation, AnnotationPatch } from '../../../types/intern/annotation.ts';
-import type {Tool} from "../tools/tools.items.tsx";
-import {Constants} from "../../../utils/Constants.ts";
+import type { Tool } from '../tools/tools.items.tsx';
+import { Constants } from '../../../utils/Constants.ts';
 
 export class ToolController implements ToolContextInterface {
   private activeToolStrategy: ToolStrategy | null = null;

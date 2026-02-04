@@ -8,6 +8,7 @@ and is designed to work with the **Media Asset Annotator Service** backend.
 ## [![Vercel Deploy](https://deploy-badge.vercel.app/vercel/media-asset-annotator?style=for-the-badge&name=vercel+demo)](https://media-asset-annotator.vercel.app)
 
 ---
+
 ### Application Entry
 
 The application uses **client-side routing**.  
@@ -16,7 +17,9 @@ A **default route (`/`)** is defined and automatically redirects to a demo annot
 - `/` → redirects to a predefined demo media asset
 - `/annotator?id=<mediaAssetId>` → loads a media asset from the backend
 - `/annotator?url=<mediaUrl>` → loads an external media asset by URL
+
 ---
+
 ## Technology Stack
 
 ### Core Framework
@@ -66,7 +69,9 @@ Start the development server:
 ```bash
 npm run dev
 ```
+
 Access the application using one of the following URLs:
+
 - http://localhost:5173/ (default demo)
 - http://localhost:5173/annotator?id=<id>
 - http://localhost:5173/annotator?url=<url>
@@ -88,7 +93,9 @@ To preview the production build locally, run:
 ```bash
 npm run preview
 ```
+
 Access the application using one of the following URLs:
+
 - http://localhost:4173/ (default demo)
 - http://localhost:4173/annotator?id=<id>
 - http://localhost:4173/annotator?url=<url>

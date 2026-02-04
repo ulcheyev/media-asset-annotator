@@ -51,7 +51,7 @@ export const StageSurface = ({
   currentTime,
   mediaType,
   onSelect,
-    isActive,
+  isActive,
   onCommit,
   onPointerDown,
   onPointerMove,
