@@ -10,11 +10,12 @@ export const MediaStage = () => {
     selectedId,
     isEditing,
     updateAnnotation,
+    commitAnnotation,
     selectAnnotation,
     getToolController,
   } = useEditor();
 
-  const { cursor } = usePlayback();
+  const { cursor, isActive, setActive } = usePlayback();
 
   if (!asset) return null;
 
@@ -22,12 +23,15 @@ export const MediaStage = () => {
     <MediaAssetContainer
       asset={asset}
       layout={layout}
+      isActive={isActive}
+      setActive={setActive}
       setLayout={setLayout}
       annotations={annotations}
       selectedId={selectedId}
       isEditing={isEditing}
       currentTime={cursor.t}
       onUpdateAnnotation={(a) => updateAnnotation(a.id, a)}
+      onCommitAnnotation={commitAnnotation}
       onSelectAnnotation={selectAnnotation}
       toolController={getToolController()}
     />

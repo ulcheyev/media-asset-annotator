@@ -16,6 +16,10 @@ import {
 } from '../../../types/mapper/annotationMapper.ts';
 import { fetchAnnotations } from '../../../api/fetchAnnotations.ts';
 import type { Tool } from '../../toolbox/tools/tools.items.tsx';
+import { StateCommandManager } from '../../toolbox/commands/StateCommandManager.ts';
+import { UpdateAnnotationCommand } from '../../toolbox/commands/stateCommands/UpdateAnnotationStateCommand.ts';
+import { AddAnnotationCommand } from '../../toolbox/commands/stateCommands/AddAnnotationStateCommand.ts';
+import { RemoveAnnotationCommand } from '../../toolbox/commands/stateCommands/RemoveAnnotationStateCommand.ts';
 
 export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -26,7 +30,23 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
   const { cursor, duration } = usePlayback();
 
   const addAnnotation = (a: Annotation) => {
-    setAnnotations((prev) => [...prev, a]);
+    stateCommandsRef.current!.execute(
+      new AddAnnotationCommand(
+        a,
+        (a) => {
+          setAnnotations((prev) => [...prev, a]);
+        },
+        (id) => {
+          setAnnotations((prev) => prev.filter((ann) => ann.id !== id));
+          setSelectedId((prev) => (prev === id ? null : prev));
+        },
+      ),
+    );
+  };
+
+  const commitUpdateAnnotation = (before: Annotation, after: Annotation) => {
+    if (!before) return;
+    stateCommandsRef.current!.execute(new UpdateAnnotationCommand(before, after, updateAnnotation));
   };
 
   const updateAnnotation = (id: string, patch: AnnotationPatch) => {
@@ -44,8 +64,19 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const removeAnnotation = (id: string) => {
-    setAnnotations((prev) => prev.filter((a) => a.id !== id));
-    setSelectedId((prev) => (prev === id ? null : prev));
+    stateCommandsRef.current!.execute(
+      new RemoveAnnotationCommand(
+        annotations.find((a) => a.id === id)!,
+        (a) => {
+          setAnnotations((prev) => [...prev, a]);
+          setSelectedId(a.id);
+        },
+        (id) => {
+          setAnnotations((prev) => prev.filter((ann) => ann.id !== id));
+          setSelectedId((prev) => (prev === id ? null : prev));
+        },
+      ),
+    );
   };
 
   const removeSelected = () => {
@@ -65,11 +96,11 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const undo = () => {
-    console.warn('Undo not implemented yet');
+    stateCommandsRef.current!.undo();
   };
 
   const redo = () => {
-    console.warn('Redo not implemented yet');
+    stateCommandsRef.current!.redo();
   };
 
   const setEditing = (v: boolean) => {
@@ -77,12 +108,9 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
     if (!v) setSelectedId(null);
   };
 
-  /* ---------------- tool controller ---------------- */
-
   const toolControllerRef = useRef<ToolController | null>(null);
+  const stateCommandsRef = useRef<StateCommandManager>(null);
   const toolRegistryRef = useRef<ToolRegistry | null>(null);
-
-  // initialize once
 
   useEffect(() => {
     if (!asset) return;
@@ -117,15 +145,15 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
       {
         addAnnotation,
         updateAnnotation,
+        commitAnnotation: commitUpdateAnnotation,
         removeAnnotation,
         selectAnnotation,
       },
-      () => {
-        setActiveTool(Constants.SELECT_TOOL_LABEL as Tool);
-      },
+      setActiveTool,
     );
 
     toolRegistryRef.current = new ToolRegistry(toolControllerRef.current);
+    stateCommandsRef.current = new StateCommandManager();
 
     return () => {
       toolControllerRef.current?.onEditingDisabled();
@@ -138,7 +166,7 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
     if (!toolControllerRef.current || !toolRegistryRef.current) return;
 
     const tool = toolRegistryRef.current.get(activeTool);
-    toolControllerRef.current.setTool(tool);
+    toolControllerRef.current.setToolStrategy(tool);
   }, [activeTool]);
 
   useEffect(() => {
@@ -156,8 +184,6 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
 
   const getToolController = () => toolControllerRef.current!;
 
-  /* ---------------- context value ---------------- */
-
   const value: EditorState = {
     annotations,
     selectedId,
@@ -172,13 +198,14 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
 
     addAnnotation,
     updateAnnotation,
+    commitAnnotation: commitUpdateAnnotation,
     removeAnnotation,
     removeSelected,
     save,
     undo,
     redo,
 
-    setAnnotations, // intentional escape hatch
+    setAnnotations,
   };
 
   return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>;

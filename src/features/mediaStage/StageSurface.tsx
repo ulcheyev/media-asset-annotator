@@ -12,12 +12,13 @@ interface StageSurfaceProps {
   annotations: Annotation[];
   selectedId: string | null;
   isEditing: boolean;
+  isActive?: boolean;
   currentTime: number;
   mediaType: 'image' | 'video';
 
   onSelect: (id: string | null) => void;
   onUpdate: (a: Annotation) => void;
-
+  onCommit: (b: Annotation, a: Annotation) => void;
   onPointerDown: (p: Point) => void;
   onPointerMove: (p: Point) => void;
   onPointerUp: (p: Point) => void;
@@ -50,7 +51,8 @@ export const StageSurface = ({
   currentTime,
   mediaType,
   onSelect,
-  onUpdate,
+  isActive,
+  onCommit,
   onPointerDown,
   onPointerMove,
   onPointerUp,
@@ -82,12 +84,13 @@ export const StageSurface = ({
           annotations={annotations}
           selectedId={selectedId}
           isEditing={isEditing}
+          isActive={isActive}
           mediaType={mediaType}
           currentTime={currentTime}
           sceneWidth={width}
           sceneHeight={height}
           onSelect={onSelect}
-          onUpdate={onUpdate}
+          onCommit={onCommit}
         />
       </Layer>
     </Stage>

@@ -27,6 +27,7 @@ export interface EditorState extends EditorMutators {
 export interface EditorMutators {
   addAnnotation: (a: Annotation) => void;
   updateAnnotation: (id: string, patch: AnnotationPatch) => void;
+  commitAnnotation: (before: Annotation, after: Annotation) => void;
   removeAnnotation: (id: string) => void;
   selectAnnotation: (id: string | null) => void;
 }

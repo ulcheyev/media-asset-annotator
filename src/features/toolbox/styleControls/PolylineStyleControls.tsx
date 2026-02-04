@@ -2,14 +2,15 @@ import type { AnnotationPatch, PolylineAnnotation } from '../../../types/intern/
 import { ControlSlider } from './BaseStyleControls.tsx';
 import { Constants } from '../../../utils/Constants.ts';
 import * as Popover from '@radix-ui/react-popover';
-import { HexColorPicker } from 'react-colorful';
+import { ColorPicker } from './ColorPicker.tsx';
 
 interface PolylineStyleControlsProps {
   annotation: PolylineAnnotation;
   onChange: (patch: AnnotationPatch) => void;
+  onCommit: (before: PolylineAnnotation, after: PolylineAnnotation) => void;
 }
 
-const PolylineStyleControls = ({ annotation, onChange }: PolylineStyleControlsProps) => {
+const PolylineStyleControls = ({ annotation, onChange, onCommit }: PolylineStyleControlsProps) => {
   const strokeWidth = annotation.style.strokeWidth ?? 1;
   const fill = annotation.style.fill ?? 'transparent';
   return (
@@ -20,10 +21,16 @@ const PolylineStyleControls = ({ annotation, onChange }: PolylineStyleControlsPr
         max={Constants.MAX_STROKE_WIDTH}
         step={1}
         value={strokeWidth}
-        onChange={(v) =>
+        onPreview={(v) =>
           onChange({
             style: { strokeWidth: v },
           })
+        }
+        onCommit={(before, after) =>
+          onCommit(
+            { ...annotation, style: { ...annotation.style, strokeWidth: before } },
+            { ...annotation, style: { ...annotation.style, strokeWidth: after } },
+          )
         }
       />
       {/* Color */}
@@ -44,7 +51,16 @@ const PolylineStyleControls = ({ annotation, onChange }: PolylineStyleControlsPr
               align="start"
               className="p-3 bg-neutral-900 rounded shadow-xl z-50"
             >
-              <HexColorPicker color={fill} onChange={(c) => onChange({ style: { fill: c } })} />
+              <ColorPicker
+                color={fill}
+                onPreview={(c) => onChange({ style: { fill: c } })}
+                onCommit={(before, after) =>
+                  onCommit(
+                    { ...annotation, style: { ...annotation.style, fill: before } },
+                    { ...annotation, style: { ...annotation.style, fill: after } },
+                  )
+                }
+              />
             </Popover.Content>
           </Popover.Portal>
         </Popover.Root>
