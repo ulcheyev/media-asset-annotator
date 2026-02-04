@@ -26,7 +26,7 @@ export class RectDrawTool implements ToolStrategy {
       points,
       time: {
         start: currentTime,
-        end: Math.min(currentTime + Constants.ANNOTATION_MIN_DURATION, duration),
+        end: Math.min(currentTime + Constants.ANNOTATION_DEFAULT_DURATION, duration),
       },
       style: {
         color: Constants.POLYLINE_DEFAULT_COLOR,

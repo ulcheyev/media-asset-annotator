@@ -30,7 +30,7 @@ export const AnnotationsLayer = ({
   const visible = annotations.filter((a) => {
     if (mediaType === Constants.IMAGE_ASSET_TYPE_LABEL) return true;
     if (a.time.start == null && a.time.end == null) return true;
-    return  a.time.start <= currentTime && a.time.end >= currentTime;
+    return a.time.start <= currentTime && a.time.end >= currentTime;
   });
 
   const current = isActive ? visible : annotations;

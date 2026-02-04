@@ -1,4 +1,3 @@
-import { Constants } from './Constants.ts';
 import type { TimeRange } from '../types/intern/annotation.ts';
 
 export const formatTime = (t: number) => {
@@ -32,8 +31,7 @@ export function computeNextInterval(
 export const isValidInterval = (interval: TimeRange, duration: number) => {
   return (
     interval.start >= 0 &&
-    interval.end <= duration &&
-    interval.end - interval.start >= Constants.ANNOTATION_MIN_DURATION
+    interval.end <= duration
   );
 };
 
