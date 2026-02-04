@@ -31,7 +31,6 @@ const SelectableAnnotation = ({
     }
   }, [isSelected, nodeRef]);
 
-  /* ---------- resize limit ---------- */
   const boundBoxFunc = useCallback((oldBox: Box, newBox: Box) => {
     const stage = transformerRef.current?.getStage();
     if (!stage) return oldBox;
@@ -45,7 +44,6 @@ const SelectableAnnotation = ({
     return outOfBounds ? oldBox : newBox;
   }, []);
 
-  /* ---------- transformer drag limit ---------- */
   const handleTransformerDrag = useCallback(
     (e: Konva.KonvaEventObject<DragEvent>) => {
       const tr = transformerRef.current;
@@ -108,7 +106,6 @@ const SelectableAnnotation = ({
     };
   }, [isSelected, isTransformable, nodeRef]);
 
-  /* ---------- transform commit ---------- */
   const handleTransformEnd = useCallback(() => {
     const node = nodeRef.current;
     if (node)

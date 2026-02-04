@@ -5,9 +5,10 @@ import { Constants } from '../../../utils/Constants.ts';
 interface TextControlsProps {
   textAnnotation: TextAnnotation;
   onChange: (patch: AnnotationPatch) => void;
+  onCommit?: (before: TextAnnotation, after: TextAnnotation) => void;
 }
 
-const CustomTextControls = ({ textAnnotation, onChange }: TextControlsProps) => {
+const CustomTextControls = ({ textAnnotation, onChange, onCommit }: TextControlsProps) => {
   const fontWeight = textAnnotation.fontWeight;
   const fontSize = textAnnotation.fontSize;
 
@@ -42,7 +43,8 @@ const CustomTextControls = ({ textAnnotation, onChange }: TextControlsProps) => 
           max={Constants.MAX_FONT_SIZE}
           step={1}
           value={fontSize}
-          onChange={(v) => onChange({ fontSize: v })}
+          onPreview={(v) => onChange({ fontSize: v })}
+          onCommit={(b, a) => onCommit && onCommit( { ...textAnnotation, fontSize: b }, { ...textAnnotation, fontSize: a })}
         />
       </div>
       {/* Font weight */}
@@ -53,7 +55,8 @@ const CustomTextControls = ({ textAnnotation, onChange }: TextControlsProps) => 
           max={900}
           step={100}
           value={fontWeight}
-          onChange={(v) => onChange({ fontWeight: v })}
+          onPreview={(v) => onChange({ fontWeight: v })}
+            onCommit={(b, a) => onCommit && onCommit( { ...textAnnotation, fontWeight: b }, { ...textAnnotation, fontWeight: a })}
         />
       </div>
     </>

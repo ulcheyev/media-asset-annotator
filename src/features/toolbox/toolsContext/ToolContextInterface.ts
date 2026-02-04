@@ -11,6 +11,7 @@ export interface ToolContextInterface {
   updateAnnotation: (id: string, patch: AnnotationPatch) => void;
   removeAnnotation: (id: string) => void;
   selectAnnotation: (id: string | null) => void;
+  setSelectTool(): void;
   setTimeContext: (timeContext: ToolControllerTimeContext) => void;
   getTimeContext: () => ToolControllerTimeContext;
 }

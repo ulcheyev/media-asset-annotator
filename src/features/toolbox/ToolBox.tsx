@@ -13,11 +13,11 @@ export const Toolbox = () => {
     selectedId,
     isEditing,
     activeTool,
-
     setEditing,
     setActiveTool,
     selectAnnotation,
     updateAnnotation,
+      commitAnnotation,
     removeSelected,
     undo,
     redo,
@@ -64,6 +64,7 @@ export const Toolbox = () => {
           <StyleControls
             annotation={selectedAnnotation}
             onChange={(patch) => updateAnnotation(selectedAnnotation.id, patch)}
+            onCommit={commitAnnotation}
           />
         ) : (
           <div className="h-full flex items-center justify-center px-4 text-sm text-neutral-500 text-center">

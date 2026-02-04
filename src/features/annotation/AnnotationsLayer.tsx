@@ -10,7 +10,8 @@ interface Props {
   sceneWidth: number;
   sceneHeight: number;
   currentTime: number;
-  onUpdate: (updated: Annotation) => void;
+  isActive: boolean | undefined;
+  onCommit: (before: Annotation, after: Annotation) => void;
   isEditing: boolean;
   selectedId?: string | null;
   onSelect: (annotationId: string) => void;
@@ -20,22 +21,25 @@ export const AnnotationsLayer = ({
   annotations,
   mediaType,
   currentTime,
-  onUpdate,
+ onCommit,
   isEditing,
+    isActive,
   selectedId,
   onSelect,
 }: Props) => {
-  // @ts-ignore
-  // TODO preview with annotations
-  const visible = annotations.filter((a) => {
+
+  const visible =  annotations.filter((a) => {
     if (mediaType === Constants.IMAGE_ASSET_TYPE_LABEL) return true;
     if (a.time.start == null && a.time.end == null) return true;
-    return a.time.start >= currentTime && a.time.end >= currentTime;
+    return a.time.end >= currentTime;
   });
+
+  const current = isActive ? visible : annotations;
+
 
   return (
     <>
-      {annotations.map((a) => {
+      {current.map((a) => {
         if (a.kind === 'polyline') {
           return (
             <PolylineAnnotationShape
@@ -44,7 +48,7 @@ export const AnnotationsLayer = ({
               annotation={a}
               isSelected={a.id === selectedId}
               onSelect={() => onSelect(a.id)}
-              onUpdate={onUpdate}
+              onCommit={onCommit}
             />
           );
         }
@@ -56,7 +60,7 @@ export const AnnotationsLayer = ({
               isSelected={a.id === selectedId}
               onSelect={() => onSelect(a.id)}
               key={a.id}
-              onUpdate={onUpdate}
+              onCommit={onCommit}
             />
           );
         }

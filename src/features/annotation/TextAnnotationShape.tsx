@@ -8,7 +8,7 @@ import { Constants } from '../../utils/Constants.ts';
 interface EditableTextProps {
   annotation: TextAnnotation;
   isEditing: boolean;
-  onUpdate: (annotation: Annotation) => void;
+  onCommit: (before: Annotation, after: Annotation) => void;
   isSelected: boolean;
   onSelect: () => void;
 }
@@ -16,7 +16,7 @@ interface EditableTextProps {
 const EditableText = ({
   annotation,
   isEditing,
-  onUpdate,
+                        onCommit,
   isSelected,
   onSelect,
 }: EditableTextProps) => {
@@ -26,7 +26,7 @@ const EditableText = ({
     const node = e.target;
     const x = node.x();
     const y = node.y();
-    onUpdate({
+    onCommit(annotation, {
       ...annotation,
       x,
       y,

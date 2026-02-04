@@ -2,7 +2,7 @@ import { StageSurface } from '../StageSurface.tsx';
 import { Constants } from '../../../utils/Constants.ts';
 import VideoAsset from './video/VideoAsset.tsx';
 import type { ToolController } from '../../toolbox/toolsContext/ToolController.ts';
-import type { Annotation } from '../../../types/intern/annotation.ts';
+import type {Annotation} from '../../../types/intern/annotation.ts';
 import type { MediaAsset, MediaLayout } from '../../../types/intern/media.ts';
 import ImageAsset from './image/ImageAsset.tsx';
 
@@ -13,9 +13,12 @@ interface MediaAssetContainerProps {
   annotations: Annotation[];
   selectedId: string | null;
   isEditing: boolean;
+  isActive?: boolean;
+  setActive?: (active: boolean) => void;
   currentTime: number;
   toolController: ToolController;
-  onUpdateAnnotation: (a: Annotation) => void;
+  onUpdateAnnotation: (annotation: Annotation) => void;
+  onCommitAnnotation: (before: Annotation, after: Annotation) => void;
   onSelectAnnotation: (id: string | null) => void;
 }
 
@@ -27,16 +30,21 @@ export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
     annotations,
     selectedId,
     isEditing,
+      isActive,
+    setActive,
     currentTime,
     toolController,
     onUpdateAnnotation,
+    onCommitAnnotation,
     onSelectAnnotation,
+
   } = props;
 
   const surface = (size: { w: number; h: number; scaleX: number; scaleY: number }) => (
     <StageSurface
       width={layout.width}
       height={layout.height}
+      isActive={isActive}
       scaleX={size.scaleX}
       scaleY={size.scaleY}
       annotations={annotations}
@@ -46,6 +54,7 @@ export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
       mediaType={asset.type}
       onSelect={onSelectAnnotation}
       onUpdate={onUpdateAnnotation}
+      onCommit={onCommitAnnotation}
       onPointerDown={(p) => toolController.onPointerDown(p)}
       onPointerMove={(p) => toolController.onPointerMove(p)}
       onPointerUp={(p) => toolController.onPointerUp(p)}
@@ -64,10 +73,11 @@ export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
     return (
       <VideoAsset
         layout={layout}
+        setActive={setActive}
         asset={asset}
         isEditing={isEditing}
         selectedAnnotation={annotations.find((a) => a.id === selectedId)}
-        onUpdateAnnotation={onUpdateAnnotation}
+        onCommitAnnotation={onCommitAnnotation}
       >
         {surface}
       </VideoAsset>
