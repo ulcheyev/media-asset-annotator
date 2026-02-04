@@ -19,7 +19,6 @@ const PolylineAnnotationShape = ({
   isSelected,
   onSelect,
 }: PolylineAnnotationProps) => {
-
   const lineRef = useRef<Konva.Line>(null);
   const handleDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
     const node = e.target as Konva.Line;
@@ -54,10 +53,7 @@ const PolylineAnnotationShape = ({
       });
 
       // REMOVE konva internal stage scale before storing
-      newPoints.push(
-          p.x / stageScaleX,
-          p.y / stageScaleY
-      );
+      newPoints.push(p.x / stageScaleX, p.y / stageScaleY);
     }
 
     line.setAttrs({
@@ -67,8 +63,7 @@ const PolylineAnnotationShape = ({
       scaleY: 1,
     });
 
-    onCommit(annotation,
-        {
+    onCommit(annotation, {
       ...annotation,
       points: newPoints,
     });

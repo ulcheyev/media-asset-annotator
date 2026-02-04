@@ -16,10 +16,10 @@ import {
 } from '../../../types/mapper/annotationMapper.ts';
 import { fetchAnnotations } from '../../../api/fetchAnnotations.ts';
 import type { Tool } from '../../toolbox/tools/tools.items.tsx';
-import {StateCommandManager} from "../../toolbox/commands/StateCommandManager.ts";
-import {UpdateAnnotationCommand} from "../../toolbox/commands/stateCommands/UpdateAnnotationStateCommand.ts";
-import {AddAnnotationCommand} from "../../toolbox/commands/stateCommands/AddAnnotationStateCommand.ts";
-import {RemoveAnnotationCommand} from "../../toolbox/commands/stateCommands/RemoveAnnotationStateCommand.ts";
+import { StateCommandManager } from '../../toolbox/commands/StateCommandManager.ts';
+import { UpdateAnnotationCommand } from '../../toolbox/commands/stateCommands/UpdateAnnotationStateCommand.ts';
+import { AddAnnotationCommand } from '../../toolbox/commands/stateCommands/AddAnnotationStateCommand.ts';
+import { RemoveAnnotationCommand } from '../../toolbox/commands/stateCommands/RemoveAnnotationStateCommand.ts';
 
 export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -31,57 +31,51 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
 
   const addAnnotation = (a: Annotation) => {
     stateCommandsRef.current!.execute(
-        new AddAnnotationCommand(
-            a,
-            (a) => {
-              setAnnotations((prev) => [...prev, a]);
-            },
-            (id) => {
-              setAnnotations((prev) => prev.filter((ann) => ann.id !== id));
-              setSelectedId((prev) => (prev === id ? null : prev));
-            }
-        ),
+      new AddAnnotationCommand(
+        a,
+        (a) => {
+          setAnnotations((prev) => [...prev, a]);
+        },
+        (id) => {
+          setAnnotations((prev) => prev.filter((ann) => ann.id !== id));
+          setSelectedId((prev) => (prev === id ? null : prev));
+        },
+      ),
     );
   };
 
   const commitUpdateAnnotation = (before: Annotation, after: Annotation) => {
-    if (!before) return
-    stateCommandsRef.current!.execute(
-        new UpdateAnnotationCommand(
-            before,
-            after,
-            updateAnnotation,
-        ),
-    );
+    if (!before) return;
+    stateCommandsRef.current!.execute(new UpdateAnnotationCommand(before, after, updateAnnotation));
   };
 
   const updateAnnotation = (id: string, patch: AnnotationPatch) => {
     setAnnotations((prev) =>
-        prev.map((a) =>
-            a.id === id
-                ? {
-                  ...a,
-                  ...patch,
-                  style: patch.style ? { ...a.style, ...patch.style } : a.style,
-                }
-                : a,
-        ),
+      prev.map((a) =>
+        a.id === id
+          ? {
+              ...a,
+              ...patch,
+              style: patch.style ? { ...a.style, ...patch.style } : a.style,
+            }
+          : a,
+      ),
     );
-  }
+  };
 
   const removeAnnotation = (id: string) => {
     stateCommandsRef.current!.execute(
-        new RemoveAnnotationCommand(
-            annotations.find((a) => a.id === id)!,
-            (a) => {
-              setAnnotations((prev) => [...prev, a]);
-              setSelectedId(a.id);
-            },
-            (id) => {
-                setAnnotations((prev) => prev.filter((ann) => ann.id !== id));
-                setSelectedId((prev) => (prev === id ? null : prev));
-            }
-        ),
+      new RemoveAnnotationCommand(
+        annotations.find((a) => a.id === id)!,
+        (a) => {
+          setAnnotations((prev) => [...prev, a]);
+          setSelectedId(a.id);
+        },
+        (id) => {
+          setAnnotations((prev) => prev.filter((ann) => ann.id !== id));
+          setSelectedId((prev) => (prev === id ? null : prev));
+        },
+      ),
     );
   };
 
@@ -113,7 +107,6 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
     setIsEditing(v);
     if (!v) setSelectedId(null);
   };
-
 
   const toolControllerRef = useRef<ToolController | null>(null);
   const stateCommandsRef = useRef<StateCommandManager>(null);

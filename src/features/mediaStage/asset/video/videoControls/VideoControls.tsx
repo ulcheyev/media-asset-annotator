@@ -27,16 +27,16 @@ interface Props {
 type DragMode = 'move' | 'start' | 'end' | null;
 
 export default function VideoControls({
-                                        duration,
-                                        currentTime,
-                                        isPlaying,
-                                        selectedAnnotation,
-                                        isEditing = false,
-                                        onPlay,
-                                        onPause,
-                                        onSeek,
-                                        onCommitAnnotationTime,
-                                      }: Props) {
+  duration,
+  currentTime,
+  isPlaying,
+  selectedAnnotation,
+  isEditing = false,
+  onPlay,
+  onPause,
+  onSeek,
+  onCommitAnnotationTime,
+}: Props) {
   const trackRef = useRef<HTMLDivElement>(null);
 
   const [hoverTime, setHoverTime] = useState<number | null>(null);
@@ -50,7 +50,6 @@ export default function VideoControls({
 
   /** Interval to render (draft during drag, committed otherwise) */
   const interval = draftInterval ?? committedInterval;
-
 
   const startDragging = (mode: DragMode) => {
     if (!isEditing || !selectedAnnotation) return;
@@ -69,7 +68,6 @@ export default function VideoControls({
     setDraftInterval(null);
     setDragMode(null);
   };
-
 
   useEffect(() => {
     if (!dragMode || !trackRef.current || !interval) return;
@@ -95,7 +93,6 @@ export default function VideoControls({
     };
   }, [dragMode, interval, duration, onSeek]);
 
-
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!trackRef.current) return;
     const rect = trackRef.current.getBoundingClientRect();
@@ -108,38 +105,27 @@ export default function VideoControls({
     onSeek(getTimeFromClientX(e.clientX, rect, duration));
   };
 
-
   return (
-      <div className="px-4 py-2">
-        <div className="flex items-center gap-4">
-          <PlayPauseButton isPlaying={isPlaying} onPlay={onPlay} onPause={onPause} />
+    <div className="px-4 py-2">
+      <div className="flex items-center gap-4">
+        <PlayPauseButton isPlaying={isPlaying} onPlay={onPlay} onPause={onPause} />
 
-          <div
-              ref={trackRef}
-              className="relative flex-1 h-6 rounded-md bg-neutral-600/80 cursor-pointer"
-              onMouseMove={handleMouseMove}
-              onMouseLeave={() => setHoverTime(null)}
-              onClick={handleClick}
-          >
-            {hoverTime !== null && (
-                <HoverTimeBubble time={hoverTime} duration={duration} />
-            )}
+        <div
+          ref={trackRef}
+          className="relative flex-1 h-6 rounded-md bg-neutral-600/80 cursor-pointer"
+          onMouseMove={handleMouseMove}
+          onMouseLeave={() => setHoverTime(null)}
+          onClick={handleClick}
+        >
+          {hoverTime !== null && <HoverTimeBubble time={hoverTime} duration={duration} />}
 
-            {interval && (
-                <AnnotationInterval
-                    interval={interval}
-                    duration={duration}
-                    onDrag={startDragging}
-                />
-            )}
+          {interval && (
+            <AnnotationInterval interval={interval} duration={duration} onDrag={startDragging} />
+          )}
 
-            <Playhead
-                time={currentTime}
-                duration={duration}
-                isPlaying={isPlaying}
-            />
-          </div>
+          <Playhead time={currentTime} duration={duration} isPlaying={isPlaying} />
         </div>
       </div>
+    </div>
   );
 }

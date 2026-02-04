@@ -21,8 +21,8 @@ export default function VideoAsset({
   asset,
   layout,
   selectedAnnotation,
-                                     onCommitAnnotation,
-    setActive,
+  onCommitAnnotation,
+  setActive,
   isEditing,
   children,
 }: VideoAssetProps) {
@@ -53,11 +53,11 @@ export default function VideoAsset({
 
     const handlePlay = () => {
       setActive?.(true);
-      setIsPlaying(true)
+      setIsPlaying(true);
     };
     const handlePause = () => {
       setActive?.(false);
-      setIsPlaying(false)
+      setIsPlaying(false);
     };
 
     video.addEventListener('loadedmetadata', handleLoaded);
@@ -92,14 +92,13 @@ export default function VideoAsset({
   const updateAnnotationInterval = useCallback(
     (interval: TimeRange) => {
       if (!selectedAnnotation || !onCommitAnnotation) return;
-      onCommitAnnotation(selectedAnnotation,{
+      onCommitAnnotation(selectedAnnotation, {
         ...selectedAnnotation,
         time: interval,
       });
     },
     [selectedAnnotation, onCommitAnnotation],
   );
-
 
   return (
     <div className="flex flex-col w-full h-full">

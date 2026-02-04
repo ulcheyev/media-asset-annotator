@@ -44,7 +44,10 @@ const CustomTextControls = ({ textAnnotation, onChange, onCommit }: TextControls
           step={1}
           value={fontSize}
           onPreview={(v) => onChange({ fontSize: v })}
-          onCommit={(b, a) => onCommit && onCommit( { ...textAnnotation, fontSize: b }, { ...textAnnotation, fontSize: a })}
+          onCommit={(b, a) =>
+            onCommit &&
+            onCommit({ ...textAnnotation, fontSize: b }, { ...textAnnotation, fontSize: a })
+          }
         />
       </div>
       {/* Font weight */}
@@ -56,7 +59,10 @@ const CustomTextControls = ({ textAnnotation, onChange, onCommit }: TextControls
           step={100}
           value={fontWeight}
           onPreview={(v) => onChange({ fontWeight: v })}
-            onCommit={(b, a) => onCommit && onCommit( { ...textAnnotation, fontWeight: b }, { ...textAnnotation, fontWeight: a })}
+          onCommit={(b, a) =>
+            onCommit &&
+            onCommit({ ...textAnnotation, fontWeight: b }, { ...textAnnotation, fontWeight: a })
+          }
         />
       </div>
     </>

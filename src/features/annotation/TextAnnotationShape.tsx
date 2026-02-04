@@ -16,7 +16,7 @@ interface EditableTextProps {
 const EditableText = ({
   annotation,
   isEditing,
-                        onCommit,
+  onCommit,
   isSelected,
   onSelect,
 }: EditableTextProps) => {
