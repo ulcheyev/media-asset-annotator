@@ -2,7 +2,6 @@ import type { AnnotationData } from '../types/extern/annotationData.ts';
 import { mockAnnotations } from './mocks/annotatios';
 import { runtimeConfig } from '../utils/runtimeConfig.ts';
 
-
 export const fetchAnnotations = async (mediaAssetId: string): Promise<AnnotationData[]> => {
   if (import.meta.env.DEV) {
     console.warn('[fetchAnnotations] DEV mode – returning mock data');
@@ -10,7 +9,6 @@ export const fetchAnnotations = async (mediaAssetId: string): Promise<Annotation
   }
 
   try {
-
     const response = await fetch(`${runtimeConfig.ANNOTATIONS_FETCH_API_URL}/${mediaAssetId}`, {
       method: 'GET',
       headers: {
