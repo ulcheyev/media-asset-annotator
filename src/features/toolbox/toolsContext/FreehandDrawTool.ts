@@ -21,7 +21,7 @@ export class FreehandDrawTool implements ToolStrategy {
       points: [point.x, point.y],
       time: {
         start: currentTime,
-        end: Math.min(currentTime + Constants.ANNOTATION_MIN_DURATION, duration),
+        end: Math.min(currentTime + Constants.ANNOTATION_DEFAULT_DURATION, duration),
       },
       style: {
         color: Constants.POLYLINE_DEFAULT_COLOR,
