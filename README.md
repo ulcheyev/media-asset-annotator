@@ -7,6 +7,19 @@ and is designed to work with the **Media Asset Annotator Service** backend.
 
 ## [![Vercel Deploy](https://deploy-badge.vercel.app/vercel/media-asset-annotator?style=for-the-badge&name=vercel+demo)](https://media-asset-annotator.vercel.app)
 
+---
+
+### Application Entry
+
+The application uses **client-side routing**.  
+A **default route (`/`)** is defined and automatically redirects to a demo annotator view.
+
+- `/` → redirects to a predefined demo media asset
+- `/annotator?id=<mediaAssetId>` → loads a media asset from the backend
+- `/annotator?url=<mediaUrl>` → loads an external media asset by URL
+
+---
+
 ## Technology Stack
 
 ### Core Framework
@@ -37,6 +50,7 @@ This project uses Prettier for code formatting and ESLint for linting to maintai
 ### Prerequisites
 
 - Node.js (v24+)
+- Configuration via `.env` file in root directory (refer to `.env.example` for guidance)
 
 ### Install Dependencies
 
@@ -56,7 +70,11 @@ Start the development server:
 npm run dev
 ```
 
-Open your browser and navigate to `http://localhost:5173/annotator?id=1 to access the application.
+Access the application using one of the following URLs:
+
+- http://localhost:5173/ (default demo)
+- http://localhost:5173/annotator?id=<id>
+- http://localhost:5173/annotator?url=<url>
 
 ### Build for Production
 
@@ -76,5 +94,8 @@ To preview the production build locally, run:
 npm run preview
 ```
 
-This will start a local server to serve the files from the `dist` directory.
-Navigate to `http://localhost:4173/annotator?id=<id>` or `https://localhost:4173/annotator?url=<url>` to view the production build.
+Access the application using one of the following URLs:
+
+- http://localhost:4173/ (default demo)
+- http://localhost:4173/annotator?id=<id>
+- http://localhost:4173/annotator?url=<url>

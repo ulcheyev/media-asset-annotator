@@ -7,7 +7,7 @@ import { useRef } from 'react';
 interface PolylineAnnotationProps {
   annotation: PolylineAnnotation;
   isEditing: boolean;
-  onUpdate: (updated: Annotation) => void;
+  onCommit: (before: Annotation, after: Annotation) => void;
   isSelected: boolean;
   onSelect: () => void;
 }
@@ -15,7 +15,7 @@ interface PolylineAnnotationProps {
 const PolylineAnnotationShape = ({
   annotation,
   isEditing,
-  onUpdate,
+  onCommit,
   isSelected,
   onSelect,
 }: PolylineAnnotationProps) => {
@@ -30,21 +30,40 @@ const PolylineAnnotationShape = ({
 
     const newPoints = annotation.points.map((v, i) => (i % 2 === 0 ? v + dx : v + dy));
 
-    onUpdate({ ...annotation, points: newPoints });
+    onCommit(annotation, { ...annotation, points: newPoints });
   };
 
   const handleTransformEnd = (node: Konva.Node) => {
-    if (!node) return;
+    const line = node as Konva.Line;
+    const stage = line.getStage();
+    if (!stage) return;
 
-    const scaleX = node.scaleX();
-    const scaleY = node.scaleY();
+    const stageScaleX = stage.scaleX();
+    const stageScaleY = stage.scaleY();
 
-    const newPoints = annotation.points.map((v, i) => (i % 2 === 0 ? v * scaleX : v * scaleY));
+    const localPoints = line.points();
+    const absTransform = line.getAbsoluteTransform();
 
-    node.scaleX(1);
-    node.scaleY(1);
+    const newPoints: number[] = [];
 
-    onUpdate({
+    for (let i = 0; i < localPoints.length; i += 2) {
+      const p = absTransform.point({
+        x: localPoints[i],
+        y: localPoints[i + 1],
+      });
+
+      // REMOVE konva internal stage scale before storing
+      newPoints.push(p.x / stageScaleX, p.y / stageScaleY);
+    }
+
+    line.setAttrs({
+      x: 0,
+      y: 0,
+      scaleX: 1,
+      scaleY: 1,
+    });
+
+    onCommit(annotation, {
       ...annotation,
       points: newPoints,
     });

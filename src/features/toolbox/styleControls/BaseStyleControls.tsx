@@ -1,13 +1,14 @@
 import * as Popover from '@radix-ui/react-popover';
 import * as Slider from '@radix-ui/react-slider';
-import { HexColorPicker } from 'react-colorful';
-import { useState } from 'react';
+import { useRef } from 'react';
 
 import type { Annotation, AnnotationPatch } from '../../../types/intern/annotation.ts';
+import { ColorPicker } from './ColorPicker.tsx';
 
 interface BaseStyleControlsProps {
   annotation: Annotation;
   onChange: (patch: AnnotationPatch) => void;
+  onCommit: (before: Annotation, after: Annotation) => void;
 }
 
 interface ControlSliderProps {
@@ -16,38 +17,61 @@ interface ControlSliderProps {
   min: number;
   max: number;
   step: number;
-  onChange: (v: number) => void;
+
+  onPreview: (v: number) => void;
+  onCommit: (before: number, after: number) => void;
 }
 
-export const ControlSlider = ({ label, value, min, max, step, onChange }: ControlSliderProps) => {
-  const [internal, setInternal] = useState(value);
-  const percent = ((internal - min) / (max - min)) * 100;
+export const ControlSlider = ({
+  label,
+  value,
+  min,
+  max,
+  step,
+  onPreview,
+  onCommit,
+}: ControlSliderProps) => {
+  const beforeRef = useRef<number | null>(null);
+
+  const percent = ((value - min) / (max - min)) * 100;
+
+  const handlePointerDown = () => {
+    if (beforeRef.current === null) {
+      beforeRef.current = value;
+    }
+  };
+
+  const handlePointerUp = () => {
+    if (beforeRef.current !== null) {
+      onCommit(beforeRef.current, value);
+      beforeRef.current = null;
+    }
+  };
 
   return (
     <div className="space-y-2">
       <div className="text-sm text-neutral-300">{label}</div>
 
-      <div className="relative">
+      <div
+        className="relative"
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
+      >
         <div
-          className="
-            absolute -top-7
-            text-xs px-2 py-0.5 rounded
-            bg-neutral-800 text-white
-            translate-x-[-50%]
-          "
+          className="absolute -top-7 text-xs px-2 py-0.5 rounded bg-neutral-800 text-white translate-x-[-50%]"
           style={{ left: `${percent}%` }}
         >
-          {internal.toFixed(step < 1 ? 2 : 0)}
+          {value.toFixed(step < 1 ? 2 : 0)}
         </div>
 
         <Slider.Root
-          value={[internal]}
+          value={[value]}
           min={min}
           max={max}
           step={step}
           onValueChange={([v]) => {
-            setInternal(v);
-            onChange(v);
+            onPreview(v);
           }}
           className="relative flex items-center h-5"
         >
@@ -55,35 +79,27 @@ export const ControlSlider = ({ label, value, min, max, step, onChange }: Contro
             <Slider.Range className="absolute h-full rounded bg-white" />
           </Slider.Track>
 
-          <Slider.Thumb
-            className="
-              block w-4 h-4
-              bg-white rounded-full
-              shadow
-              hover:bg-neutral-200
-              focus:outline-none
-              focus:ring-2 focus:ring-neutral-500
-            "
-          />
+          <Slider.Thumb className="block w-4 h-4 bg-white rounded-full shadow" />
         </Slider.Root>
       </div>
     </div>
   );
 };
 
-const BaseStyleControls = ({ annotation, onChange }: BaseStyleControlsProps) => {
+const BaseStyleControls = ({ annotation, onChange, onCommit }: BaseStyleControlsProps) => {
   const color = annotation.style.color ?? '#ffffff';
   const opacity = annotation.style.opacity ?? 1;
   const label = annotation.label ?? '';
+
   return (
     <div className="flex flex-col gap-5">
-      {/* LABEL — FIRST */}
+      {/* LABEL */}
       <div className="space-y-1">
         <div className="text-sm text-neutral-300">Label</div>
         <input
           type="text"
           value={label}
-          onChange={(e) => onChange({ label: e.target.value })}
+          onChange={(e) => onCommit(annotation, { ...annotation, label: e.target.value })}
           placeholder="Annotation label"
           className="
             w-full
@@ -119,7 +135,16 @@ const BaseStyleControls = ({ annotation, onChange }: BaseStyleControlsProps) => 
               align="start"
               className="p-3 bg-neutral-900 rounded shadow-xl z-50"
             >
-              <HexColorPicker color={color} onChange={(c) => onChange({ style: { color: c } })} />
+              <ColorPicker
+                color={color}
+                onPreview={(c) => onChange({ style: { color: c } })}
+                onCommit={(before, after) =>
+                  onCommit(
+                    { ...annotation, style: { ...annotation.style, color: before } },
+                    { ...annotation, style: { ...annotation.style, color: after } },
+                  )
+                }
+              />
             </Popover.Content>
           </Popover.Portal>
         </Popover.Root>
@@ -132,7 +157,13 @@ const BaseStyleControls = ({ annotation, onChange }: BaseStyleControlsProps) => 
         max={1}
         step={0.01}
         value={opacity}
-        onChange={(v) => onChange({ style: { opacity: v } })}
+        onPreview={(v) => onChange({ style: { opacity: v } })}
+        onCommit={(before, after) =>
+          onCommit(
+            { ...annotation, style: { ...annotation.style, opacity: before } },
+            { ...annotation, style: { ...annotation.style, opacity: after } },
+          )
+        }
       />
     </div>
   );

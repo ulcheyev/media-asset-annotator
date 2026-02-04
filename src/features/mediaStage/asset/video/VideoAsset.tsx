@@ -11,8 +11,9 @@ interface VideoAssetProps {
   asset: MediaAsset;
   layout: MediaLayout;
   selectedAnnotation?: Annotation;
-  onUpdateAnnotation?: (annotation: Annotation) => void;
+  onCommitAnnotation?: (before: Annotation, after: Annotation) => void;
   isEditing?: boolean;
+  setActive?: (active: boolean) => void;
   children?: (size: { w: number; h: number; scaleX: number; scaleY: number }) => React.ReactNode;
 }
 
@@ -20,7 +21,8 @@ export default function VideoAsset({
   asset,
   layout,
   selectedAnnotation,
-  onUpdateAnnotation,
+  onCommitAnnotation,
+  setActive,
   isEditing,
   children,
 }: VideoAssetProps) {
@@ -32,8 +34,6 @@ export default function VideoAsset({
   } | null>(null);
 
   const { duration, setDuration, cursor, setTime } = usePlayback();
-
-  /* ---------------- lifecycle ---------------- */
 
   useEffect(() => {
     const video = videoRef.current;
@@ -51,8 +51,14 @@ export default function VideoAsset({
       setTime(video.currentTime);
     };
 
-    const handlePlay = () => setIsPlaying(true);
-    const handlePause = () => setIsPlaying(false);
+    const handlePlay = () => {
+      setActive?.(true);
+      setIsPlaying(true);
+    };
+    const handlePause = () => {
+      setActive?.(false);
+      setIsPlaying(false);
+    };
 
     video.addEventListener('loadedmetadata', handleLoaded);
     video.addEventListener('timeupdate', handleTimeUpdate);
@@ -66,8 +72,6 @@ export default function VideoAsset({
       video.removeEventListener('pause', handlePause);
     };
   }, [setDuration, setTime]);
-
-  /* ---------------- playback controls ---------------- */
 
   const play = useCallback(() => {
     videoRef.current?.play();
@@ -87,16 +91,14 @@ export default function VideoAsset({
 
   const updateAnnotationInterval = useCallback(
     (interval: TimeRange) => {
-      if (!selectedAnnotation || !onUpdateAnnotation) return;
-      onUpdateAnnotation({
+      if (!selectedAnnotation || !onCommitAnnotation) return;
+      onCommitAnnotation(selectedAnnotation, {
         ...selectedAnnotation,
         time: interval,
       });
     },
-    [selectedAnnotation, onUpdateAnnotation],
+    [selectedAnnotation, onCommitAnnotation],
   );
-
-  /* ---------------- render ---------------- */
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -130,7 +132,7 @@ export default function VideoAsset({
           onPlay={play}
           onPause={pause}
           onSeek={seek}
-          onUpdateAnnotationTime={updateAnnotationInterval}
+          onCommitAnnotationTime={updateAnnotationInterval}
         />
       )}
     </div>

@@ -5,7 +5,7 @@ import {
   computeNextInterval,
   getTimeFromClientX,
   isValidInterval,
-} from '../../../../../utils/videoTime.utils.ts';
+} from '../../../../../utils/videoTime.utils';
 
 import { PlayPauseButton } from './PlayPauseButton';
 import { HoverTimeBubble } from './HoverTimeBubble';
@@ -21,7 +21,7 @@ interface Props {
   onPlay: () => void;
   onPause: () => void;
   onSeek: (t: number) => void;
-  onUpdateAnnotationTime: (interval: TimeRange) => void;
+  onCommitAnnotationTime: (interval: TimeRange) => void;
 }
 
 type DragMode = 'move' | 'start' | 'end' | null;
@@ -35,39 +35,52 @@ export default function VideoControls({
   onPlay,
   onPause,
   onSeek,
-  onUpdateAnnotationTime,
+  onCommitAnnotationTime,
 }: Props) {
   const trackRef = useRef<HTMLDivElement>(null);
 
   const [hoverTime, setHoverTime] = useState<number | null>(null);
   const [dragMode, setDragMode] = useState<DragMode>(null);
 
-  const interval = selectedAnnotation?.time ?? null;
+  /** Local draft interval used ONLY during dragging */
+  const [draftInterval, setDraftInterval] = useState<TimeRange | null>(null);
+
+  /** Committed interval from annotation */
+  const committedInterval = selectedAnnotation?.time ?? null;
+
+  /** Interval to render (draft during drag, committed otherwise) */
+  const interval = draftInterval ?? committedInterval;
 
   const startDragging = (mode: DragMode) => {
-    if (!isEditing) return;
+    if (!isEditing || !selectedAnnotation) return;
 
-    if (isPlaying) {
-      onPause();
-    }
+    if (isPlaying) onPause();
 
+    setDraftInterval(selectedAnnotation.time);
     setDragMode(mode);
   };
 
   const stopDragging = () => {
+    if (draftInterval) {
+      onCommitAnnotationTime(draftInterval);
+    }
+
+    setDraftInterval(null);
     setDragMode(null);
   };
 
   useEffect(() => {
-    if (!dragMode || !interval || !trackRef.current) return;
+    if (!dragMode || !trackRef.current || !interval) return;
+
     const onMove = (e: MouseEvent) => {
       const rect = trackRef.current!.getBoundingClientRect();
       const t = getTimeFromClientX(e.clientX, rect, duration);
 
       onSeek(t);
+
       const next = computeNextInterval(dragMode, t, interval);
       if (isValidInterval(next, duration)) {
-        onUpdateAnnotationTime(next);
+        setDraftInterval(next);
       }
     };
 
@@ -78,7 +91,7 @@ export default function VideoControls({
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', stopDragging);
     };
-  }, [dragMode, interval, duration, onSeek, onUpdateAnnotationTime]);
+  }, [dragMode, interval, duration, onSeek]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!trackRef.current) return;

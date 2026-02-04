@@ -6,44 +6,44 @@ import type {
 import type { Point } from '../../../types/geometry';
 import type { EditorMutators } from '../../context/editor/EditorContext.types.ts';
 import type { Annotation, AnnotationPatch } from '../../../types/intern/annotation.ts';
+import type { Tool } from '../tools/tools.items.tsx';
+import { Constants } from '../../../utils/Constants.ts';
 
 export class ToolController implements ToolContextInterface {
-  private activeTool: ToolStrategy | null = null;
+  private activeToolStrategy: ToolStrategy | null = null;
   private readonly mutators: EditorMutators;
-  private readonly onFinish: () => void;
+  private readonly setActiveTool: (tool: Tool) => void;
   private time: ToolControllerTimeContext = { currentTime: 0, duration: 0 };
-  constructor(mutators: EditorMutators, onFinish: () => void) {
+  constructor(mutators: EditorMutators, setActiveTool: (tool: Tool) => void) {
     this.mutators = mutators;
-    this.onFinish = onFinish;
+    this.setActiveTool = setActiveTool;
   }
-
   /* ---------------- tool lifecycle ---------------- */
 
-  setTool(tool: ToolStrategy | null) {
-    if (this.activeTool) {
-      this.activeTool.cancel(this);
+  setToolStrategy(tool: ToolStrategy | null) {
+    if (this.activeToolStrategy) {
+      this.activeToolStrategy.cancel(this);
     }
-    this.activeTool = tool;
+    this.activeToolStrategy = tool;
   }
 
   onEditingDisabled() {
-    this.activeTool?.cancel(this);
-    this.activeTool = null;
+    this.activeToolStrategy?.cancel(this);
+    this.activeToolStrategy = null;
   }
 
   /* ---------------- pointer events ---------------- */
 
   onPointerDown(point: Point) {
-    this.activeTool?.onPointerDown(point, this);
+    this.activeToolStrategy?.onPointerDown(point, this);
   }
 
   onPointerMove(point: Point) {
-    this.activeTool?.onPointerMove(point, this);
+    this.activeToolStrategy?.onPointerMove(point, this);
   }
 
   onPointerUp(point: Point) {
-    this.activeTool?.onPointerUp(point, this);
-    this.onFinish();
+    this.activeToolStrategy?.onPointerUp(point, this);
   }
 
   /* ---------------- ToolContextInterface ---------------- */
@@ -70,5 +70,9 @@ export class ToolController implements ToolContextInterface {
 
   getTimeContext(): ToolControllerTimeContext {
     return this.time;
+  }
+
+  setSelectTool(): void {
+    this.setActiveTool(Constants.SELECT_TOOL_LABEL as Tool);
   }
 }

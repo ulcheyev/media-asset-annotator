@@ -49,6 +49,7 @@ export class FreehandDrawTool implements ToolStrategy {
     if (!this.annotationId) return;
 
     ctx.selectAnnotation(this.annotationId);
+    ctx.setSelectTool();
     this.reset();
   }
 

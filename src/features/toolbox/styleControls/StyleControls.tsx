@@ -8,9 +8,10 @@ import PolylineStyleControls from './PolylineStyleControls';
 interface StyleControlsProps {
   annotation: Annotation;
   onChange: (patch: AnnotationPatch) => void;
+  onCommit: (before: Annotation, after: Annotation) => void;
 }
 
-const StyleControls = ({ annotation, onChange }: StyleControlsProps) => {
+const StyleControls = ({ annotation, onChange, onCommit }: StyleControlsProps) => {
   const isText = annotation.kind === 'text';
   const isPolyline = annotation.kind === 'polyline';
 
@@ -18,11 +19,21 @@ const StyleControls = ({ annotation, onChange }: StyleControlsProps) => {
     <ScrollArea.Root className="h-full">
       <ScrollArea.Viewport className="h-full overflow-x-hidden">
         <div className="flex flex-col gap-5 p-5">
-          <BaseStyleControls annotation={annotation} onChange={onChange} />
-
-          {isPolyline && <PolylineStyleControls annotation={annotation} onChange={onChange} />}
-
-          {isText && <CustomTextControls textAnnotation={annotation} onChange={onChange} />}
+          <BaseStyleControls annotation={annotation} onChange={onChange} onCommit={onCommit} />
+          {isPolyline && (
+            <PolylineStyleControls
+              annotation={annotation}
+              onChange={onChange}
+              onCommit={onCommit}
+            />
+          )}
+          {isText && (
+            <CustomTextControls
+              textAnnotation={annotation}
+              onChange={onChange}
+              onCommit={onCommit}
+            />
+          )}
         </div>
       </ScrollArea.Viewport>
 

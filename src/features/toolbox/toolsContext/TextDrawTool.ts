@@ -45,9 +45,8 @@ export class TextDrawTool implements ToolStrategy {
     // no-op
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onPointerUp(_: Point) {
-    // no-op
+  onPointerUp(_: Point, ctx: ToolContextInterface) {
+    ctx.setSelectTool();
   }
 
   cancel(ctx: ToolContextInterface) {
