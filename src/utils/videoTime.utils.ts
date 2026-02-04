@@ -29,10 +29,7 @@ export function computeNextInterval(
 }
 
 export const isValidInterval = (interval: TimeRange, duration: number) => {
-  return (
-    interval.start >= 0 &&
-    interval.end <= duration
-  );
+  return interval.start >= 0 && interval.end <= duration;
 };
 
 export const clamp = (value: number, min: number, max: number) =>

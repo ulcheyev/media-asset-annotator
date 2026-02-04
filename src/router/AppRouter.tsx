@@ -8,7 +8,12 @@ export const AppRouter = () => {
       <Routes>
         <Route
           path="/"
-          element={<Navigate to={`/annotator?url=${encodeURIComponent(runtimeConfig.DEMO_MEDIA_URL)}`} replace />}
+          element={
+            <Navigate
+              to={`/annotator?url=${encodeURIComponent(runtimeConfig.DEMO_MEDIA_URL)}`}
+              replace
+            />
+          }
         />
         <Route path="/annotator" element={<MediaAssetAnnotatorPage />} />
       </Routes>

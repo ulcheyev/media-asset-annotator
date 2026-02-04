@@ -30,11 +30,11 @@ RUN rm /etc/nginx/conf.d/default.conf
 # Copy build output
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Custom nginx template
-COPY nginx.conf.template /etc/nginx/templates/nginx.conf.template
+# Copy nginx config template
+COPY .docker/nginx.conf.template /etc/nginx/templates/nginx.conf.template
 
-# Entrypoint
-COPY entrypoint.sh /entrypoint.sh
+# Copy entrypoint
+COPY .docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Run as non-root
