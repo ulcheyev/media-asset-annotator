@@ -7,6 +7,6 @@ envsubst \
    ${DEMO_MEDIA_URL} \
    ${BASE_PATH}' \
   < /etc/nginx/runtime-env.template.js \
-  > /var/www/runtime-env.template.js
+  > /var/www/runtime-env.js
 
 exec "$@"

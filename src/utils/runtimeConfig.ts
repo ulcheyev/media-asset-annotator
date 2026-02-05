@@ -1,5 +1,5 @@
 // Prefix for Vite-exposed variables
-const VITE_ENV_PREFIX = "ANNOTATOR_";
+const VITE_ENV_PREFIX = 'ANNOTATOR_';
 
 /**
  * Shape of runtime config injected at runtime (e.g. via runtime-env.js)
@@ -27,7 +27,7 @@ function getViteEnv(): Record<string, string> {
   const result: Record<string, string> = {};
 
   for (const [key, value] of Object.entries(import.meta.env)) {
-    if (key.startsWith(VITE_ENV_PREFIX) && typeof value === "string") {
+    if (key.startsWith(VITE_ENV_PREFIX) && typeof value === 'string') {
       const strippedKey = key.slice(VITE_ENV_PREFIX.length);
       result[strippedKey] = value;
     }
@@ -48,17 +48,14 @@ const ENV: Record<string, string> = {
  * Strongly-typed env accessor
  */
 function getEnv<T extends string>(
-    name: T,
-    options?: {
-      defaultValue?: string;
-      required?: boolean;
-    }
-): string | undefined {
+  name: T,
+  options?: {
+    defaultValue?: string;
+    required?: boolean;
+  },
+): string {
   const value = ENV[name];
 
-  if (value !== undefined) {
-    return value;
-  }
 
   if (options?.defaultValue !== undefined) {
     return options.defaultValue;
@@ -68,8 +65,9 @@ function getEnv<T extends string>(
     throw new Error(`Missing required environment variable: ${name}`);
   }
 
-  if(import.meta.env.DEV) {
+  if (import.meta.env.DEV) {
     console.warn(`Environment variable "${name}" is not defined. Using undefined.`);
+    return value;
   } else {
     throw new Error(`Environment variable "${name}" is not defined`);
   }
@@ -78,20 +76,19 @@ function getEnv<T extends string>(
 export const runtimeConfig = {
   USE_MOCK: import.meta.env.DEV,
 
-  DEMO_MEDIA_URL: getEnv("DEMO_MEDIA_URL", {
-    defaultValue:
-        "https://cdn.pixabay.com/video/2023/09/15/180693-864967735_large.mp4",
+  DEMO_MEDIA_URL: getEnv('DEMO_MEDIA_URL', {
+    defaultValue: 'https://cdn.pixabay.com/video/2023/09/15/180693-864967735_large.mp4',
   }),
 
-  ANNOTATIONS_FETCH_API_URL: getEnv("ANNOTATIONS_FETCH_API_URL", {
+  ANNOTATIONS_FETCH_API_URL: getEnv('ANNOTATIONS_FETCH_API_URL', {
     required: false,
   }),
 
-  MEDIA_ASSET_FETCH_API_URL: getEnv("MEDIA_ASSET_FETCH_API_URL", {
+  MEDIA_ASSET_FETCH_API_URL: getEnv('MEDIA_ASSET_FETCH_API_URL', {
     required: false,
   }),
 
-  BASE_PATH: getEnv("BASE_PATH", {
-    defaultValue: "/",
+  BASE_PATH: getEnv('BASE_PATH', {
+    defaultValue: '/',
   }),
 } as const;
