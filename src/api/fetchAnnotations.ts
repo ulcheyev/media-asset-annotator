@@ -3,7 +3,8 @@ import { mockAnnotations } from './mocks/annotatios';
 import { runtimeConfig } from '../utils/runtimeConfig.ts';
 
 export const fetchAnnotations = async (mediaAssetId: string): Promise<AnnotationData[]> => {
-  if (runtimeConfig.USE_MOCK) {
+
+  if (runtimeConfig.USE_MOCK_DATA) {
     console.warn('[fetchAnnotations] DEV mode – returning mock data');
     return mockAnnotations;
   }
