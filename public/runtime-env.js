@@ -1,5 +1,2 @@
-window.__RUNTIME_CONFIG__ = {
-  ANNOTATIONS_FETCH_API_URL: '__ANNOTATIONS_FETCH_API_URL__',
-  MEDIA_ASSET_FETCH_API_URL: '__MEDIA_ASSET_FETCH_API_URL__',
-  DEMO_MEDIA_URL: '__DEMO_MEDIA_URL__',
-};
+// Replace placeholders with actual runtime configuration values
+window.__RUNTIME_CONFIG__ = {};
