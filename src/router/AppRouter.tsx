@@ -1,11 +1,10 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { MediaAssetAnnotatorPage } from '../pages/MediaAssetAnnotatorPage.tsx';
 import { runtimeConfig } from '../utils/runtimeConfig.ts';
-const basePath = import.meta.env.VITE_BASE_PATH;
 
 export const AppRouter = () => {
   return (
-    <BrowserRouter basename={basePath}>
+    <BrowserRouter basename={runtimeConfig.BASE_PATH}>
       <Routes>
         <Route
           path="/"
