@@ -1,17 +1,97 @@
-export type RuntimeConfig = {
-  ANNOTATIONS_FETCH_API_URL: string;
-  MEDIA_ASSET_FETCH_API_URL: string;
-  DEMO_MEDIA_URL: string;
-};
+// Prefix for Vite-exposed variables
+const VITE_ENV_PREFIX = "ANNOTATOR_";
 
+/**
+ * Shape of runtime config injected at runtime (e.g. via runtime-env.js)
+ */
+export interface RuntimeConfig {
+  DEMO_MEDIA_URL?: string;
+  ANNOTATIONS_FETCH_API_URL?: string;
+  MEDIA_ASSET_FETCH_API_URL?: string;
+  BASE_PATH?: string;
+}
+
+/**
+ * Extend Window type safely
+ */
 declare global {
   interface Window {
     __RUNTIME_CONFIG__?: RuntimeConfig;
   }
 }
 
-export const runtimeConfig: RuntimeConfig = {
-  ANNOTATIONS_FETCH_API_URL: window.__RUNTIME_CONFIG__?.ANNOTATIONS_FETCH_API_URL ?? '',
-  MEDIA_ASSET_FETCH_API_URL: window.__RUNTIME_CONFIG__?.MEDIA_ASSET_FETCH_API_URL ?? '',
-  DEMO_MEDIA_URL: window.__RUNTIME_CONFIG__?.DEMO_MEDIA_URL ?? '',
+/**
+ * Extract prefixed variables from import.meta.env
+ */
+function getViteEnv(): Record<string, string> {
+  const result: Record<string, string> = {};
+
+  for (const [key, value] of Object.entries(import.meta.env)) {
+    if (key.startsWith(VITE_ENV_PREFIX) && typeof value === "string") {
+      const strippedKey = key.slice(VITE_ENV_PREFIX.length);
+      result[strippedKey] = value;
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Merge Vite env and runtime env (runtime takes precedence)
+ */
+const ENV: Record<string, string> = {
+  ...getViteEnv(),
+  ...(window.__RUNTIME_CONFIG__ ?? {}),
 };
+
+/**
+ * Strongly-typed env accessor
+ */
+function getEnv<T extends string>(
+    name: T,
+    options?: {
+      defaultValue?: string;
+      required?: boolean;
+    }
+): string | undefined {
+  const value = ENV[name];
+
+  if (value !== undefined) {
+    return value;
+  }
+
+  if (options?.defaultValue !== undefined) {
+    return options.defaultValue;
+  }
+
+  if (options?.required) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+
+  if(import.meta.env.DEV) {
+    console.warn(`Environment variable "${name}" is not defined. Using undefined.`);
+  } else {
+    throw new Error(`Environment variable "${name}" is not defined`);
+  }
+}
+
+export const runtimeConfig = {
+  USE_MOCK: import.meta.env.DEV,
+
+  DEMO_MEDIA_URL: getEnv("DEMO_MEDIA_URL", {
+    defaultValue:
+        "https://cdn.pixabay.com/video/2023/09/15/180693-864967735_large.mp4",
+  }),
+
+  ANNOTATIONS_FETCH_API_URL: getEnv("ANNOTATIONS_FETCH_API_URL", {
+    required: false,
+  }),
+
+  MEDIA_ASSET_FETCH_API_URL: getEnv("MEDIA_ASSET_FETCH_API_URL", {
+    required: false,
+  }),
+
+  BASE_PATH: getEnv("BASE_PATH", {
+    defaultValue: "/",
+  }),
+} as const;
