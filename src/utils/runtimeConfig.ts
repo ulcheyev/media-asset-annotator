@@ -1,6 +1,7 @@
 // Prefix for Vite-exposed variables
 const VITE_ENV_PREFIX = 'ANNOTATOR_';
-export const APP_MODES = ["demo", "dev", "prod"] as const;
+export const APP_MODES = ['demo', 'dev', 'prod'] as const;
+export type AppMode = typeof APP_MODES[number];
 
 /**
  * Shape of runtime config injected at runtime (e.g. via runtime-env.js)
@@ -45,85 +46,63 @@ const ENV: Record<string, string> = {
   ...(window.__RUNTIME_CONFIG__ ?? {}),
 };
 
-/**
- * Strongly-typed env accessor
- */
-function getEnv<T extends string>(
-  name: T,
-  options?: {
-    defaultValue?: string;
-    required?: boolean;
-  },
-): string {
-  const value = ENV[name];
+function env(name: string): string | undefined {
+  return ENV[name];
+}
 
-  if (options?.defaultValue !== undefined) {
-    return options.defaultValue;
-  }
+function envOrDefault(name: string, value: string): string {
+  return env(name) ?? value;
+}
 
-  if (options?.required) {
+function envRequired(name: string): string {
+  const value = env(name);
+  if (!value) {
     throw new Error(`Missing required environment variable: ${name}`);
   }
+  return value;
+}
 
-  if (import.meta.env.DEV) {
-    console.warn(`Environment variable "${name}" is not defined. Using undefined.`);
+function parseAppMode(value?: string): AppMode {
+  if (value === "demo" || value === "dev" || value === "prod") {
     return value;
-  } else {
-    throw new Error(`Environment variable "${name}" is not defined`);
   }
-}
-
-function getEnumEnv<T extends readonly string[]>(
-    name: string,
-    allowedValues: T,
-    options?: {
-      defaultValue?: T[number];
-      required?: boolean;
-    }
-): T[number] {
-  const raw = getEnv(name, {
-    defaultValue: options?.defaultValue,
-    required: options?.required,
-  });
-
-  if (!raw) {
-    if (options?.defaultValue !== undefined) {
-      return options.defaultValue;
-    }
-    throw new Error(`Missing environment variable: ${name}`);
-  }
-
-  if ((allowedValues as readonly string[]).includes(raw)) {
-    return raw as T[number];
-  }
-
-  throw new Error(
-      `Invalid value for ${name}: "${raw}". Allowed values: ${allowedValues.join(", ")}`
-  );
+  return import.meta.env.DEV ? "dev" : "demo";
 }
 
 
+
+// Determine app mode
+const APP_MODE: AppMode = parseAppMode(env("APP_MODE"));
+
+const IS_DEMO = APP_MODE === "demo";
+const IS_DEV = APP_MODE === "dev";
+const IS_PROD = APP_MODE === "prod";
+
+
+// Export runtime config
 export const runtimeConfig = {
+  // mode
+  APP_MODE,
+  IS_DEMO,
+  IS_DEV,
+  IS_PROD,
 
-  APP_MODE: getEnumEnv("APP_MODE", APP_MODES, {
-    defaultValue: import.meta.env.DEV ? "dev" : "prod",
-  }),
+  // behavior
+  USE_MOCK_DATA: IS_DEMO || IS_DEV,
 
-  USE_MOCK_DATA: import.meta.env.DEV || getEnumEnv("APP_MODE", APP_MODES) === "demo",
+  // always available
+  BASE_PATH: envOrDefault("BASE_PATH", "/"),
+  DEMO_MEDIA_URL: envOrDefault(
+      "DEMO_MEDIA_URL",
+      "https://cdn.pixabay.com/video/2023/09/15/180693-864967735_large.mp4",
+  ),
 
-  DEMO_MEDIA_URL: getEnv('DEMO_MEDIA_URL', {
-    defaultValue: 'https://cdn.pixabay.com/video/2023/09/15/180693-864967735_large.mp4',
-  }),
+  // backend (required only in prod)
+  ANNOTATIONS_FETCH_API_URL: IS_PROD
+      ? envRequired("ANNOTATIONS_FETCH_API_URL")
+      : env("ANNOTATIONS_FETCH_API_URL"),
 
-  ANNOTATIONS_FETCH_API_URL: getEnv('ANNOTATIONS_FETCH_API_URL', {
-    required: false,
-  }),
-
-  MEDIA_ASSET_FETCH_API_URL: getEnv('MEDIA_ASSET_FETCH_API_URL', {
-    required: false,
-  }),
-
-  BASE_PATH: getEnv('BASE_PATH', {
-    defaultValue: '/',
-  }),
+  MEDIA_ASSET_FETCH_API_URL: IS_PROD
+      ? envRequired("MEDIA_ASSET_FETCH_API_URL")
+      : env("MEDIA_ASSET_FETCH_API_URL"),
 } as const;
