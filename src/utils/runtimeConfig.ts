@@ -53,7 +53,7 @@ function env(name: string): string | undefined {
 function envOrDefault(name: string, defaultValue: string): string {
   const value = env(name);
 
-  if (value === undefined || value.trim() === "") {
+  if (value === undefined || value.trim() === '') {
     return defaultValue;
   }
 
@@ -72,7 +72,7 @@ function parseAppMode(value?: string): AppMode {
   if (value === 'demo' || value === 'dev' || value === 'prod') {
     return value;
   }
-  return import.meta.env.DEV ? 'dev' : 'demo';
+  return import.meta.env.DEV ? 'dev' : 'prod';
 }
 
 // Determine app mode

@@ -25,7 +25,7 @@ RUN npm run build
 FROM nginx:1.25-alpine
 
 # Copy build output
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist /var/www
 
 # Copy custom JS config
 COPY .docker/runtime-env.template.js /etc/nginx/runtime-env.template.js
@@ -33,7 +33,12 @@ COPY .docker/runtime-env.template.js /etc/nginx/runtime-env.template.js
 # Copy entrypoint
 COPY .docker/entrypoint.sh /entrypoint.sh
 
+# Copy nginx configuration
+COPY .docker/nginx.conf /etc/nginx/nginx.conf
+
 RUN chmod +x /entrypoint.sh
+
+EXPOSE 80
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]

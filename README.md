@@ -72,9 +72,13 @@ npm run dev
 
 Access the application using one of the following URLs:
 
-- http://localhost:5173/ (default demo)
-- http://localhost:5173/annotator?id=<id>
-- http://localhost:5173/annotator?url=<url>
+- http://localhost:5173 (default demo)
+- http://localhost:5173/asset?id=<id>
+- http://localhost:5173/asset?url=<url>
+
+### Run Production Server
+
+In order to run the application in production mode refer to the [deployment instructions](deploy/README.md).
 
 ### Build for Production
 
@@ -96,6 +100,6 @@ npm run preview
 
 Access the application using one of the following URLs:
 
-- http://localhost:4173/ (default demo)
-- http://localhost:4173/annotator?id=<id>
-- http://localhost:4173/annotator?url=<url>
+- http://localhost:4173 (default demo)
+- http://localhost:4173/asset?id=<id>
+- http://localhost:4173/asset?url=<url>
