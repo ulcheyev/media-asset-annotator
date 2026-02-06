@@ -1,25 +1,25 @@
-version: "3.9"
+version: '3.9'
 
 services:
   media-asset-annotator:
     build: ../
     container_name: ${ANNOTATOR_CONTAINER_NAME:-media-asset-annotator}
     expose:
-      - "80"
+      - '80'
     environment:
-      BASE_PATH: "${ANNOTATOR_BASE_PATH:-/annotator}"
-      DEMO_MEDIA_URL: "${ANNOTATOR_DEMO_MEDIA_URL:-https://cdn.pixabay.com/video/2023/09/15/180693-864967735_large.mp4}"
-      ANNOTATIONS_FETCH_API_URL: "${ANNOTATIONS_FETCH_API_URL:-}"
-      MEDIA_ASSET_FETCH_API_URL: "${MEDIA_ASSET_FETCH_API_URL:-}"
+      BASE_PATH: '${ANNOTATOR_BASE_PATH:-/annotator}'
+      DEMO_MEDIA_URL: '${ANNOTATOR_DEMO_MEDIA_URL:-https://cdn.pixabay.com/video/2023/09/15/180693-864967735_large.mp4}'
+      ANNOTATIONS_FETCH_API_URL: '${ANNOTATIONS_FETCH_API_URL:-}'
+      MEDIA_ASSET_FETCH_API_URL: '${MEDIA_ASSET_FETCH_API_URL:-}'
 
   nginx:
     image: nginx:alpine
     container_name: ${PROXY_CONTAINER_NAME:-media-asset-annotator-proxy}
     ports:
-      - "${ANNOTATOR_HOST_PORT:-2030}:80"
+      - '${ANNOTATOR_HOST_PORT:-2030}:80'
     environment:
-      BASE_PATH: "${ANNOTATOR_BASE_PATH:-/annotator}"
-      ANNOTATOR_CONTAINER_NAME: "${ANNOTATOR_CONTAINER_NAME:-media-asset-annotator}"
+      BASE_PATH: '${ANNOTATOR_BASE_PATH:-/annotator}'
+      ANNOTATOR_CONTAINER_NAME: '${ANNOTATOR_CONTAINER_NAME:-media-asset-annotator}'
     volumes:
       - ./nginx/nginx.conf.template:/etc/nginx/templates/nginx.conf.template:ro
       - /dev/null:/etc/nginx/conf.d/default.conf
