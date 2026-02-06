@@ -26,17 +26,4 @@ export const mockAnnotations: AnnotationData[] = [
     color: '#00ff00',
     opacity: 1,
   },
-  {
-    id: 'a3',
-    type: 'text',
-    label: 'My awesome text 3',
-    points: '0.4875,0.4221105527638191',
-    timeStart: 0,
-    timeEnd: 8,
-    text: 'Hello world',
-    fontSize: 0.083424,
-    fontWeight: 200,
-    color: '#00ff00',
-    opacity: 1,
-  },
 ];

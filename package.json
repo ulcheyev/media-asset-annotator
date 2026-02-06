@@ -2,7 +2,15 @@
   "name": "media-asset-annotator",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "keywords": [
+    "react",
+    "media",
+    "annotation"
+  ],
+  "author": {
+    "name": "Yevgeniy Ulchenkov",
+    "email": "ulcheyev@fel.cvut.cz"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

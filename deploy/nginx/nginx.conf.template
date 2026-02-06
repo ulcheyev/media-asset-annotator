@@ -1,0 +1,21 @@
+server {
+  listen 80;
+  server_name _;
+
+  # redirect /annotator -> /annotator/
+  location = ${BASE_PATH} {
+    return 302 ${BASE_PATH}/;
+  }
+
+  # proxy UI
+  location ${BASE_PATH}/ {
+    proxy_pass http://${ANNOTATOR_CONTAINER_NAME}/;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+
+  location /health {
+    return 200;
+  }
+}

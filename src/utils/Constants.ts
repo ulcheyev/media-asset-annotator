@@ -8,7 +8,7 @@ export class Constants {
   /* ============================================================
    * Time
    * ============================================================ */
-  static ANNOTATION_MIN_DURATION = 1;
+  static ANNOTATION_DEFAULT_DURATION = 5;
 
   /* ============================================================
    * Annotation Types
