@@ -5,7 +5,9 @@ on media assets such as images and video using a canvas-based rendering model.
 This repository contains the **frontend module** of the Media Asset Annotator system
 and is designed to work with the **Media Asset Annotator Service** backend.
 
-## [![Vercel Deploy](https://deploy-badge.vercel.app/vercel/media-asset-annotator?style=for-the-badge&name=vercel+demo)](https://media-asset-annotator.vercel.app)
+## [![Vercel Deploy](https://deploy-badge.vercel.app/vercel/media-asset-annotator?name=vercel+demo)](https://media-asset-annotator.vercel.app) 
+![Build (main)](https://github.com/ulcheyev/media-asset-annotator/actions/workflows/build-and-push.yml/badge.svg?branch=main)
+
 
 ---
 
