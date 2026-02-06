@@ -21,7 +21,7 @@ export class PolygonDrawTool implements ToolStrategy {
         points: [point.x, point.y],
         time: {
           start: currentTime,
-          end: Math.min(currentTime + Constants.ANNOTATION_MIN_DURATION, duration),
+          end: Math.min(currentTime + Constants.ANNOTATION_DEFAULT_DURATION, duration),
         },
         style: {
           color: Constants.POLYGON_DEFAULT_COLOR,
@@ -57,10 +57,8 @@ export class PolygonDrawTool implements ToolStrategy {
     });
   }
 
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onPointerUp(_: Point, __: ToolContextInterface) {
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onPointerUp(_: Point, __: ToolContextInterface) {}
 
   cancel(ctx: ToolContextInterface) {
     if (!this.annotationId) return;

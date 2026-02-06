@@ -1,20 +1,15 @@
 import type { AnnotationData } from '../types/extern/annotationData.ts';
 import { mockAnnotations } from './mocks/annotatios';
-
-const ANNOTATIONS_FETCH_API_URL = import.meta.env.VITE_ANNOTATIONS_FETCH_API_URL as string;
+import { runtimeConfig } from '../utils/runtimeConfig.ts';
 
 export const fetchAnnotations = async (mediaAssetId: string): Promise<AnnotationData[]> => {
-  if (import.meta.env.DEV) {
+  if (runtimeConfig.USE_MOCK_DATA) {
     console.warn('[fetchAnnotations] DEV mode – returning mock data');
     return mockAnnotations;
   }
 
   try {
-    if (!ANNOTATIONS_FETCH_API_URL) {
-      throw new Error('Missing VITE_ANNOTATIONS_FETCH_API_URL');
-    }
-
-    const response = await fetch(`${ANNOTATIONS_FETCH_API_URL}/${mediaAssetId}`, {
+    const response = await fetch(`${runtimeConfig.ANNOTATIONS_FETCH_API_URL}/${mediaAssetId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
