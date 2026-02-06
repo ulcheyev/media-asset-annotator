@@ -2,7 +2,8 @@ version: '3.9'
 
 services:
   media-asset-annotator:
-    build: ../
+#    build: ../
+    image: manki1337/media-asset-annotator:latest
     container_name: ${ANNOTATOR_CONTAINER_NAME:-media-asset-annotator}
     expose:
       - '80'
