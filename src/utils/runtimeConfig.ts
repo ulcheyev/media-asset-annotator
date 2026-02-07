@@ -94,18 +94,23 @@ export const runtimeConfig = {
   USE_MOCK_DATA: IS_DEMO || IS_DEV,
 
   // always available
-  BASE_PATH: envOrDefault('BASE_PATH', '/'),
+  BASE_PATH: envOrDefault('BASE_PATH', ''),
   DEMO_MEDIA_URL: envOrDefault(
     'DEMO_MEDIA_URL',
     'https://cdn.pixabay.com/video/2023/09/15/180693-864967735_large.mp4',
   ),
 
   // backend (required only in prod)
-  ANNOTATIONS_FETCH_API_URL: IS_PROD
-    ? envRequired('ANNOTATIONS_FETCH_API_URL')
-    : env('ANNOTATIONS_FETCH_API_URL'),
+  ANNOTATIONS_API_URL: IS_PROD
+    ? envRequired('ANNOTATIONS_API_URL')
+    : env('ANNOTATIONS_API_URL'),
 
-  MEDIA_ASSET_FETCH_API_URL: IS_PROD
-    ? envRequired('MEDIA_ASSET_FETCH_API_URL')
-    : env('MEDIA_ASSET_FETCH_API_URL'),
+  MEDIA_ASSET_API_URL: IS_PROD
+    ? envRequired('MEDIA_ASSET_API_URL')
+    : env('MEDIA_ASSET_API_URL'),
+
+  MEDIA_ASSETS_LIST_API_URL: IS_PROD
+    ? envRequired('MEDIA_ASSETS_LIST_API_URL')
+    : env('MEDIA_ASSETS_LIST_API_URL'),
+
 } as const;

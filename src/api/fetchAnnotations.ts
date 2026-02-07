@@ -4,12 +4,12 @@ import { runtimeConfig } from '../utils/runtimeConfig.ts';
 
 export const fetchAnnotations = async (mediaAssetId: string): Promise<AnnotationData[]> => {
   if (runtimeConfig.USE_MOCK_DATA) {
-    console.warn('[fetchAnnotations] DEV mode – returning mock data');
+    console.warn('[fetchAnnotations] MOCK mode – returning mock data');
     return mockAnnotations;
   }
 
   try {
-    const response = await fetch(`${runtimeConfig.ANNOTATIONS_FETCH_API_URL}/${mediaAssetId}`, {
+    const response = await fetch(`${runtimeConfig.ANNOTATIONS_API_URL}/${mediaAssetId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

@@ -16,7 +16,7 @@ export interface EditorState extends EditorMutators {
   /* editor UI actions */
   setEditing: (v: boolean) => void;
   removeSelected: () => void;
-  save: () => void;
+  save: () => Promise<void>;
   undo: () => void;
   redo: () => void;
 
