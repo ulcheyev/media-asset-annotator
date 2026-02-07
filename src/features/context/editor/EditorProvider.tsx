@@ -87,13 +87,21 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
     setSelectedId(id);
   };
 
-  const save = () => {
-    if (!asset) return;
+  const save = async (): Promise<void> => {
+    if (!asset) {
+      throw new Error("Cannot save: media asset is not loaded");
+    }
 
-    const result = exportAsSFormsObject(asset, layout.width, layout.height, annotations);
+    const result = exportAsSFormsObject(
+        asset,
+        layout.width,
+        layout.height,
+        annotations
+    );
 
     console.log(result);
   };
+
 
   const undo = () => {
     stateCommandsRef.current!.undo();

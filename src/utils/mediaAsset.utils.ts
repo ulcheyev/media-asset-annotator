@@ -1,3 +1,8 @@
+
+import type { MediaAsset } from "../types/intern/media";
+import { runtimeConfig } from "./runtimeConfig";
+
+
 export const getMediaKindFromSource = (source: string) => {
   const lower = source.toLowerCase();
 
@@ -14,4 +19,12 @@ export const getMediaKindFromSource = (source: string) => {
     default:
       return 'unknown';
   }
+};
+
+export const buildMediaAssetAnnotatorUrl = (asset: MediaAsset): string => {
+  if (runtimeConfig.USE_MOCK_DATA) {
+    return `${runtimeConfig.BASE_PATH}/asset?url=${encodeURIComponent(asset.src)}`;
+  }
+
+  return `${runtimeConfig.BASE_PATH}/asset?id=${encodeURIComponent(asset.id)}`;
 };

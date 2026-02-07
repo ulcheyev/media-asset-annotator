@@ -3,7 +3,7 @@
 Media Asset Annotator is a web-based application for creating **SVG-based annotations**
 on media assets such as images and video using a canvas-based rendering model.
 This repository contains the **frontend module** of the Media Asset Annotator system
-and is designed to work with the **Media Asset Annotator Service** backend.
+and is designed to work with the [Media Asset Annotator Server](https://github.com/ulcheyev/media-asset-annotator-server) on backend side.
 
 ## [![Vercel Deploy](https://deploy-badge.vercel.app/vercel/media-asset-annotator?name=vercel+demo)](https://media-asset-annotator.vercel.app)
 
@@ -14,11 +14,10 @@ and is designed to work with the **Media Asset Annotator Service** backend.
 ### Application Entry
 
 The application uses **client-side routing**.  
-A **default route (`/`)** is defined and automatically redirects to a demo annotator view.
 
-- `/` → redirects to a predefined demo media asset
-- `/annotator?id=<mediaAssetId>` → loads a media asset from the backend
-- `/annotator?url=<mediaUrl>` → loads an external media asset by URL
+- `/` → redirects to a media assets `/list` page (the `?id` param of list is required)
+- `/<basePath>/asset?id=<mediaAssetId>` → loads a media asset from the backend
+- `/<basePath>/asset?url=<mediaUrl>` → loads an external media asset by URL
 
 ---
 
@@ -49,10 +48,14 @@ This project uses Prettier for code formatting and ESLint for linting to maintai
 
 ## Setup
 
+### Run Production Server
+
+In order to run the application in production mode refer to the [deployment instructions](deploy/README.md).
+
+
 ### Prerequisites
 
 - Node.js (v24+)
-- Configuration via `.env` file in root directory (refer to `.env.example` for guidance)
 
 ### Install Dependencies
 
@@ -78,9 +81,6 @@ Access the application using one of the following URLs:
 - http://localhost:5173/asset?id=<id>
 - http://localhost:5173/asset?url=<url>
 
-### Run Production Server
-
-In order to run the application in production mode refer to the [deployment instructions](deploy/README.md).
 
 ### Build for Production
 
