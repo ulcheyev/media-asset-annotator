@@ -31,7 +31,7 @@ export const MediaAssetProvider = ({
 
         let asset: MediaAsset;
 
-        if (source.type === 'backend') {
+        if (source.type === 'internal') {
           asset = await fetchMediaAsset(source.id);
         } else {
           const kind = getMediaKindFromSource(source.url);
