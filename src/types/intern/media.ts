@@ -1,10 +1,12 @@
 export type MediaType = 'image' | 'video';
 
 export type MediaAsset = {
-  id?: string;
+  id: string;
   type: MediaType;
   src: string;
   duration?: number;
+  status?: "annotated" | "pending";
+  modifiedAt?: string;
 };
 
 export type MediaLayout = {
@@ -13,4 +15,4 @@ export type MediaLayout = {
   scale: number;
 };
 
-export type MediaAssetSource = { type: 'backend'; id: string } | { type: 'external'; url: string };
+export type MediaAssetSource = { type: 'internal'; id: string } | { type: 'external'; url: string };

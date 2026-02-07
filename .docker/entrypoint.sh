@@ -2,8 +2,9 @@
 set -eu
 
 envsubst \
-  '${ANNOTATIONS_FETCH_API_URL} \
-   ${MEDIA_ASSET_FETCH_API_URL} \
+  '${ANNOTATIONS_API_URL} \
+   ${MEDIA_ASSET_API_URL} \
+   ${MEDIA_ASSETS_LIST_API_URL} \
    ${DEMO_MEDIA_URL} \
    ${BASE_PATH} \
    ${APP_MODE}' \
