@@ -8,36 +8,26 @@ import { Toolbox } from '../../features/toolbox/ToolBox.tsx';
 import { ResponsiveScene } from '../../features/mediaStage/ResponsiveScene.tsx';
 import { useSearchParams } from 'react-router-dom';
 import type { MediaAssetSource } from '../../types/intern/media.ts';
-import {ErrorStatus} from "../../features/pageStatus/ErrorStatus.tsx";
-import {LoadingStatus} from "../../features/pageStatus/LoadingStatus.tsx";
+import { ErrorStatus } from '../../features/pageStatus/ErrorStatus.tsx';
+import { LoadingStatus } from '../../features/pageStatus/LoadingStatus.tsx';
 
 export const MediaAssetAnnotatorLayout = () => {
   const { asset, setLayout, loading, error } = useMediaAsset();
 
   if (loading) {
-    return (
-        <LoadingStatus
-            title="Loading media asset"
-            description="Preparing the annotator…"
-        />
-    );
+    return <LoadingStatus title="Loading media asset" description="Preparing the annotator…" />;
   }
 
   if (error) {
-    return (
-        <ErrorStatus
-            title="Failed to load media asset"
-            description={error}
-        />
-    );
+    return <ErrorStatus title="Failed to load media asset" description={error} />;
   }
 
   if (!asset) {
     return (
-        <ErrorStatus
-            title="Media not found"
-            description="The requested media asset does not exist or is unavailable."
-        />
+      <ErrorStatus
+        title="Media not found"
+        description="The requested media asset does not exist or is unavailable."
+      />
     );
   }
 
@@ -71,10 +61,9 @@ export const MediaAssetAnnotatorPage = () => {
   }
 
   if (!source) {
-    return <ErrorStatus
-        title="Failed to load media asset"
-        description="Missing ?id or ?url parameter"
-    />
+    return (
+      <ErrorStatus title="Failed to load media asset" description="Missing ?id or ?url parameter" />
+    );
   }
 
   return (

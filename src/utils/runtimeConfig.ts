@@ -101,16 +101,11 @@ export const runtimeConfig = {
   ),
 
   // backend (required only in prod)
-  ANNOTATIONS_API_URL: IS_PROD
-    ? envRequired('ANNOTATIONS_API_URL')
-    : env('ANNOTATIONS_API_URL'),
+  ANNOTATIONS_API_URL: IS_PROD ? envRequired('ANNOTATIONS_API_URL') : env('ANNOTATIONS_API_URL'),
 
-  MEDIA_ASSET_API_URL: IS_PROD
-    ? envRequired('MEDIA_ASSET_API_URL')
-    : env('MEDIA_ASSET_API_URL'),
+  MEDIA_ASSET_API_URL: IS_PROD ? envRequired('MEDIA_ASSET_API_URL') : env('MEDIA_ASSET_API_URL'),
 
   MEDIA_ASSETS_LIST_API_URL: IS_PROD
     ? envRequired('MEDIA_ASSETS_LIST_API_URL')
     : env('MEDIA_ASSETS_LIST_API_URL'),
-
 } as const;

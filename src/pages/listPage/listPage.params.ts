@@ -1,7 +1,6 @@
-
 export const mediaAssetsListParams = {
-    id: {
-        required: true,
-        demoDefault: "demo",
-    },
+  id: {
+    required: true,
+    demoDefault: 'demo',
+  },
 };
