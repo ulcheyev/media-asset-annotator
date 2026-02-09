@@ -1,8 +1,5 @@
-import {BaseSnackbar} from "./BaseSnackbar.tsx";
+import { BaseSnackbar } from './BaseSnackbar.tsx';
 
 export const SuccessSnackbar = ({ message }: { message: string }) => (
-    <BaseSnackbar
-        message={message}
-        className="bg-green-600 text-white"
-    />
+  <BaseSnackbar message={message} className="bg-green-600 text-white" />
 );

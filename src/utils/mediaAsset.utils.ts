@@ -1,7 +1,5 @@
-
-import type { MediaAsset } from "../types/intern/media";
-import { runtimeConfig } from "./runtimeConfig";
-
+import type { MediaAsset } from '../types/intern/media';
+import { runtimeConfig } from './runtimeConfig';
 
 export const getMediaKindFromSource = (source: string) => {
   const lower = source.toLowerCase();
