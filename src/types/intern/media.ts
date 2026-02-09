@@ -5,7 +5,7 @@ export type MediaAsset = {
   type: MediaType;
   src: string;
   duration?: number;
-  status?: "annotated" | "pending";
+  status?: 'annotated' | 'pending';
   modifiedAt?: string;
 };
 
