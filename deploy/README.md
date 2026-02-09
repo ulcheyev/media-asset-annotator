@@ -22,12 +22,32 @@ No rebuild is required when changing base paths or API URLs.
 
 ## Deployment Steps
 
-### 1️⃣ Create `.env` file
+### 0️⃣ Choose Deployment Setup
 
-Copy the example file and adjust values for your environment:
+Decide on the deployment setup for your environment:
+
+- **Standalone**: Deploy only the UI and proxy containers.
 
 ```bash
-cp .env.example .env
+cd standalone
+```
+
+- **Full**: Deploy the entire system, including backend services.
+
+```bash
+cd full
+```
+
+### 1️⃣ Create `.env` file
+
+The environment variables are split into two files for better organization:
+
+- `.env` for UI and proxy configuration
+- `.env.shared` for shared configuration across all services (used in the full setup) <br/>
+  Copy the example file and adjust values for your environment:
+
+```bash
+cat .env.example ../shared/envs/.env.shared.example >.env
 ```
 
 Edit .env and fill in all required variables. Descriptions are provided in the file as comments.

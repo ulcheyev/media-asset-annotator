@@ -16,7 +16,7 @@ dist-ssr
 # Environment files
 .env
 .env.*.local
-docker-compose.dev.yml
+deploy/full/docker-compose.dev.yml
 docker-compose.local.yml
 
 # Editor directories and files
