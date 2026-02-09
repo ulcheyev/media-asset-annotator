@@ -13,7 +13,7 @@ and is designed to work with the [Media Asset Annotator Server](https://github.c
 
 ### Application Entry
 
-The application uses **client-side routing**.  
+The application uses **client-side routing**.
 
 - `/` → redirects to a media assets `/list` page (the `?id` param of list is required)
 - `/<basePath>/asset?id=<mediaAssetId>` → loads a media asset from the backend
@@ -52,7 +52,6 @@ This project uses Prettier for code formatting and ESLint for linting to maintai
 
 In order to run the application in production mode refer to the [deployment instructions](deploy/README.md).
 
-
 ### Prerequisites
 
 - Node.js (v24+)
@@ -80,7 +79,6 @@ Access the application using one of the following URLs:
 - http://localhost:5173 (default demo)
 - http://localhost:5173/asset?id=<id>
 - http://localhost:5173/asset?url=<url>
-
 
 ### Build for Production
 

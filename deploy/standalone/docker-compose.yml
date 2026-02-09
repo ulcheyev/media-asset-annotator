@@ -2,10 +2,8 @@ version: '3.9'
 
 services:
   media-asset-annotator:
-    build: ../
+    build: ../..
     container_name: ${ANNOTATOR_CONTAINER_NAME:-media-asset-annotator}
-    expose:
-      - '80'
     environment:
       BASE_PATH: '${ANNOTATOR_BASE_PATH:-/annotator}'
       APP_MODE: '${ANNOTATOR_APP_MODE:-demo}'
