@@ -29,4 +29,11 @@ export const mockMediaAssetList: MediaAsset[] = [
     status: 'annotated',
     modifiedAt: '2024-06-04T18:20:00Z',
   },
+  {
+    id: '5',
+    type: 'image' as MediaType,
+    src: 'https://cdn.eso.org/images/thumb300y/eso2008a.jpg',
+    status: 'annotated',
+    modifiedAt: '2024-06-04T18:20:00Z',
+  },
 ];

@@ -26,6 +26,7 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  const [rawAnnotations, setRawAnnotations] = useState<any[] | null>(null);
   const [activeTool, setActiveTool] = useState<Tool>(Constants.SELECT_TOOL_LABEL as Tool);
   const { asset, layout } = useMediaAsset();
   const { cursor, duration } = usePlayback();
@@ -91,7 +92,7 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const save = async (): Promise<void> => {
-    if (!asset) {
+    if (!asset || !layout) {
       throw new Error('Cannot save: media asset is not loaded');
     }
 
@@ -129,33 +130,44 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
   const toolRegistryRef = useRef<ToolRegistry | null>(null);
 
   useEffect(() => {
-    if (!asset) return;
+    if (!asset?.id) return;
 
     const loadAnnotations = async () => {
-      if (!asset || !asset.id) return;
+      try {
+        const data = await fetchAnnotations(asset.id);
 
-      const data = await fetchAnnotations(asset.id);
+        setRawAnnotations(data);   // store raw
+        setSelectedId(null);
+        setIsEditing(false);
+      } catch (e) {
+        console.error('Failed to fetch annotations', e);
+      }
+    };
 
-      const mapped = data
+    loadAnnotations();
+  }, [asset?.id]);
+
+  useEffect(() => {
+    if (!rawAnnotations || !layout) return;
+
+    const mapped = rawAnnotations
         .map((a) => {
           switch (a.type) {
             case Constants.TEXT_TYPE_LABEL:
               return getTextAnnotationFromAnnotationData(a, layout.width, layout.height);
+
             case Constants.POLYLINE_TYPE_LABEL:
               return getPolylineAnnotationFromAnnotationData(a, layout.width, layout.height);
+
             default:
               return null;
           }
         })
         .filter((a): a is Annotation => a !== null);
 
-      setAnnotations(mapped);
-      setSelectedId(null);
-      setIsEditing(false);
-    };
+    setAnnotations(mapped);
+  }, [rawAnnotations, layout]);
 
-    loadAnnotations();
-  }, [asset]);
 
   useEffect(() => {
     toolControllerRef.current = new ToolController(

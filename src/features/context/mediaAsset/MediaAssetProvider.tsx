@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { MediaAssetContext } from './MediaAssetContext';
 import type { MediaAsset, MediaAssetSource, MediaLayout } from '../../../types/intern/media.ts';
-import { Constants } from '../../../utils/Constants.ts';
 import { fetchMediaAsset } from '../../../api/fetchMediaAsset.ts';
 import { getMediaKindFromSource } from '../../../utils/mediaAsset.utils.ts';
 
@@ -13,14 +12,9 @@ export const MediaAssetProvider = ({
   children: React.ReactNode;
 }) => {
   const [asset, setAsset] = useState<MediaAsset | null>(null);
+  const [layout, setLayout] = useState<MediaLayout | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const [layout, setLayout] = useState<MediaLayout>({
-    width: Constants.DEFAULT_SCENE_WIDTH,
-    height: Constants.DEFAULT_SCENE_HEIGHT,
-    scale: 1,
-  });
 
   useEffect(() => {
     let cancelled = false;
