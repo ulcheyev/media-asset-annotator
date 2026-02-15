@@ -8,18 +8,19 @@ import { Constants } from '../../../utils/Constants';
 
 import { ToolController } from '../../toolbox/toolsContext/ToolController';
 import { ToolRegistry } from '../../toolbox/toolsContext/ToolRegistry';
-import { exportAsSFormsObject } from '../../../api/exporters/sFormsExporter.ts';
 import { useMediaAsset } from '../mediaAsset/useMediaAsset.ts';
 import {
   getPolylineAnnotationFromAnnotationData,
   getTextAnnotationFromAnnotationData,
 } from '../../../types/mapper/annotationMapper.ts';
-import { fetchAnnotations } from '../../../api/fetchAnnotations.ts';
+import { fetchAnnotations, patchMediaAssetWithAnnotations } from '../../../api/annotationsApi.ts';
 import type { Tool } from '../../toolbox/tools/tools.items.tsx';
 import { StateCommandManager } from '../../toolbox/commands/StateCommandManager.ts';
 import { UpdateAnnotationCommand } from '../../toolbox/commands/stateCommands/UpdateAnnotationStateCommand.ts';
 import { AddAnnotationCommand } from '../../toolbox/commands/stateCommands/AddAnnotationStateCommand.ts';
 import { RemoveAnnotationCommand } from '../../toolbox/commands/stateCommands/RemoveAnnotationStateCommand.ts';
+import { toAnnotationDataArray } from '../../../types/mapper/annotationDataMapper.ts';
+import { exportAsSFormsObject } from '../../../api/exporters/sFormsExporter.ts';
 
 export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -80,7 +81,9 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const removeSelected = () => {
-    if (selectedId) removeAnnotation(selectedId);
+    if (selectedId) {
+      removeAnnotation(selectedId);
+    }
   };
 
   const selectAnnotation = (id: string | null) => {
@@ -93,8 +96,19 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const result = exportAsSFormsObject(asset, layout.width, layout.height, annotations);
-
     console.log(result);
+
+    return patchMediaAssetWithAnnotations(
+      asset.id,
+      toAnnotationDataArray(annotations, layout.width, layout.height),
+    )
+      .then(() => {
+        console.log('Annotations saved successfully');
+      })
+      .catch((error) => {
+        console.error('Failed to save annotations:', error);
+        throw error;
+      });
   };
 
   const undo = () => {
@@ -119,6 +133,7 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
 
     const loadAnnotations = async () => {
       if (!asset || !asset.id) return;
+
       const data = await fetchAnnotations(asset.id);
 
       const mapped = data

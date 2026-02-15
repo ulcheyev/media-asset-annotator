@@ -31,12 +31,15 @@ export const Toolbox = () => {
   const { snackbar, showSuccess, showError } = useSnackbar();
 
   const handleSave = async () => {
-    try {
-      await save();
-      showSuccess('Annotations saved');
-    } catch (e) {
-      showError(e instanceof Error ? e.message : 'Failed to save annotations');
-    }
+    save().then(
+      () => {
+        showSuccess('Annotations saved');
+      },
+      (e) => {
+        console.log(e);
+        showError(e instanceof Error ? e.message : 'Failed to save annotations');
+      },
+    );
   };
 
   const handleCommand = async (cmd: CommandKey) => {
