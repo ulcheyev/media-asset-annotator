@@ -12,7 +12,15 @@ export type MediaAsset = {
 export type MediaLayout = {
   width: number;
   height: number;
-  scale: number;
+  scaleX: number;
+  scaleY: number;
+};
+
+export type MediaResolution = {
+  naturalWidth: number;
+  naturalHeight: number;
+  clientWidth: number;
+  clientHeight: number;
 };
 
 export type MediaAssetSource = { type: 'internal'; id: string } | { type: 'external'; url: string };

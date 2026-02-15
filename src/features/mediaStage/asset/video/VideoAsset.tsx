@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import VideoControls from './videoControls/VideoControls';
 
-import type { MediaAsset, MediaLayout } from '../../../../types/intern/media';
+import type {MediaAsset, MediaLayout, MediaResolution} from '../../../../types/intern/media';
 import type { Annotation, TimeRange } from '../../../../types/intern/annotation';
 
 import { clamp } from '../../../../utils/videoTime.utils';
@@ -9,17 +9,19 @@ import { usePlayback } from '../../../context/playback/usePlayback';
 
 interface VideoAssetProps {
   asset: MediaAsset;
-  layout: MediaLayout;
+  layout: MediaLayout | null;
+  onAssetSrcReady: (mediaResolution: MediaResolution) => void;
   selectedAnnotation?: Annotation;
   onCommitAnnotation?: (before: Annotation, after: Annotation) => void;
   isEditing?: boolean;
   setActive?: (active: boolean) => void;
-  children?: (size: { w: number; h: number; scaleX: number; scaleY: number }) => React.ReactNode;
+  children: React.ReactNode;
 }
+
 
 export default function VideoAsset({
   asset,
-  layout,
+ onAssetSrcReady,
   selectedAnnotation,
   onCommitAnnotation,
   setActive,
@@ -42,13 +44,22 @@ export default function VideoAsset({
     const handleLoaded = () => {
       setDuration(video.duration);
       setViewportSize({
-        w: video.clientWidth,
-        h: video.clientHeight,
+        w: video.videoWidth,
+        h: video.videoHeight,
       });
     };
 
     const handleTimeUpdate = () => {
       setTime(video.currentTime);
+    };
+
+    const notify = () => {
+      onAssetSrcReady({
+        naturalWidth: video.videoWidth,
+        naturalHeight: video.videoHeight,
+        clientWidth: video.clientWidth,
+        clientHeight: video.clientHeight,
+      });
     };
 
     const handlePlay = () => {
@@ -64,7 +75,8 @@ export default function VideoAsset({
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
-
+    const ro = new ResizeObserver(notify);
+    ro.observe(video);
     return () => {
       video.removeEventListener('loadedmetadata', handleLoaded);
       video.removeEventListener('timeupdate', handleTimeUpdate);
@@ -110,15 +122,8 @@ export default function VideoAsset({
           className="max-w-full max-h-full object-contain"
           controls={false}
         />
-
         {/* CANVAS OVERLAY — only when size is known */}
-        {viewportSize &&
-          children?.({
-            w: layout.width,
-            h: layout.height,
-            scaleX: layout.scale,
-            scaleY: layout.scale,
-          })}
+        {viewportSize &&  children}
       </div>
 
       {/* CONTROLS */}

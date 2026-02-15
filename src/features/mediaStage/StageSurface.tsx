@@ -7,8 +7,6 @@ import { AnnotationsLayer } from '../annotation/AnnotationsLayer.tsx';
 interface StageSurfaceProps {
   width: number;
   height: number;
-  scaleX: number;
-  scaleY: number;
   annotations: Annotation[];
   selectedId: string | null;
   isEditing: boolean;
@@ -24,27 +22,9 @@ interface StageSurfaceProps {
   onPointerUp: (p: Point) => void;
 }
 
-const getStagePoint = (e: KonvaEventObject<MouseEvent>): Point | null => {
-  const stage = e.target.getStage();
-  if (!stage) return null;
-
-  const pos = stage.getPointerPosition();
-  if (!pos) return null;
-
-  const scaleX = stage.scaleX();
-  const scaleY = stage.scaleY();
-
-  return {
-    x: pos.x / scaleX,
-    y: pos.y / scaleY,
-  };
-};
-
 export const StageSurface = ({
   width,
   height,
-  scaleX,
-  scaleY,
   annotations,
   selectedId,
   isEditing,
@@ -57,27 +37,42 @@ export const StageSurface = ({
   onPointerMove,
   onPointerUp,
 }: StageSurfaceProps) => {
+  const getStagePoint = (e: KonvaEventObject<MouseEvent>): Point | null => {
+    const stage = e.target.getStage();
+    if (!stage) return null;
+
+    const pos = stage.getPointerPosition();
+    if (!pos) return null;
+
+    return {
+      x: pos.x,
+      y: pos.y,
+    };
+  };
+
   const withPoint = (fn: (p: Point) => void) => (e: KonvaEventObject<MouseEvent>) => {
     if (!isEditing) return;
     const p = getStagePoint(e);
     if (p) fn(p);
   };
 
+  const getOnClick = () => {
+    return (e: KonvaEventObject<MouseEvent>) => {
+      if (e.target === e.target.getStage()) {
+        onSelect(null);
+      }
+    };
+  };
+
   return (
     <Stage
-      width={width * scaleX}
-      height={height * scaleY}
-      scaleX={scaleX}
-      scaleY={scaleY}
+      width={width}
+      height={height}
       className="absolute inset-0"
       onMouseDown={withPoint(onPointerDown)}
       onMouseMove={withPoint(onPointerMove)}
       onMouseUp={withPoint(onPointerUp)}
-      onClick={(e) => {
-        if (e.target === e.target.getStage()) {
-          onSelect(null);
-        }
-      }}
+      onClick={getOnClick()}
     >
       <Layer>
         <AnnotationsLayer

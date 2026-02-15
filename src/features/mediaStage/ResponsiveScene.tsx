@@ -1,28 +1,27 @@
 import { useEffect, useRef } from 'react';
-import { Constants } from '../../utils/Constants';
 import type { MediaLayout } from '../../types/intern/media';
 
 interface ResponsiveSceneProps {
   children: React.ReactNode;
   onLayoutChange: (layout: MediaLayout) => void;
+  layout: MediaLayout | null;
 }
 
-export const ResponsiveScene = ({ children, onLayoutChange }: ResponsiveSceneProps) => {
+export const ResponsiveScene = ({ children, onLayoutChange, layout }: ResponsiveSceneProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
     const observer = new ResizeObserver(([entry]) => {
+      if (!layout) return;
       const containerWidth = entry.contentRect.width;
       const containerHeight = entry.contentRect.height;
-      const scaleX = containerWidth / Constants.DEFAULT_SCENE_WIDTH;
-      const scaleY = containerHeight / Constants.DEFAULT_SCENE_HEIGHT;
-      // preserve aspect ratio
-      const scale = Math.min(scaleX, scaleY);
+      const scaleX = containerWidth / layout.width;
+      const scaleY = containerHeight / layout.height;
       const newLayout: MediaLayout = {
-        width: Constants.DEFAULT_SCENE_WIDTH,
-        height: Constants.DEFAULT_SCENE_HEIGHT,
-        scale,
+        ...layout,
+        scaleX,
+        scaleY,
       };
       onLayoutChange(newLayout);
     });
