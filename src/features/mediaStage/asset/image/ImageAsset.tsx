@@ -13,6 +13,8 @@ export default function ImageAsset({ asset, layout, setLayout, children }: Image
   const [cssSize, setCssSize] = useState<{
     width: number;
     height: number;
+    scaleX: number;
+    scaleY: number;
   } | null>(null);
 
   useEffect(() => {
@@ -21,13 +23,15 @@ export default function ImageAsset({ asset, layout, setLayout, children }: Image
     const img = imgRef.current;
 
     const update = () => {
-      const cssWidth = img.clientWidth;
-      const cssHeight = img.clientHeight;
-
-      setCssSize({ width: cssWidth, height: cssHeight });
-
+      const cssWidth = img.naturalWidth;
+      const cssHeight = img.naturalHeight;
       const scaleX = cssWidth / layout.width;
       const scaleY = cssHeight / layout.height;
+      setCssSize({ width: cssWidth, height: cssHeight, scaleX, scaleY });
+
+      console.log('Image resized:', cssWidth, cssHeight);
+      console.log('Original layout:', layout.width, layout.height);
+      console.log('Calculated scales:', scaleX, scaleY);
       const scale = Math.min(scaleX, scaleY);
 
       setLayout({
@@ -37,7 +41,7 @@ export default function ImageAsset({ asset, layout, setLayout, children }: Image
       });
     };
 
-    update();
+    if (!layout) update();
 
     const ro = new ResizeObserver(update);
     ro.observe(img);

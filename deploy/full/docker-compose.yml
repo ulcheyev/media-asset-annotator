@@ -27,6 +27,24 @@ services:
       MEDIA_ASSET_API_URL: '${MEDIA_ASSET_API_URL:-}'
       MEDIA_ASSETS_LIST_API_URL: '${MEDIA_ASSETS_LIST_API_URL:-}'
 
+  graphdb:
+    image: ontotext/graphdb:10.6.3
+    container_name: media-asset-annotator-db
+    ports:
+      - '7200:7200'
+    volumes:
+      - ./graphdb/import:/opt/graphdb/home/import
+      - ./graphdb/settings.js:/opt/graphdb/home/data/settings.js
+
+  graphdb-init:
+    image: curlimages/curl:8.5.0
+    container_name: media-asset-annotator-db-init
+    depends_on:
+      - graphdb
+    volumes:
+      - ./graphdb/import:/init
+    entrypoint: ['sh', '/init/init-script.sh']
+
   db:
     image: postgres:18
     container_name: media-cms-db

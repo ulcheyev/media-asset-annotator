@@ -39,10 +39,11 @@ export const AnnotationList = ({ annotations, selectedId, onSelect }: Annotation
                     className={clsx(
                       'w-full text-left px-3 py-2 rounded text-sm',
                       'hover:bg-neutral-800',
+                      'break-all',
                       selectedId === a.id && 'bg-neutral-800',
                     )}
                   >
-                    {a.label || a.id}
+                    {a.label ?? `${a.kind} annotation`}
                   </button>
                 ))}
               </div>
