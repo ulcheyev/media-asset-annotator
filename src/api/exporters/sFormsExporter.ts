@@ -1,6 +1,6 @@
 import type { MediaAsset } from '../../types/intern/media.ts';
 import type { Annotation } from '../../types/intern/annotation.ts';
-import { normalizePoints } from '../../utils/geometry.utils.ts';
+import { getStringPointsFromPoints, normalizePoints } from '../../utils/geometry.utils.ts';
 
 const NS = {
   asset: 'http://onto.fel.cvut.cz/ontologies/form/media/asset',
@@ -41,16 +41,8 @@ export const exportAsSFormsObject = (
           normalized = normalizePoints([a.x, a.y], containerWidth, containerHeight);
         }
 
-        // normalize geometry
-
-        const geometryString = normalized
-          .reduce<string[]>((acc, value, i) => {
-            if (i % 2 === 0) {
-              acc.push(`${value},${normalized[i + 1]}`);
-            }
-            return acc;
-          }, [])
-          .join(' ');
+        // normalize geometry points to "x1,y1 x2,y2 ..." format
+        const geometryString = getStringPointsFromPoints(normalized);
 
         return {
           '@id': `annotation-${mediaAsset.id}-${index}`,

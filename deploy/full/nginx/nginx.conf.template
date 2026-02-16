@@ -1,0 +1,33 @@
+server {
+
+  listen 80;
+  server_name _;
+
+  location ^~ ${MEDIA_CMS_REDIRECT_PATH} {
+         return 302 http://localhost:${MEDIA_CMS_HOST_PORT};
+  }
+
+  # Annotator UI
+  location ${ANNOTATOR_BASE_PATH}/ {
+    proxy_pass http://media-asset-annotator/;
+  }
+
+  # Annotator API
+  location ^~ ${ANNOTATOR_SERVER_CONTEXT_PATH}/ {
+    proxy_pass ${ANNOTATOR_SERVER_URL};
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+
+  location = ${ANNOTATOR_BASE_PATH}/runtime-config.js {
+    proxy_pass http://media-asset-annotator/runtime-config.js;
+    add_header Cache-Control "no-store, no-cache, must-revalidate" always;
+    add_header Pragma "no-cache" always;
+    add_header Expires "0" always;
+  }
+
+  location /health {
+    return 200;
+  }
+}

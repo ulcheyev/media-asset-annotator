@@ -2,7 +2,6 @@ server {
   listen 80;
   server_name _;
 
-  # redirect /annotator -> /annotator/
   location = ${BASE_PATH} {
     return 302 ${BASE_PATH}/;
   }

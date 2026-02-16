@@ -1,4 +1,5 @@
 import type { Point } from '../types/geometry';
+import type { Annotation } from '../types/intern/annotation.ts';
 
 export const normalizePoint = (point: Point, width: number, height: number): Point => {
   return {
@@ -94,4 +95,27 @@ export const getFirstPoint = (points: string | number[]): { x: number; y: number
 
 export const getFirstPointFromPoints = (points: number[]): Point => {
   return { x: points[0], y: points[1] };
+};
+
+export const normalizeAnnotations = (
+  annotations: Annotation[],
+  width: number,
+  height: number,
+): Annotation[] => {
+  return annotations.map((ann) => {
+    if (ann.kind === 'polyline') {
+      return {
+        ...ann,
+        points: normalizePoints(ann.points, width, height),
+      };
+    }
+
+    const norm = normalizePoints([ann.x, ann.y], width, height);
+    return {
+      ...ann,
+      x: norm[0],
+      y: norm[1],
+      fontSize: ann.fontSize / height,
+    };
+  });
 };

@@ -4,7 +4,7 @@ import { runtimeConfig } from '../utils/runtimeConfig.ts';
 
 export const fetchMediaAsset = async (mediaAssetId: string): Promise<MediaAsset> => {
   if (runtimeConfig.USE_MOCK_DATA) {
-    console.warn('[fetchAnnotations] MOCK mode – returning mock asset data');
+    console.warn('[annotationsApi] MOCK mode – returning mock asset data');
     return mockVideoMediaAsset;
   }
 

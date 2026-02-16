@@ -2,17 +2,12 @@ version: '3.9'
 
 services:
   media-asset-annotator:
-    build: ../
+    build: ../..
     container_name: ${ANNOTATOR_CONTAINER_NAME:-media-asset-annotator}
-    expose:
-      - '80'
     environment:
       BASE_PATH: '${ANNOTATOR_BASE_PATH:-/annotator}'
       APP_MODE: '${ANNOTATOR_APP_MODE:-demo}'
       DEMO_MEDIA_URL: '${ANNOTATOR_DEMO_MEDIA_URL:-https://cdn.pixabay.com/video/2023/09/15/180693-864967735_large.mp4}'
-      ANNOTATIONS_API_URL: '${ANNOTATIONS_API_URL:-}'
-      MEDIA_ASSET_API_URL: '${MEDIA_ASSET_API_URL:-}'
-      MEDIA_ASSETS_LIST_API_URL: '${MEDIA_ASSETS_LIST_API_URL:-}'
 
   nginx:
     image: nginx:alpine
