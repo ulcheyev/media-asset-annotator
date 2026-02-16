@@ -38,9 +38,6 @@ const PolylineAnnotationShape = ({
     const stage = line.getStage();
     if (!stage) return;
 
-    const stageScaleX = stage.scaleX();
-    const stageScaleY = stage.scaleY();
-
     const localPoints = line.points();
     const absTransform = line.getAbsoluteTransform();
 
@@ -52,8 +49,7 @@ const PolylineAnnotationShape = ({
         y: localPoints[i + 1],
       });
 
-      // REMOVE konva internal stage scale before storing
-      newPoints.push(p.x / stageScaleX, p.y / stageScaleY);
+      newPoints.push(p.x, p.y);
     }
 
     line.setAttrs({

@@ -5,14 +5,13 @@ import { useMediaAsset } from '../../features/context/mediaAsset/useMediaAsset.t
 
 import { MediaStage } from '../../features/mediaStage/MediaStage.tsx';
 import { Toolbox } from '../../features/toolbox/ToolBox.tsx';
-import { ResponsiveScene } from '../../features/mediaStage/ResponsiveScene.tsx';
 import { useSearchParams } from 'react-router-dom';
 import type { MediaAssetSource } from '../../types/intern/media.ts';
 import { ErrorStatus } from '../../features/pageStatus/ErrorStatus.tsx';
 import { LoadingStatus } from '../../features/pageStatus/LoadingStatus.tsx';
 
 export const MediaAssetAnnotatorLayout = () => {
-  const { asset, setLayout, loading, error } = useMediaAsset();
+  const { asset, loading, error } = useMediaAsset();
 
   if (loading) {
     return <LoadingStatus title="Loading media asset" description="Preparing the annotator…" />;
@@ -32,16 +31,13 @@ export const MediaAssetAnnotatorLayout = () => {
   }
 
   return (
-    <div className="w-full h-full flex">
+    <div className="w-full h-full flex overflow-hidden">
       {/* Media */}
-      <div className="w-8/10 h-full bg-black">
-        <ResponsiveScene onLayoutChange={setLayout}>
-          <MediaStage />
-        </ResponsiveScene>
+      <div className="basis-4/5">
+        <MediaStage />
       </div>
-
       {/* Toolbox */}
-      <div className="basis-2/10 flex-shrink-0 h-full border-l-white border-2">
+      <div className="basis-1/5 flex-shrink-0 border-l-white border-2">
         <Toolbox />
       </div>
     </div>

@@ -1,68 +1,52 @@
-import { useEffect, useRef, useState } from 'react';
-import type { MediaAsset, MediaLayout } from '../../../../types/intern/media';
+import { useEffect, useRef } from 'react';
+import type { MediaAsset, MediaLayout, MediaResolution } from '../../../../types/intern/media';
 
 interface ImageAssetProps {
   asset: MediaAsset;
-  layout: MediaLayout;
-  setLayout: (layout: MediaLayout) => void;
-  children: (viewport: { w: number; h: number; scaleX: number; scaleY: number }) => React.ReactNode;
+  layout: MediaLayout | null;
+  onAssetSrcReady: (mediaResolution: MediaResolution) => void;
+  children: React.ReactNode;
 }
 
-export default function ImageAsset({ asset, layout, setLayout, children }: ImageAssetProps) {
-  const imgRef = useRef<HTMLImageElement>(null);
-  const [cssSize, setCssSize] = useState<{
-    width: number;
-    height: number;
-  } | null>(null);
+export default function ImageAsset({ asset, onAssetSrcReady, layout, children }: ImageAssetProps) {
+  const imgRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
-    if (!imgRef.current) return;
-
     const img = imgRef.current;
+    if (!img) return;
 
-    const update = () => {
-      const cssWidth = img.clientWidth;
-      const cssHeight = img.clientHeight;
-
-      setCssSize({ width: cssWidth, height: cssHeight });
-
-      const scaleX = cssWidth / layout.width;
-      const scaleY = cssHeight / layout.height;
-      const scale = Math.min(scaleX, scaleY);
-
-      setLayout({
-        width: cssWidth,
-        height: cssHeight,
-        scale,
+    const notify = () => {
+      onAssetSrcReady({
+        naturalWidth: img.naturalWidth,
+        naturalHeight: img.naturalHeight,
+        clientWidth: img.clientWidth,
+        clientHeight: img.clientHeight,
       });
     };
 
-    update();
+    if (img.complete) notify();
+    else img.onload = notify;
 
-    const ro = new ResizeObserver(update);
+    const ro = new ResizeObserver(notify);
     ro.observe(img);
 
     return () => ro.disconnect();
-  }, [layout.width, layout.height, setLayout]);
+  }, [asset.src, onAssetSrcReady]);
 
   return (
-    <div className="flex w-full h-full items-center justify-center bg-black">
-      <div className="relative">
+    <div className="w-full h-full flex items-center justify-center overflow-hidden">
+      <div
+        className="relative"
+        style={layout ? { width: layout.width, height: layout.height } : undefined}
+      >
         <img
           ref={imgRef}
           src={asset.src}
-          className="block max-w-full max-h-full object-contain select-none pointer-events-none"
+          className="max-w-full max-h-full object-contain"
           draggable={false}
-          alt=""
+          alt="Beautiful Image"
         />
-
-        {cssSize &&
-          children({
-            w: cssSize.width,
-            h: cssSize.height,
-            scaleX: layout.scale,
-            scaleY: layout.scale,
-          })}
+        {children}
       </div>
     </div>
   );

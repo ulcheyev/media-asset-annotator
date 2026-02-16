@@ -3,13 +3,13 @@ import { Constants } from '../../../utils/Constants.ts';
 import VideoAsset from './video/VideoAsset.tsx';
 import type { ToolController } from '../../toolbox/toolsContext/ToolController.ts';
 import type { Annotation } from '../../../types/intern/annotation.ts';
-import type { MediaAsset, MediaLayout } from '../../../types/intern/media.ts';
+import type { MediaAsset, MediaLayout, MediaResolution } from '../../../types/intern/media.ts';
 import ImageAsset from './image/ImageAsset.tsx';
 
 interface MediaAssetContainerProps {
   asset: MediaAsset;
-  layout: MediaLayout;
-  setLayout: (layout: MediaLayout) => void;
+  layout: MediaLayout | null;
+  onAssetSrcReady: (mediaResolution: MediaResolution) => void;
   annotations: Annotation[];
   selectedId: string | null;
   isEditing: boolean;
@@ -26,7 +26,7 @@ export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
   const {
     asset,
     layout,
-    setLayout,
+    onAssetSrcReady,
     annotations,
     selectedId,
     isEditing,
@@ -39,13 +39,11 @@ export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
     onSelectAnnotation,
   } = props;
 
-  const surface = (size: { w: number; h: number; scaleX: number; scaleY: number }) => (
+  const overlay = (size: { width: number; height: number }) => (
     <StageSurface
-      width={layout.width}
-      height={layout.height}
+      width={size.width}
+      height={size.height}
       isActive={isActive}
-      scaleX={size.scaleX}
-      scaleY={size.scaleY}
       annotations={annotations}
       selectedId={selectedId}
       isEditing={isEditing}
@@ -62,8 +60,8 @@ export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
 
   if (asset.type === Constants.IMAGE_ASSET_TYPE_LABEL) {
     return (
-      <ImageAsset asset={asset} setLayout={setLayout} layout={layout}>
-        {surface}
+      <ImageAsset asset={asset} onAssetSrcReady={onAssetSrcReady} layout={layout}>
+        {layout && overlay(layout)}
       </ImageAsset>
     );
   }
@@ -73,12 +71,13 @@ export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
       <VideoAsset
         layout={layout}
         setActive={setActive}
+        onAssetSrcReady={onAssetSrcReady}
         asset={asset}
         isEditing={isEditing}
         selectedAnnotation={annotations.find((a) => a.id === selectedId)}
         onCommitAnnotation={onCommitAnnotation}
       >
-        {surface}
+        {layout && overlay(layout)}
       </VideoAsset>
     );
   }
