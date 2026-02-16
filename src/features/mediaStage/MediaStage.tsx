@@ -29,14 +29,14 @@ export const MediaStage = () => {
 
       const containerWidth = containerRef.current.clientWidth;
       const containerHeight = containerRef.current.clientHeight;
-    if (
+      if (
         containerWidth === 0 ||
         containerHeight === 0 ||
         mediaResolution.clientWidth === 0 ||
         mediaResolution.clientHeight === 0
-    ) {
+      ) {
         return; // do NOT set layout yet
-    }
+      }
 
       const { naturalWidth, naturalHeight, clientWidth, clientHeight } = mediaResolution;
 
@@ -44,8 +44,6 @@ export const MediaStage = () => {
       const scaleY = containerHeight / naturalHeight;
       const width = clientWidth > containerWidth ? containerWidth : clientWidth;
       const height = clientHeight > containerHeight ? containerHeight : clientHeight;
-
-
 
       setLayout({
         width,

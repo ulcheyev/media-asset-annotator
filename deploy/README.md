@@ -1,68 +1,24 @@
-# Production Deployment (Docker Compose)
+# Media Asset Annotator Deployment
 
-This document describes how to deploy **Media Asset Annotator** in **production** using **Docker Compose** with environment-based configuration.
+This project provides two deployment options:
 
-The setup uses:
-
-- one **UI container** (React + nginx, SPA fallback)
-- one **proxy nginx container** (base-path routing via `proxy_pass`)
-- runtime configuration injected via `.env`
-
-No rebuild is required when changing base paths or API URLs.
+1. **Standalone mode** – UI only
+2. **Full stack mode** – UI + Annotator Server + GraphDB + MediaCMS
 
 ---
 
-## Prerequisites
+## Quick Start
 
-- Docker 20+
-- Docker Compose v2+
-- Ports you plan to use are free on the host
-
----
-
-## Deployment Steps
-
-### 0️⃣ Choose Deployment Setup
-
-Decide on the deployment setup for your environment:
-
-- **Standalone**: Deploy only the UI and proxy containers.
-
+0. Pick a deployment option (standalone or full)
+1. Copy example of env file
 ```bash
-cd standalone
+cd deploy/<option>
+cp .env.example .env
 ```
-
-- **Full**: Deploy the entire system, including backend services.
-
+2. Edit .env file
+3. Run application
 ```bash
-cd full
+docker compose --env-file .env up --build -d 
 ```
-
-### 1️⃣ Create `.env` file
-
-The environment variables are split into two files for better organization:
-
-- `.env` for UI and proxy configuration
-- `.env.shared` for shared configuration across all services (used in the full setup) <br/>
-  Copy the example file and adjust values for your environment:
-
-```bash
-cat .env.example ../shared/envs/.env.shared.example >.env
-```
-
-Edit .env and fill in all required variables. Descriptions are provided in the file as comments.
-
-### 2️⃣ Start the stack
-
-Run Docker Compose with the env file:
-
-```bash
-docker compose --env-file .env up -d
-```
-
-### 3️⃣ Access the application
-
-Open the application in your browser:
-
-- `http://<host>:<port>/<basePath>/`
-  ⚠️ Trailing slash is mandatory
+4. App available at: http://localhost:2030/annotator (default)
+5. For detailed configuration and architecture description of full deployment see [Full Deployment Docs](full/README.md)

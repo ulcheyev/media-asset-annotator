@@ -136,7 +136,7 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const data = await fetchAnnotations(asset.id);
 
-        setRawAnnotations(data);   // store raw
+        setRawAnnotations(data); // store raw
         setSelectedId(null);
         setIsEditing(false);
       } catch (e) {
@@ -151,23 +151,22 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
     if (!rawAnnotations || !layout) return;
 
     const mapped = rawAnnotations
-        .map((a) => {
-          switch (a.type) {
-            case Constants.TEXT_TYPE_LABEL:
-              return getTextAnnotationFromAnnotationData(a, layout.width, layout.height);
+      .map((a) => {
+        switch (a.type) {
+          case Constants.TEXT_TYPE_LABEL:
+            return getTextAnnotationFromAnnotationData(a, layout.width, layout.height);
 
-            case Constants.POLYLINE_TYPE_LABEL:
-              return getPolylineAnnotationFromAnnotationData(a, layout.width, layout.height);
+          case Constants.POLYLINE_TYPE_LABEL:
+            return getPolylineAnnotationFromAnnotationData(a, layout.width, layout.height);
 
-            default:
-              return null;
-          }
-        })
-        .filter((a): a is Annotation => a !== null);
+          default:
+            return null;
+        }
+      })
+      .filter((a): a is Annotation => a !== null);
 
     setAnnotations(mapped);
   }, [rawAnnotations, layout]);
-
 
   useEffect(() => {
     toolControllerRef.current = new ToolController(

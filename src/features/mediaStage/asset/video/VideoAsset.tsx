@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import VideoControls from './videoControls/VideoControls';
 
-import type {MediaAsset, MediaLayout, MediaResolution} from '../../../../types/intern/media';
+import type { MediaAsset, MediaLayout, MediaResolution } from '../../../../types/intern/media';
 import type { Annotation, TimeRange } from '../../../../types/intern/annotation';
 
 import { clamp } from '../../../../utils/videoTime.utils';
@@ -18,10 +18,9 @@ interface VideoAssetProps {
   children: React.ReactNode;
 }
 
-
 export default function VideoAsset({
   asset,
- onAssetSrcReady,
+  onAssetSrcReady,
   selectedAnnotation,
   onCommitAnnotation,
   setActive,
@@ -123,7 +122,7 @@ export default function VideoAsset({
           controls={false}
         />
         {/* CANVAS OVERLAY — only when size is known */}
-        {viewportSize &&  children}
+        {viewportSize && children}
       </div>
 
       {/* CONTROLS */}

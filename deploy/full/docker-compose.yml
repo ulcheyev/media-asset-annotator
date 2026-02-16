@@ -1,31 +1,53 @@
 version: '3.9'
 
 services:
+
   gateway:
     image: nginx:alpine
     container_name: gateway
     ports:
-      - '${GATEWAY_PORT:-2030}:80'
+      - "${GATEWAY_PORT:-2030}:80"
     environment:
-      ANNOTATOR_BASE_PATH: '${ANNOTATOR_BASE_PATH:-/annotator}'
-      MEDIA_CMS_REDIRECT_PATH: '${MEDIA_CMS_REDIRECT_PATH:-/mediacms}'
-      MEDIA_CMS_HOST_PORT: ${MEDIA_CMS_HOST_PORT:-2080}
+      ANNOTATOR_BASE_PATH: "${ANNOTATOR_BASE_PATH:-/annotator}"
+      ANNOTATOR_SERVER_URL: "http://media-asset-annotator-server:5040"
+      MEDIA_CMS_HOST_PORT: "${MEDIA_CMS_HOST_PORT:-2080}"
+      ANNOTATOR_SERVER_CONTEXT_PATH: "${ANNOTATOR_SERVER_CONTEXT_PATH:-/annotator-server/api}"
+      MEDIA_CMS_BASE_PATH: "${MEDIA_CMS_BASE_PATH:-/mediacms}"
     volumes:
       - ./nginx/nginx.conf.template:/etc/nginx/templates/nginx.conf.template:ro
       - /dev/null:/etc/nginx/conf.d/default.conf
     depends_on:
       - media-asset-annotator
+      - media-asset-annotator-server
+
 
   media-asset-annotator:
     build: ../..
     container_name: media-asset-annotator
     environment:
-      BASE_PATH: '${ANNOTATOR_BASE_PATH:-/annotator}'
-      APP_MODE: prod
-      DEMO_MEDIA_URL: '${ANNOTATOR_DEMO_MEDIA_URL:-https://cdn.pixabay.com/video/2023/09/15/180693-864967735_large.mp4}'
-      ANNOTATIONS_API_URL: '${ANNOTATIONS_API_URL:-}'
-      MEDIA_ASSET_API_URL: '${MEDIA_ASSET_API_URL:-}'
-      MEDIA_ASSETS_LIST_API_URL: '${MEDIA_ASSETS_LIST_API_URL:-}'
+      BASE_PATH: "${ANNOTATOR_BASE_PATH:-/annotator}"
+      APP_MODE: "prod"
+      ANNOTATIONS_API_URL: "${ANNOTATIONS_API_URL:-http://localhost:2030/annotator-server/api/annotation/media}"
+      MEDIA_ASSET_API_URL: "${MEDIA_ASSET_API_URL:-http://localhost:2030/annotator-server/api/asset}"
+      MEDIA_ASSETS_LIST_API_URL: "${MEDIA_ASSETS_LIST_API_URL:-http://localhost:2030/annotator-server/api/asset/adapter/playlist}"
+
+  media-asset-annotator-server:
+    image: manki1337/media-asset-annotator-server:latest
+    container_name: media-asset-annotator-server
+    environment:
+      SERVER_PORT: 5040
+      SERVER_CONTEXT_PATH: "${ANNOTATOR_SERVER_CONTEXT_PATH:-/annotator-server/api}"
+      MEDIA_CMS_INTERNAL_BASE_URL: "http://web"
+      MEDIA_CMS_PUBLIC_BASE_URL: "${MEDIA_CMS_PUBLIC_BASE_URL:-http://localhost:${MEDIA_CMS_HOST_PORT:-2080}}"
+      MEDIA_CMS_API_BASE: "${MEDIA_CMS_API_BASE:-/api/v1}"
+      REPOSITORY_URL: "${GDB_REPOSITORY_URL:-http://graphdb:7200/repositories/media-assets}"
+      DB_USERNAME: "${GDB_USERNAME:-admin}"
+      DB_PASSWORD: "${GDB_PASSWORD:-root}"
+      CORS_ALLOWED_ORIGINS: "${ANNOTATOR_SERVER_CORS_ORIGINS:-http://media-asset-annotator,http://localhost:2030}"
+    depends_on:
+      - graphdb
+      - graphdb-init
+
 
   graphdb:
     image: ontotext/graphdb:10.6.3
@@ -99,6 +121,7 @@ services:
       FRONTEND_HOST: ${MEDIA_CMS_FRONTEND_HOST:-http://localhost}
     depends_on:
       - migrations
+      - db
     restart: on-failure
 
   celery_beat:
