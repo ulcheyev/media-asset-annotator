@@ -1,6 +1,6 @@
 import * as Separator from '@radix-ui/react-separator';
 import { useEditor } from '../context/editor/useEditor';
-import AnnotationList from './styleControls/AnnotationList';
+import AnnotationList from './styleControls/annotationList/AnnotationList.tsx';
 import StyleControls from './styleControls/StyleControls';
 import { Tools } from './tools/Tools';
 import type { CommandKey } from './commands/commands.items';
@@ -65,6 +65,12 @@ export const Toolbox = () => {
     }
   };
 
+  const toggleVisibility = (id: string) => {
+    updateAnnotation(id, {
+      visible: !annotations.find(a => a.id === id)?.visible,
+    });
+  };
+
   return (
     <div className="relative bg-neutral-900 text-white flex flex-col h-full overflow-hidden">
       <div className="shrink-0 border-b border-neutral-700">
@@ -99,6 +105,7 @@ export const Toolbox = () => {
           annotations={annotations}
           selectedId={selectedId}
           onSelect={selectAnnotation}
+          onToggleVisibility={toggleVisibility}
         />
       </div>
 

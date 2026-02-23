@@ -17,6 +17,7 @@ export class FreehandDrawTool implements ToolStrategy {
     ctx.createAnnotation({
       id,
       kind: 'polyline',
+      visible: true,
       label: `Polyline ${this.counter}`,
       points: [point.x, point.y],
       time: {
