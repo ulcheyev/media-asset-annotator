@@ -10,6 +10,7 @@ import DynamicMediaFrame from '../MediaFrameWithDynamicSize.tsx';
 
 interface VideoAssetProps {
   asset: MediaAsset;
+  setAsset: (asset: MediaAsset) => void;
   layout: MediaLayout | null;
   onAssetSrcReady: (mediaResolution: MediaResolution) => void;
   selectedAnnotation?: Annotation;
@@ -21,6 +22,7 @@ interface VideoAssetProps {
 
 export default function VideoAsset({
   asset,
+    setAsset,
   layout,
   onAssetSrcReady,
   selectedAnnotation,
@@ -40,6 +42,9 @@ export default function VideoAsset({
 
     const handleLoaded = () => {
       setDuration(video.duration);
+      if(!asset.duration || asset.duration === 0) {
+        setAsset({...asset, duration: video.duration})
+      }
     };
 
     const handleTimeUpdate = () => {

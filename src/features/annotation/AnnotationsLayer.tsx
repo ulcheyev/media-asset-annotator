@@ -27,15 +27,15 @@ export const AnnotationsLayer = ({
   selectedId,
   onSelect,
 }: Props) => {
-  const filtered = annotations
-      .filter((a) => a.visible)
-      .filter((a) => {
-        if (mediaType === Constants.IMAGE_ASSET_TYPE_LABEL) return true;
-        if (!isActive) return true;
-        if (a.time.start == null || a.time.end == null) return true;
 
-        return a.time.start <= currentTime && a.time.end >= currentTime;
-      });
+  const filtered = annotations
+    .filter((a) => a.visible)
+    .filter((a) => {
+      if (mediaType === Constants.IMAGE_ASSET_TYPE_LABEL) return true;
+      if (!isActive) return true;
+      if (a.time.start == null || a.time.end == null) return true;
+      return a.time.start <= currentTime && a.time.end >= currentTime;
+    });
 
   return (
     <>
