@@ -6,8 +6,7 @@ export const formatTime = (t: number) => {
   return `${m}:${s.toString().padStart(2, '0')}`;
 };
 
-export const roundTo = (value: number, digits = 2) =>
-    Number(value.toFixed(digits));
+export const roundTo = (value: number, digits = 2) => Number(value.toFixed(digits));
 
 export const toPercent = (t: number, duration: number) => `${(t / duration) * 100}%`;
 

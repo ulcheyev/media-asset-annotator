@@ -13,12 +13,12 @@ interface PolylineAnnotationProps {
 }
 
 const PolylineAnnotationShape = ({
-                                   annotation,
-                                   isEditing,
-                                   onCommit,
-                                   isSelected,
-                                   onSelect,
-                                 }: PolylineAnnotationProps) => {
+  annotation,
+  isEditing,
+  onCommit,
+  isSelected,
+  onSelect,
+}: PolylineAnnotationProps) => {
   const strokeRef = useRef<Konva.Line>(null);
   const fillRef = useRef<Konva.Line>(null);
 
@@ -51,9 +51,7 @@ const PolylineAnnotationShape = ({
     node.position({ x: 0, y: 0 });
     fillRef.current?.position({ x: 0, y: 0 });
 
-    const newPoints = annotation.points.map((v, i) =>
-        i % 2 === 0 ? v + dx : v + dy,
-    );
+    const newPoints = annotation.points.map((v, i) => (i % 2 === 0 ? v + dx : v + dy));
 
     onCommit(annotation, { ...annotation, points: newPoints });
   };
@@ -98,36 +96,36 @@ const PolylineAnnotationShape = ({
   };
 
   return (
-      <SelectableAnnotation
-          isSelected={isSelected}
-          isTransformable={isEditing}
-          nodeRef={strokeRef}
-          onTransformCommit={handleTransformEnd}
-      >
-        {/* FILL LAYER */}
-        {annotation.style.fill !== 'none' && (
-            <Line
-                ref={fillRef}
-                points={annotation.points}
-                closed
-                fill={annotation.style.fill}
-                opacity={annotation.style.opacity ?? 1}
-                listening={false}
-            />
-        )}
-
-        {/* STROKE LAYER */}
+    <SelectableAnnotation
+      isSelected={isSelected}
+      isTransformable={isEditing}
+      nodeRef={strokeRef}
+      onTransformCommit={handleTransformEnd}
+    >
+      {/* FILL LAYER */}
+      {annotation.style.fill !== 'none' && (
         <Line
-            ref={strokeRef}
-            points={annotation.points}
-            stroke={annotation.style.color}
-            strokeWidth={annotation.style.strokeWidth}
-            onClick={onSelect}
-            draggable={isSelected && isEditing}
-            onDragMove={handleDragMove}
-            onDragEnd={handleDragEnd}
+          ref={fillRef}
+          points={annotation.points}
+          closed
+          fill={annotation.style.fill}
+          opacity={annotation.style.opacity ?? 1}
+          listening={false}
         />
-      </SelectableAnnotation>
+      )}
+
+      {/* STROKE LAYER */}
+      <Line
+        ref={strokeRef}
+        points={annotation.points}
+        stroke={annotation.style.color}
+        strokeWidth={annotation.style.strokeWidth}
+        onClick={onSelect}
+        draggable={isSelected && isEditing}
+        onDragMove={handleDragMove}
+        onDragEnd={handleDragEnd}
+      />
+    </SelectableAnnotation>
   );
 };
 

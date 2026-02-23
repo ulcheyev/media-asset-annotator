@@ -27,7 +27,6 @@ export const AnnotationsLayer = ({
   selectedId,
   onSelect,
 }: Props) => {
-
   const filtered = annotations
     .filter((a) => a.visible)
     .filter((a) => {

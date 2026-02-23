@@ -3,10 +3,10 @@ import * as Slider from '@radix-ui/react-slider';
 
 import type { Annotation, AnnotationPatch } from '../../../types/intern/annotation.ts';
 import { ColorPicker } from './ColorPicker.tsx';
-import {TimeIntervalControls} from "./TimeIntervalControls.tsx";
-import {useRef} from "react";
-import type {MediaAsset} from "../../../types/intern/media.ts";
-import {Constants} from "../../../utils/Constants.ts";
+import { TimeIntervalControls } from './TimeIntervalControls.tsx';
+import { useRef } from 'react';
+import type { MediaAsset } from '../../../types/intern/media.ts';
+import { Constants } from '../../../utils/Constants.ts';
 
 interface BaseStyleControlsProps {
   annotation: Annotation;
@@ -93,7 +93,7 @@ export const ControlSlider = ({
 const BaseStyleControls = ({ annotation, asset, onChange, onCommit }: BaseStyleControlsProps) => {
   const color = annotation.style.color ?? '#ffffff';
   const opacity = annotation.style.opacity ?? 1;
-  const duration = asset?.duration ?? 0
+  const duration = asset?.duration ?? 0;
   const label = annotation.label ?? '';
 
   return (
@@ -124,12 +124,12 @@ const BaseStyleControls = ({ annotation, asset, onChange, onCommit }: BaseStyleC
 
       {/* TIME INTERVAL*/}
       {asset && asset.type === Constants.VIDEO_ASSET_TYPE_LABEL && (
-          <TimeIntervalControls
-              annotation={annotation}
-              duration={duration}
-              onPreview={(patch) => onChange(patch)}
-              onCommit={onCommit}
-          />
+        <TimeIntervalControls
+          annotation={annotation}
+          duration={duration}
+          onPreview={(patch) => onChange(patch)}
+          onCommit={onCommit}
+        />
       )}
 
       {/* COLOR */}

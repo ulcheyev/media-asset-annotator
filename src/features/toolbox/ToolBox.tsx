@@ -8,7 +8,7 @@ import { Commands } from './commands/Commands';
 import { ErrorSnackbar } from '../snack/ErrorSnackbar.tsx';
 import { SuccessSnackbar } from '../snack/SuccessSnackbar.tsx';
 import { useSnackbar } from '../snack/useSnackbar.ts';
-import {useMediaAsset} from "../context/mediaAsset/useMediaAsset.ts";
+import { useMediaAsset } from '../context/mediaAsset/useMediaAsset.ts';
 
 export const Toolbox = () => {
   const {
@@ -30,7 +30,7 @@ export const Toolbox = () => {
   const selectedAnnotation = annotations.find((a) => a.id === selectedId) ?? null;
 
   const { snackbar, showSuccess, showError } = useSnackbar();
-  const {asset} = useMediaAsset();
+  const { asset } = useMediaAsset();
 
   const handleSave = async () => {
     save().then(
