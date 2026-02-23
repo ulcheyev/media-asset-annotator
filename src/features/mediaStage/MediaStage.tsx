@@ -7,7 +7,7 @@ import type { MediaResolution } from '../../types/intern/media.ts';
 
 export const MediaStage = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { asset, layout, setLayout } = useMediaAsset();
+  const { asset, setAsset, layout, setLayout } = useMediaAsset();
 
   const {
     annotations,
@@ -59,6 +59,7 @@ export const MediaStage = () => {
     <div ref={containerRef} className="relative w-full h-full">
       <MediaAssetContainer
         asset={asset}
+        setAsset={setAsset}
         layout={layout}
         onAssetSrcReady={handleMediaReady}
         isActive={isActive}

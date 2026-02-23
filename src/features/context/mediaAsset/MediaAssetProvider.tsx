@@ -61,6 +61,7 @@ export const MediaAssetProvider = ({
     <MediaAssetContext.Provider
       value={{
         asset,
+        setAsset,
         layout,
         setLayout,
         loading,

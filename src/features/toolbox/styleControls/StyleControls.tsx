@@ -4,14 +4,16 @@ import * as ScrollArea from '@radix-ui/react-scroll-area';
 import BaseStyleControls from './BaseStyleControls';
 import CustomTextControls from './CustomTextControls';
 import PolylineStyleControls from './PolylineStyleControls';
+import type {MediaAsset} from "../../../types/intern/media.ts";
 
 interface StyleControlsProps {
   annotation: Annotation;
+  asset?: MediaAsset;
   onChange: (patch: AnnotationPatch) => void;
   onCommit: (before: Annotation, after: Annotation) => void;
 }
 
-const StyleControls = ({ annotation, onChange, onCommit }: StyleControlsProps) => {
+const StyleControls = ({ annotation, asset, onChange, onCommit }: StyleControlsProps) => {
   const isText = annotation.kind === 'text';
   const isPolyline = annotation.kind === 'polyline';
 
@@ -19,7 +21,7 @@ const StyleControls = ({ annotation, onChange, onCommit }: StyleControlsProps) =
     <ScrollArea.Root className="h-full">
       <ScrollArea.Viewport className="h-full overflow-x-hidden">
         <div className="flex flex-col gap-5 p-5">
-          <BaseStyleControls annotation={annotation} onChange={onChange} onCommit={onCommit} />
+          <BaseStyleControls asset={asset} annotation={annotation} onChange={onChange} onCommit={onCommit} />
           {isPolyline && (
             <PolylineStyleControls
               annotation={annotation}
