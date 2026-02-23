@@ -22,7 +22,7 @@ interface VideoAssetProps {
 
 export default function VideoAsset({
   asset,
-    setAsset,
+  setAsset,
   layout,
   onAssetSrcReady,
   selectedAnnotation,
@@ -42,8 +42,8 @@ export default function VideoAsset({
 
     const handleLoaded = () => {
       setDuration(video.duration);
-      if(!asset.duration || asset.duration === 0) {
-        setAsset({...asset, duration: video.duration})
+      if (!asset.duration || asset.duration === 0) {
+        setAsset({ ...asset, duration: video.duration });
       }
     };
 

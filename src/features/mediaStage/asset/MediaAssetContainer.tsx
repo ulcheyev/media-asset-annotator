@@ -26,7 +26,7 @@ interface MediaAssetContainerProps {
 export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
   const {
     asset,
-      setAsset,
+    setAsset,
     layout,
     onAssetSrcReady,
     annotations,
