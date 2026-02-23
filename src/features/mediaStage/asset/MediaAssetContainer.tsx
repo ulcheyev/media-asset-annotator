@@ -6,7 +6,6 @@ import type { Annotation } from '../../../types/intern/annotation.ts';
 import type { MediaAsset, MediaLayout, MediaResolution } from '../../../types/intern/media.ts';
 import ImageAsset from './image/ImageAsset.tsx';
 
-
 interface MediaAssetContainerProps {
   asset: MediaAsset;
   layout: MediaLayout | null;
