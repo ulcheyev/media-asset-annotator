@@ -21,7 +21,6 @@ export const MediaStage = () => {
 
   const { cursor, isActive, setActive } = usePlayback();
 
-
   const handleMediaReady = useCallback(
     (mediaResolution: MediaResolution) => {
       if (!containerRef.current) return;
@@ -31,8 +30,8 @@ export const MediaStage = () => {
       if (
         containerWidth === 0 ||
         containerHeight === 0 ||
-      mediaResolution.naturalHeight === 0 ||
-          mediaResolution.naturalWidth === 0
+        mediaResolution.naturalHeight === 0 ||
+        mediaResolution.naturalWidth === 0
       ) {
         return; // do NOT set layout yet
       }
@@ -54,7 +53,7 @@ export const MediaStage = () => {
     [setLayout],
   );
 
-    if (!asset) return null;
+  if (!asset) return null;
 
   return (
     <div ref={containerRef} className="relative w-full h-full">

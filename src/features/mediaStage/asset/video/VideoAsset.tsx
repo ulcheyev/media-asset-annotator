@@ -6,7 +6,7 @@ import type { Annotation, TimeRange } from '../../../../types/intern/annotation'
 
 import { clamp } from '../../../../utils/videoTime.utils';
 import { usePlayback } from '../../../context/playback/usePlayback';
-import DynamicMediaFrame from "../MediaFrameWithDynamicSize.tsx";
+import DynamicMediaFrame from '../MediaFrameWithDynamicSize.tsx';
 
 interface VideoAssetProps {
   asset: MediaAsset;
@@ -21,7 +21,7 @@ interface VideoAssetProps {
 
 export default function VideoAsset({
   asset,
-    layout,
+  layout,
   onAssetSrcReady,
   selectedAnnotation,
   onCommitAnnotation,
@@ -49,12 +49,7 @@ export default function VideoAsset({
     const notify = () => {
       const { videoWidth, videoHeight, clientWidth, clientHeight } = video;
 
-      if (
-          videoWidth === 0 ||
-          videoHeight === 0 ||
-          clientWidth === 0 ||
-          clientHeight === 0
-      ) {
+      if (videoWidth === 0 || videoHeight === 0 || clientWidth === 0 || clientHeight === 0) {
         return;
       }
 
@@ -119,17 +114,17 @@ export default function VideoAsset({
   return (
     <div className="flex flex-col w-full h-full">
       <DynamicMediaFrame layout={layout}>
-          <video
-              ref={videoRef}
-              src={asset.src}
-              className="max-w-full max-h-full object-contain"
-              controls={false}
-          />
-          {/* CANVAS OVERLAY — only when size is known */}
-          {layout && children}
-    </DynamicMediaFrame>
+        <video
+          ref={videoRef}
+          src={asset.src}
+          className="max-w-full max-h-full object-contain"
+          controls={false}
+        />
+        {/* CANVAS OVERLAY — only when size is known */}
+        {layout && children}
+      </DynamicMediaFrame>
 
-    {/* CONTROLS */}
+      {/* CONTROLS */}
       {duration > 0 && (
         <VideoControls
           isEditing={isEditing}
