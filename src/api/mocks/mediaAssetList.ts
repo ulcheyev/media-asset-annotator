@@ -16,6 +16,13 @@ export const mockMediaAssetList: MediaAsset[] = [
     modifiedAt: '2024-06-02T15:30:00Z',
   },
   {
+    id: '6',
+    type: 'video' as MediaType,
+    src: 'https://videos.pexels.com/video-files/7088947/7088947-uhd_1440_2560_25fps.mp4',
+    status: 'annotated',
+    modifiedAt: '2024-06-02T15:30:00Z',
+  },
+  {
     id: '3',
     type: 'image' as MediaType,
     src: 'https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg',

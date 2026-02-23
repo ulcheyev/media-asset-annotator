@@ -8,6 +8,7 @@ import ImageAsset from './image/ImageAsset.tsx';
 
 interface MediaAssetContainerProps {
   asset: MediaAsset;
+  setAsset: (asset: MediaAsset) => void;
   layout: MediaLayout | null;
   onAssetSrcReady: (mediaResolution: MediaResolution) => void;
   annotations: Annotation[];
@@ -25,6 +26,7 @@ interface MediaAssetContainerProps {
 export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
   const {
     asset,
+    setAsset,
     layout,
     onAssetSrcReady,
     annotations,
@@ -73,6 +75,7 @@ export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
         setActive={setActive}
         onAssetSrcReady={onAssetSrcReady}
         asset={asset}
+        setAsset={setAsset}
         isEditing={isEditing}
         selectedAnnotation={annotations.find((a) => a.id === selectedId)}
         onCommitAnnotation={onCommitAnnotation}

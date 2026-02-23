@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { MediaAsset, MediaLayout, MediaResolution } from '../../../../types/intern/media';
+import DynamicMediaFrame from '../MediaFrameWithDynamicSize.tsx';
 
 interface ImageAssetProps {
   asset: MediaAsset;
@@ -34,11 +35,8 @@ export default function ImageAsset({ asset, onAssetSrcReady, layout, children }:
   }, [asset.src, onAssetSrcReady]);
 
   return (
-    <div className="w-full h-full flex items-center justify-center overflow-hidden">
-      <div
-        className="relative"
-        style={layout ? { width: layout.width, height: layout.height } : undefined}
-      >
+    <DynamicMediaFrame layout={layout}>
+      <>
         <img
           ref={imgRef}
           src={asset.src}
@@ -47,7 +45,7 @@ export default function ImageAsset({ asset, onAssetSrcReady, layout, children }:
           alt="Beautiful Image"
         />
         {children}
-      </div>
-    </div>
+      </>
+    </DynamicMediaFrame>
   );
 }
