@@ -22,6 +22,7 @@ export class RectDrawTool implements ToolStrategy {
     ctx.createAnnotation({
       id,
       kind: 'polyline',
+      visible: true,
       label: `Rect ${this.counter}`,
       points,
       time: {

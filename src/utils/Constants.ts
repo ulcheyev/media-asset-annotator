@@ -9,6 +9,7 @@ export class Constants {
    * Time
    * ============================================================ */
   static ANNOTATION_DEFAULT_DURATION = 5;
+  static ANNOTATION_DEFAULT_TIME_INTERVAL_PRECISION = 2;
 
   /* ============================================================
    * Annotation Types

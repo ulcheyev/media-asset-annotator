@@ -19,28 +19,51 @@ const PolylineAnnotationShape = ({
   isSelected,
   onSelect,
 }: PolylineAnnotationProps) => {
-  const lineRef = useRef<Konva.Line>(null);
+  const strokeRef = useRef<Konva.Line>(null);
+  const fillRef = useRef<Konva.Line>(null);
+
+  /*
+   * REAL-TIME DRAG SYNC
+   * Stroke is draggable.
+   * Fill mirrors stroke position during drag.
+   */
+  const handleDragMove = (e: Konva.KonvaEventObject<DragEvent>) => {
+    const node = e.target as Konva.Line;
+
+    const x = node.x();
+    const y = node.y();
+
+    if (fillRef.current) {
+      fillRef.current.position({ x, y });
+    }
+  };
+
+  /*
+   * DRAG END → Bake movement into points
+   */
   const handleDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
     const node = e.target as Konva.Line;
 
     const dx = node.x();
     const dy = node.y();
 
+    // Reset transforms
     node.position({ x: 0, y: 0 });
+    fillRef.current?.position({ x: 0, y: 0 });
 
     const newPoints = annotation.points.map((v, i) => (i % 2 === 0 ? v + dx : v + dy));
 
     onCommit(annotation, { ...annotation, points: newPoints });
   };
 
+  /*
+   * TRANSFORM (resize / scale)
+   */
   const handleTransformEnd = (node: Konva.Node) => {
     const line = node as Konva.Line;
-    const stage = line.getStage();
-    if (!stage) return;
-
-    const localPoints = line.points();
     const absTransform = line.getAbsoluteTransform();
 
+    const localPoints = line.points();
     const newPoints: number[] = [];
 
     for (let i = 0; i < localPoints.length; i += 2) {
@@ -59,6 +82,13 @@ const PolylineAnnotationShape = ({
       scaleY: 1,
     });
 
+    fillRef.current?.setAttrs({
+      x: 0,
+      y: 0,
+      scaleX: 1,
+      scaleY: 1,
+    });
+
     onCommit(annotation, {
       ...annotation,
       points: newPoints,
@@ -68,20 +98,31 @@ const PolylineAnnotationShape = ({
   return (
     <SelectableAnnotation
       isSelected={isSelected}
-      isTransformable={isEditing && true}
-      nodeRef={lineRef}
+      isTransformable={isEditing}
+      nodeRef={strokeRef}
       onTransformCommit={handleTransformEnd}
     >
+      {/* FILL LAYER */}
+      {annotation.style.fill !== 'none' && (
+        <Line
+          ref={fillRef}
+          points={annotation.points}
+          closed
+          fill={annotation.style.fill}
+          opacity={annotation.style.opacity ?? 1}
+          listening={false}
+        />
+      )}
+
+      {/* STROKE LAYER */}
       <Line
-        ref={lineRef}
-        fill={annotation.style.fill}
-        closed={annotation.style.fill !== 'none'}
+        ref={strokeRef}
         points={annotation.points}
         stroke={annotation.style.color}
         strokeWidth={annotation.style.strokeWidth}
-        opacity={annotation.style.opacity}
         onClick={onSelect}
         draggable={isSelected && isEditing}
+        onDragMove={handleDragMove}
         onDragEnd={handleDragEnd}
       />
     </SelectableAnnotation>

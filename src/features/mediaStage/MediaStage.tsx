@@ -7,7 +7,7 @@ import type { MediaResolution } from '../../types/intern/media.ts';
 
 export const MediaStage = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { asset, layout, setLayout } = useMediaAsset();
+  const { asset, setAsset, layout, setLayout } = useMediaAsset();
 
   const {
     annotations,
@@ -21,8 +21,6 @@ export const MediaStage = () => {
 
   const { cursor, isActive, setActive } = usePlayback();
 
-  if (!asset) return null;
-
   const handleMediaReady = useCallback(
     (mediaResolution: MediaResolution) => {
       if (!containerRef.current) return;
@@ -32,8 +30,8 @@ export const MediaStage = () => {
       if (
         containerWidth === 0 ||
         containerHeight === 0 ||
-        mediaResolution.clientWidth === 0 ||
-        mediaResolution.clientHeight === 0
+        mediaResolution.naturalHeight === 0 ||
+        mediaResolution.naturalWidth === 0
       ) {
         return; // do NOT set layout yet
       }
@@ -55,10 +53,13 @@ export const MediaStage = () => {
     [setLayout],
   );
 
+  if (!asset) return null;
+
   return (
     <div ref={containerRef} className="relative w-full h-full">
       <MediaAssetContainer
         asset={asset}
+        setAsset={setAsset}
         layout={layout}
         onAssetSrcReady={handleMediaReady}
         isActive={isActive}

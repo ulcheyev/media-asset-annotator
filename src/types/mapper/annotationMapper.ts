@@ -32,6 +32,7 @@ export const getTextAnnotationFromAnnotationData = (
   const fontWeight = annotationData.fontWeight ?? Constants.TEXT_DEFAULT_FONT_WEIGHT;
   return {
     kind: 'text',
+    visible: true,
     id: annotationData.id,
     label: annotationData.label,
     x: firstPoint.x,
@@ -68,6 +69,7 @@ export const getPolylineAnnotationFromAnnotationData = (
   );
   return {
     kind: 'polyline',
+    visible: true,
     id: annotationData.id,
     label: annotationData.label,
     points: points,

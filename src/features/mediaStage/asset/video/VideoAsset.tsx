@@ -6,9 +6,11 @@ import type { Annotation, TimeRange } from '../../../../types/intern/annotation'
 
 import { clamp } from '../../../../utils/videoTime.utils';
 import { usePlayback } from '../../../context/playback/usePlayback';
+import DynamicMediaFrame from '../MediaFrameWithDynamicSize.tsx';
 
 interface VideoAssetProps {
   asset: MediaAsset;
+  setAsset: (asset: MediaAsset) => void;
   layout: MediaLayout | null;
   onAssetSrcReady: (mediaResolution: MediaResolution) => void;
   selectedAnnotation?: Annotation;
@@ -20,6 +22,8 @@ interface VideoAssetProps {
 
 export default function VideoAsset({
   asset,
+  setAsset,
+  layout,
   onAssetSrcReady,
   selectedAnnotation,
   onCommitAnnotation,
@@ -29,10 +33,6 @@ export default function VideoAsset({
 }: VideoAssetProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [viewportSize, setViewportSize] = useState<{
-    w: number;
-    h: number;
-  } | null>(null);
 
   const { duration, setDuration, cursor, setTime } = usePlayback();
 
@@ -42,10 +42,9 @@ export default function VideoAsset({
 
     const handleLoaded = () => {
       setDuration(video.duration);
-      setViewportSize({
-        w: video.videoWidth,
-        h: video.videoHeight,
-      });
+      if (!asset.duration || asset.duration === 0) {
+        setAsset({ ...asset, duration: video.duration });
+      }
     };
 
     const handleTimeUpdate = () => {
@@ -53,11 +52,17 @@ export default function VideoAsset({
     };
 
     const notify = () => {
+      const { videoWidth, videoHeight, clientWidth, clientHeight } = video;
+
+      if (videoWidth === 0 || videoHeight === 0 || clientWidth === 0 || clientHeight === 0) {
+        return;
+      }
+
       onAssetSrcReady({
-        naturalWidth: video.videoWidth,
-        naturalHeight: video.videoHeight,
-        clientWidth: video.clientWidth,
-        clientHeight: video.clientHeight,
+        naturalWidth: videoWidth,
+        naturalHeight: videoHeight,
+        clientWidth,
+        clientHeight,
       });
     };
 
@@ -113,8 +118,7 @@ export default function VideoAsset({
 
   return (
     <div className="flex flex-col w-full h-full">
-      {/* VIDEO VIEWPORT */}
-      <div className="relative flex-1 bg-black overflow-hidden flex items-center justify-center">
+      <DynamicMediaFrame layout={layout}>
         <video
           ref={videoRef}
           src={asset.src}
@@ -122,8 +126,8 @@ export default function VideoAsset({
           controls={false}
         />
         {/* CANVAS OVERLAY — only when size is known */}
-        {viewportSize && children}
-      </div>
+        {layout && children}
+      </DynamicMediaFrame>
 
       {/* CONTROLS */}
       {duration > 0 && (
