@@ -18,6 +18,7 @@ type BaseAnnotation = {
   label: string;
   time: TimeRange;
   style: AnnotationStyle;
+  visible: boolean;
 };
 
 export type PolylineAnnotation = BaseAnnotation & {
@@ -38,6 +39,7 @@ export type Annotation = PolylineAnnotation | TextAnnotation;
 
 export type AnnotationPatch = {
   label?: string;
+  visible?: boolean;
   style?: Partial<Annotation['style']>;
   text?: string;
   time?: Annotation['time'];

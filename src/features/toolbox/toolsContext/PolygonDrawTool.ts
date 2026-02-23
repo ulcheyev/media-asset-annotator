@@ -17,6 +17,7 @@ export class PolygonDrawTool implements ToolStrategy {
       ctx.createAnnotation({
         id,
         kind: 'polyline',
+        visible: true,
         label: `Polygon ${this.counter}`,
         points: [point.x, point.y],
         time: {

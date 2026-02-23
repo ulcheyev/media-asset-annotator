@@ -17,6 +17,7 @@ export class TextDrawTool implements ToolStrategy {
     ctx.createAnnotation({
       id,
       kind: 'text',
+      visible: true,
       label: `Text ${this.counter}`,
       text: `Text ${this.counter}`,
       x: point.x,
