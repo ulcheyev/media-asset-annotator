@@ -4,7 +4,7 @@ import type {
   ToolStrategy,
 } from './ToolContextInterface';
 import type { Point } from '../../../types/geometry';
-import type { EditorMutators } from '../../context/editor/EditorContext.types.ts';
+import type { EditorMutators } from '../../../context/editor/EditorContext.types.ts';
 import type { Annotation, AnnotationPatch } from '../../../types/intern/annotation.ts';
 import type { Tool } from '../tools/tools.items.tsx';
 import { Constants } from '../../../utils/Constants.ts';

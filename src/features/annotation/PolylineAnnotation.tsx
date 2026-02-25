@@ -3,7 +3,7 @@ import { Line } from 'react-konva';
 import Konva from 'konva';
 import SelectableAnnotation from './SelectableAnnotation.tsx';
 import { useRef } from 'react';
-import {isClosedPolyline} from "../../utils/geometry.utils.ts";
+import { isClosedPolyline } from '../../utils/geometry.utils.ts';
 
 interface PolylineAnnotationProps {
   annotation: PolylineAnnotation;

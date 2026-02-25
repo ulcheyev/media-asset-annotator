@@ -4,7 +4,7 @@ import { fetchMediaAssetList } from '../../api/fetchMediaAssetList';
 import { MediaAssetsTable } from '../../features/list/table/MediaAssetsTable';
 import { ErrorStatus } from '../../features/pageStatus/ErrorStatus';
 import { LoadingStatus } from '../../features/pageStatus/LoadingStatus';
-import { useQueryParams } from '../../utils/hooks/useQueryParams';
+import { useQueryParams } from '../../hooks/useQueryParams';
 import { mediaAssetsListParams } from './listPage.params';
 
 export const MediaAssetsListPage = () => {

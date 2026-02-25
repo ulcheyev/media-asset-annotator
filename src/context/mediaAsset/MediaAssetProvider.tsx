@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { MediaAssetContext } from './MediaAssetContext';
-import type { MediaAsset, MediaAssetSource, MediaLayout } from '../../../types/intern/media.ts';
-import { fetchMediaAsset } from '../../../api/fetchMediaAsset.ts';
-import { getMediaKindFromSource } from '../../../utils/mediaAsset.utils.ts';
+import { MediaAssetContext } from './MediaAssetContext.ts';
+import type { MediaAsset, MediaAssetSource, MediaLayout } from '../../types/intern/media.ts';
+import { fetchMediaAsset } from '../../api/fetchMediaAsset.ts';
+import { getMediaKindFromSource } from '../../utils/mediaAsset.utils.ts';
 
 export const MediaAssetProvider = ({
   source,

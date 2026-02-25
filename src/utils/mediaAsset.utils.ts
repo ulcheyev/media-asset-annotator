@@ -1,5 +1,6 @@
 import type { MediaAsset } from '../types/intern/media';
 import { runtimeConfig } from './runtimeConfig';
+import type {Annotation} from "../types/intern/annotation.ts";
 
 export const getMediaKindFromSource = (source: string) => {
   const lower = source.toLowerCase();
@@ -26,3 +27,22 @@ export const buildMediaAssetAnnotatorUrl = (asset: MediaAsset): string => {
 
   return `${runtimeConfig.BASE_PATH}/asset?id=${encodeURIComponent(asset.id)}`;
 };
+
+
+
+export function isAnnotationVisible(
+    annotation: Annotation,
+    currentTime: number
+): boolean {
+  const mode = annotation.visibilityMode ?? { type: 'auto' };
+
+  if (mode.type === 'force') {
+    return mode.value;
+  }
+
+  // auto mode
+  return (
+      currentTime >= annotation.time.start &&
+      currentTime <= annotation.time.end
+  );
+}

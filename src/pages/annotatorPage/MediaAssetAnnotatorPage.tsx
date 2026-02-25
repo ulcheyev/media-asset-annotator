@@ -1,7 +1,7 @@
-import { PlaybackProvider } from '../../features/context/playback/PlaybackProvider.tsx';
-import { MediaAssetProvider } from '../../features/context/mediaAsset/MediaAssetProvider.tsx';
-import { EditorProvider } from '../../features/context/editor/EditorProvider.tsx';
-import { useMediaAsset } from '../../features/context/mediaAsset/useMediaAsset.ts';
+import { PlaybackProvider } from '../../context/playback/PlaybackProvider.tsx';
+import { MediaAssetProvider } from '../../context/mediaAsset/MediaAssetProvider.tsx';
+import { EditorProvider } from '../../context/editor/EditorProvider.tsx';
+import { useMediaAsset } from '../../context/mediaAsset/useMediaAsset.ts';
 
 import { MediaStage } from '../../features/mediaStage/MediaStage.tsx';
 import { Toolbox } from '../../features/toolbox/ToolBox.tsx';

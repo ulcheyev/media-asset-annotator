@@ -1,16 +1,12 @@
 import { Constants } from '../../../utils/Constants.ts';
 import type { ToolContextInterface, ToolStrategy } from './ToolContextInterface.ts';
 import type { Point } from '../../../types/geometry.ts';
-import {AnnotationFactory} from "./AnnotationFactory.ts";
-import {AbstractDrawTool} from "./AbstractDrawTool.ts";
+import { AnnotationFactory } from './AnnotationFactory.ts';
+import { AbstractDrawTool } from './AbstractDrawTool.ts';
 
 export class RectDrawTool extends AbstractDrawTool implements ToolStrategy {
-
   onPointerDown(point: Point, ctx: ToolContextInterface) {
-    const base = AnnotationFactory.createBase(
-        ctx,
-        this.nextLabel('Rect')
-    );
+    const base = AnnotationFactory.createBase(ctx, this.nextLabel('Rect'));
 
     const halfWidth = Constants.DEFAULT_RECT_WIDTH / 2;
     const halfHeight = Constants.DEFAULT_RECT_HEIGHT / 2;
@@ -18,13 +14,7 @@ export class RectDrawTool extends AbstractDrawTool implements ToolStrategy {
     const x1 = point.x + halfWidth;
     const y1 = point.y + halfHeight;
 
-    const points = [
-      point.x, point.y,
-      x1, point.y,
-      x1, y1,
-      point.x, y1,
-      point.x, point.y,
-    ];
+    const points = [point.x, point.y, x1, point.y, x1, y1, point.x, y1, point.x, point.y];
 
     ctx.createAnnotation({
       ...base,

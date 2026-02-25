@@ -5,12 +5,13 @@ import type { MediaAsset, MediaLayout, MediaResolution } from '../../../../types
 import type { Annotation, TimeRange } from '../../../../types/intern/annotation';
 
 import { clamp } from '../../../../utils/videoTime.utils';
-import { usePlayback } from '../../../context/playback/usePlayback';
+import { usePlayback } from '../../../../context/playback/usePlayback';
 import DynamicMediaFrame from '../MediaFrameWithDynamicSize.tsx';
 
 interface VideoAssetProps {
   asset: MediaAsset;
   setAsset: (asset: MediaAsset) => void;
+  setTime: (time: number) => void;
   layout: MediaLayout | null;
   onAssetSrcReady: (mediaResolution: MediaResolution) => void;
   selectedAnnotation?: Annotation;
@@ -23,6 +24,7 @@ interface VideoAssetProps {
 export default function VideoAsset({
   asset,
   setAsset,
+    setTime,
   layout,
   onAssetSrcReady,
   selectedAnnotation,
@@ -33,8 +35,7 @@ export default function VideoAsset({
 }: VideoAssetProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-
-  const { duration, setDuration, cursor, setTime } = usePlayback();
+  const { duration, setDuration, cursor } = usePlayback();
 
   useEffect(() => {
     const video = videoRef.current;

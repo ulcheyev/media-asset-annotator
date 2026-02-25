@@ -9,6 +9,7 @@ import ImageAsset from './image/ImageAsset.tsx';
 interface MediaAssetContainerProps {
   asset: MediaAsset;
   setAsset: (asset: MediaAsset) => void;
+  setTime: (time: number) => void;
   layout: MediaLayout | null;
   onAssetSrcReady: (mediaResolution: MediaResolution) => void;
   annotations: Annotation[];
@@ -24,9 +25,11 @@ interface MediaAssetContainerProps {
 }
 
 export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
+
   const {
     asset,
     setAsset,
+      setTime,
     layout,
     onAssetSrcReady,
     annotations,
@@ -40,6 +43,8 @@ export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
     onCommitAnnotation,
     onSelectAnnotation,
   } = props;
+
+
 
   const overlay = (size: { width: number; height: number }) => (
     <StageSurface
@@ -73,6 +78,7 @@ export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
       <VideoAsset
         layout={layout}
         setActive={setActive}
+        setTime={setTime}
         onAssetSrcReady={onAssetSrcReady}
         asset={asset}
         setAsset={setAsset}

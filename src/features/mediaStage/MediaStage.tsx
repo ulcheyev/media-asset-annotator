@@ -1,7 +1,7 @@
 import { MediaAssetContainer } from './asset/MediaAssetContainer.tsx';
-import { usePlayback } from '../context/playback/usePlayback.ts';
-import { useEditor } from '../context/editor/useEditor.ts';
-import { useMediaAsset } from '../context/mediaAsset/useMediaAsset.ts';
+import { usePlayback } from '../../context/playback/usePlayback.ts';
+import { useEditor } from '../../context/editor/useEditor.ts';
+import { useMediaAsset } from '../../context/mediaAsset/useMediaAsset.ts';
 import { useCallback, useRef } from 'react';
 import type { MediaResolution } from '../../types/intern/media.ts';
 
@@ -13,6 +13,7 @@ export const MediaStage = () => {
     annotations,
     selectedId,
     isEditing,
+      setTime,
     updateAnnotation,
     commitAnnotation,
     selectAnnotation,
@@ -61,6 +62,7 @@ export const MediaStage = () => {
         asset={asset}
         setAsset={setAsset}
         layout={layout}
+        setTime={setTime}
         onAssetSrcReady={handleMediaReady}
         isActive={isActive}
         setActive={setActive}

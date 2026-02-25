@@ -1,7 +1,7 @@
 // useQueryParams.ts
 import { useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { runtimeConfig } from '../runtimeConfig';
+import { runtimeConfig } from '../utils/runtimeConfig.ts';
 
 type ParamConfig = {
   required?: boolean;

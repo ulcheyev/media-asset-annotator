@@ -2,22 +2,16 @@ import { Constants } from '../../../utils/Constants';
 import type { ToolContextInterface, ToolStrategy } from './ToolContextInterface';
 import type { Point } from '../../../types/geometry';
 import { AbstractDrawTool } from './AbstractDrawTool';
-import {AnnotationFactory} from "./AnnotationFactory.ts";
+import { AnnotationFactory } from './AnnotationFactory.ts';
 
-export class PolygonDrawTool
-    extends AbstractDrawTool
-    implements ToolStrategy
-{
+export class PolygonDrawTool extends AbstractDrawTool implements ToolStrategy {
   private annotationId: string | null = null;
   private points: number[] = [];
 
   onPointerDown(point: Point, ctx: ToolContextInterface) {
     // Start new polygon
     if (!this.annotationId) {
-      const base = AnnotationFactory.createBase(
-          ctx,
-          this.nextLabel('Polygon')
-      );
+      const base = AnnotationFactory.createBase(ctx, this.nextLabel('Polygon'));
 
       ctx.createAnnotation({
         ...base,
@@ -81,11 +75,7 @@ export class PolygonDrawTool
     }
 
     // Explicitly close polygon
-    const closedPoints = [
-      ...this.points,
-      this.points[0],
-      this.points[1],
-    ];
+    const closedPoints = [...this.points, this.points[0], this.points[1]];
 
     ctx.updateAnnotation(this.annotationId, {
       points: closedPoints,
@@ -105,9 +95,7 @@ export class PolygonDrawTool
     const dx = point.x - this.points[0];
     const dy = point.y - this.points[1];
 
-    const threshold =
-        Constants.POLYGON_CLOSE_DISTANCE *
-        Constants.POLYGON_CLOSE_DISTANCE;
+    const threshold = Constants.POLYGON_CLOSE_DISTANCE * Constants.POLYGON_CLOSE_DISTANCE;
 
     return dx * dx + dy * dy < threshold;
   }

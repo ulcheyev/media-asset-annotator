@@ -1,18 +1,14 @@
 import { Constants } from '../../../utils/Constants';
 import type { ToolContextInterface, ToolStrategy } from './ToolContextInterface';
 import type { Point } from '../../../types/geometry';
-import {AbstractDrawTool} from "./AbstractDrawTool.ts";
-import {AnnotationFactory} from "./AnnotationFactory.ts";
+import { AbstractDrawTool } from './AbstractDrawTool.ts';
+import { AnnotationFactory } from './AnnotationFactory.ts';
 
 export class TextDrawTool extends AbstractDrawTool implements ToolStrategy {
   private annotationId: string | null = null;
 
   onPointerDown(point: Point, ctx: ToolContextInterface) {
-
-    const base = AnnotationFactory.createBase(
-        ctx,
-        this.nextLabel('Text')
-    );
+    const base = AnnotationFactory.createBase(ctx, this.nextLabel('Text'));
 
     ctx.createAnnotation({
       ...base,

@@ -36,7 +36,6 @@ export const ControlSlider = ({
   onCommit,
 }: ControlSliderProps) => {
   const beforeRef = useRef<number | null>(null);
-
   const percent = ((value - min) / (max - min)) * 100;
 
   const handlePointerDown = () => {
@@ -57,13 +56,18 @@ export const ControlSlider = ({
       <div className="text-sm text-neutral-300">{label}</div>
 
       <div
-        className="relative"
+        className="relative group"
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerUp}
       >
         <div
-          className="absolute -top-7 text-xs px-2 py-0.5 rounded bg-neutral-800 text-white translate-x-[-50%]"
+          className=" absolute -top-7 text-xs px-2 py-0.5 rounded
+  bg-neutral-800 text-white
+  translate-x-[-50%]
+  opacity-0
+  transition-opacity duration-150
+  group-hover:opacity-100"
           style={{ left: `${percent}%` }}
         >
           {value.toFixed(step < 1 ? 2 : 0)}
