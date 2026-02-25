@@ -42,7 +42,7 @@ services:
       MEDIA_CMS_API_BASE: "${MEDIA_CMS_API_BASE:-/api/v1}"
       REPOSITORY_URL: "${GDB_REPOSITORY_URL:-http://graphdb:7200/repositories/media-assets}"
       DB_USERNAME: "${GDB_USERNAME:-admin}"
-      DB_PASSWORD: "${GDB_PASSWORD:-root}"
+      DB_PASSWORD: "${GDB_PASSWORD}"
       CORS_ALLOWED_ORIGINS: "${ANNOTATOR_SERVER_CORS_ORIGINS:-http://media-asset-annotator,http://localhost:2030}"
     depends_on:
       - graphdb
@@ -77,7 +77,7 @@ services:
       retries: 10
     environment:
       POSTGRES_USER: ${MEDIA_CMS_DB_USER:-mediacms}
-      POSTGRES_PASSWORD: ${MEDIA_CMS_DB_PASSWORD:-mediacms}
+      POSTGRES_PASSWORD: ${MEDIA_CMS_DB_PASSWORD}
       POSTGRES_DB: ${MEDIA_CMS_DB_NAME:-mediacms}
       TZ: Europe/Bucharest
     restart: on-failure:5
@@ -92,7 +92,7 @@ services:
       ENABLE_CELERY_LONG: no
       ENABLE_CELERY_BEAT: no
       ADMIN_USER: ${MEDIA_CMS_ADMIN_USER:-admin}
-      ADMIN_PASSWORD: ${MEDIA_CMS_ADMIN_PASSWORD:-admin}
+      ADMIN_PASSWORD: ${MEDIA_CMS_ADMIN_PASSWORD}
       ADMIN_EMAIL: ${MEDIA_CMS_ADMIN_EMAIL:-admin@mediacms.com}
     command: ./deploy/docker/prestart.sh
     depends_on:

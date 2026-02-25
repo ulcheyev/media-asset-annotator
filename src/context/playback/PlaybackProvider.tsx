@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { PlaybackContext } from './PlaybackContext.ts';
-import type { PlaybackCursor, PlaybackState } from './PlaybackContext.types';
+import type { PlaybackCursor, PlaybackInternalState } from './PlaybackContext.types.ts';
 
 export const PlaybackProvider = ({ children }: { children: React.ReactNode }) => {
   const [cursor, setCursorState] = useState<PlaybackCursor>({
@@ -12,7 +12,7 @@ export const PlaybackProvider = ({ children }: { children: React.ReactNode }) =>
 
   const [isActive, setIsActive] = useState(false);
 
-  const setTime = useCallback((t: number) => {
+  const setTimeInternal = useCallback((t: number) => {
     setCursorState((c) => ({ ...c, t }));
   }, []);
 
@@ -28,11 +28,11 @@ export const PlaybackProvider = ({ children }: { children: React.ReactNode }) =>
     setIsActive(v);
   }, []);
 
-  const value: PlaybackState = {
+  const value: PlaybackInternalState = {
     cursor,
     duration,
     isActive,
-    setTime,
+    setTimeInternal,
     setPosition,
     setCursor,
     setDuration,

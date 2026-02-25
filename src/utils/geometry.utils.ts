@@ -97,6 +97,15 @@ export const getFirstPointFromPoints = (points: number[]): Point => {
   return { x: points[0], y: points[1] };
 };
 
+export const isClosedPolyline = (points: number[], epsilon = 0.001): boolean => {
+  if (!points || points.length < 4) return false;
+
+  const dx = points[0] - points[points.length - 2];
+  const dy = points[1] - points[points.length - 1];
+
+  return Math.abs(dx) < epsilon && Math.abs(dy) < epsilon;
+};
+
 export const normalizeAnnotations = (
   annotations: Annotation[],
   width: number,

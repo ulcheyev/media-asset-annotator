@@ -1,29 +1,22 @@
 import { Constants } from '../../../utils/Constants.ts';
 import type { ToolContextInterface, ToolStrategy } from './ToolContextInterface.ts';
 import type { Point } from '../../../types/geometry.ts';
+import { AbstractDrawTool } from './AbstractDrawTool.ts';
+import { AnnotationFactory } from './AnnotationFactory.ts';
 
-export class FreehandDrawTool implements ToolStrategy {
+export class FreehandDrawTool extends AbstractDrawTool implements ToolStrategy {
   private annotationId: string | null = null;
   private points: number[] = [];
-  private counter = 0;
 
   onPointerDown(point: Point, ctx: ToolContextInterface) {
     if (this.annotationId) return;
 
-    const id = crypto.randomUUID();
-    this.counter += 1;
-    const { currentTime, duration } = ctx.getTimeContext();
+    const base = AnnotationFactory.createBase(ctx, this.nextLabel('Polyline'));
 
     ctx.createAnnotation({
-      id,
+      ...base,
       kind: 'polyline',
-      visible: true,
-      label: `Polyline ${this.counter}`,
       points: [point.x, point.y],
-      time: {
-        start: currentTime,
-        end: Math.min(currentTime + Constants.ANNOTATION_DEFAULT_DURATION, duration),
-      },
       style: {
         color: Constants.POLYLINE_DEFAULT_COLOR,
         opacity: Constants.POLYLINE_DEFAULT_OPACITY,
@@ -32,7 +25,7 @@ export class FreehandDrawTool implements ToolStrategy {
       },
     });
 
-    this.annotationId = id;
+    this.annotationId = base.id;
     this.points = [point.x, point.y];
   }
 

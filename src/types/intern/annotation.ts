@@ -12,13 +12,17 @@ type AnnotationStyle = {
   strokeWidth: number;
 };
 
+export type VisibilityMode =
+  | { type: 'auto' } // based on time
+  | { type: 'force'; value: boolean }; // forced by user
+
 type BaseAnnotation = {
   id: string;
   kind: AnnotationDataType;
   label: string;
   time: TimeRange;
   style: AnnotationStyle;
-  visible: boolean;
+  visibilityMode?: VisibilityMode;
 };
 
 export type PolylineAnnotation = BaseAnnotation & {
@@ -37,9 +41,13 @@ export type TextAnnotation = BaseAnnotation & {
 
 export type Annotation = PolylineAnnotation | TextAnnotation;
 
+export type AnnotationView = Annotation & {
+  isVisibleNow: boolean;
+};
+
 export type AnnotationPatch = {
   label?: string;
-  visible?: boolean;
+  visibilityMode?: VisibilityMode;
   style?: Partial<Annotation['style']>;
   text?: string;
   time?: Annotation['time'];

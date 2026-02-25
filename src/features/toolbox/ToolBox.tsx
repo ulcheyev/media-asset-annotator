@@ -1,5 +1,5 @@
 import * as Separator from '@radix-ui/react-separator';
-import { useEditor } from '../context/editor/useEditor';
+import { useEditor } from '../../context/editor/useEditor';
 import AnnotationList from './styleControls/annotationList/AnnotationList.tsx';
 import StyleControls from './styleControls/StyleControls';
 import { Tools } from './tools/Tools';
@@ -8,13 +8,18 @@ import { Commands } from './commands/Commands';
 import { ErrorSnackbar } from '../snack/ErrorSnackbar.tsx';
 import { SuccessSnackbar } from '../snack/SuccessSnackbar.tsx';
 import { useSnackbar } from '../snack/useSnackbar.ts';
-import { useMediaAsset } from '../context/mediaAsset/useMediaAsset.ts';
+import { useMediaAsset } from '../../context/mediaAsset/useMediaAsset.ts';
+import { usePlayback } from '../../context/playback/usePlayback.ts';
 
 export const Toolbox = () => {
   const {
     annotations,
     selectedId,
     isEditing,
+    isLocked,
+    setIsLocked,
+    freezeCurrentVisibility,
+    restoreAutoVisibility,
     activeTool,
     setEditing,
     setActiveTool,
@@ -28,9 +33,9 @@ export const Toolbox = () => {
   } = useEditor();
 
   const selectedAnnotation = annotations.find((a) => a.id === selectedId) ?? null;
-
   const { snackbar, showSuccess, showError } = useSnackbar();
   const { asset } = useMediaAsset();
+  const { cursor } = usePlayback();
 
   const handleSave = async () => {
     save().then(
@@ -63,14 +68,18 @@ export const Toolbox = () => {
         return;
 
       case 'save':
-        handleSave();
+        await handleSave();
     }
   };
 
-  const toggleVisibility = (id: string) => {
-    updateAnnotation(id, {
-      visible: !annotations.find((a) => a.id === id)?.visible,
-    });
+  const handleToggleLock = () => {
+    if (!isLocked) {
+      freezeCurrentVisibility(cursor.t);
+      setIsLocked(true);
+    } else {
+      restoreAutoVisibility();
+      setIsLocked(false);
+    }
   };
 
   return (
@@ -106,14 +115,16 @@ export const Toolbox = () => {
       <div className="shrink-0 h-60">
         <AnnotationList
           annotations={annotations}
+          isLocked={isLocked}
+          onToggleLock={handleToggleLock}
+          currentTime={cursor.t}
           selectedId={selectedId}
           onSelect={selectAnnotation}
-          onToggleVisibility={toggleVisibility}
+          updateAnnotation={updateAnnotation}
         />
       </div>
 
       {snackbar?.type === 'success' && <SuccessSnackbar message={snackbar.message} />}
-
       {snackbar?.type === 'error' && <ErrorSnackbar message={snackbar.message} />}
     </div>
   );

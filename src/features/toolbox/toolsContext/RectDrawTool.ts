@@ -1,15 +1,12 @@
 import { Constants } from '../../../utils/Constants.ts';
 import type { ToolContextInterface, ToolStrategy } from './ToolContextInterface.ts';
 import type { Point } from '../../../types/geometry.ts';
+import { AnnotationFactory } from './AnnotationFactory.ts';
+import { AbstractDrawTool } from './AbstractDrawTool.ts';
 
-export class RectDrawTool implements ToolStrategy {
-  private counter = 0;
-
+export class RectDrawTool extends AbstractDrawTool implements ToolStrategy {
   onPointerDown(point: Point, ctx: ToolContextInterface) {
-    const id = crypto.randomUUID();
-    this.counter += 1;
-
-    const { currentTime, duration } = ctx.getTimeContext();
+    const base = AnnotationFactory.createBase(ctx, this.nextLabel('Rect'));
 
     const halfWidth = Constants.DEFAULT_RECT_WIDTH / 2;
     const halfHeight = Constants.DEFAULT_RECT_HEIGHT / 2;
@@ -20,15 +17,9 @@ export class RectDrawTool implements ToolStrategy {
     const points = [point.x, point.y, x1, point.y, x1, y1, point.x, y1, point.x, point.y];
 
     ctx.createAnnotation({
-      id,
+      ...base,
       kind: 'polyline',
-      visible: true,
-      label: `Rect ${this.counter}`,
       points,
-      time: {
-        start: currentTime,
-        end: Math.min(currentTime + Constants.ANNOTATION_DEFAULT_DURATION, duration),
-      },
       style: {
         color: Constants.POLYLINE_DEFAULT_COLOR,
         opacity: Constants.POLYLINE_DEFAULT_OPACITY,
@@ -37,7 +28,7 @@ export class RectDrawTool implements ToolStrategy {
       },
     });
 
-    ctx.selectAnnotation(id);
+    ctx.selectAnnotation(base.id);
     ctx.setSelectTool();
   }
 

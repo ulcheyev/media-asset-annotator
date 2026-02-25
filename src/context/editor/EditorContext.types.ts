@@ -1,6 +1,6 @@
-import type { ToolController } from '../../toolbox/toolsContext/ToolController';
-import type { Annotation, AnnotationPatch } from '../../../types/intern/annotation.ts';
-import type { Tool } from '../../toolbox/tools/tools.items.tsx';
+import type { ToolController } from '../../features/toolbox/toolsContext/ToolController.ts';
+import type { Annotation, AnnotationPatch } from '../../types/intern/annotation.ts';
+import type { Tool } from '../../features/toolbox/tools/tools.items.tsx';
 
 export interface EditorState extends EditorMutators {
   /* state */
@@ -8,20 +8,27 @@ export interface EditorState extends EditorMutators {
   selectedId: string | null;
   isEditing: boolean;
   activeTool: Tool;
+  isLocked: boolean;
+
+  /* playback integration */
+  setTime: (t: number) => void;
 
   /* tools */
   getToolController: () => ToolController;
   setActiveTool: (tool: Tool) => void;
 
+  /* visibility control */
+  freezeCurrentVisibility: (time: number) => void;
+  restoreAutoVisibility: () => void;
+  forceVisibility: (id: string, visible: boolean) => void;
+
   /* editor UI actions */
   setEditing: (v: boolean) => void;
+  setIsLocked: (v: boolean) => void;
   removeSelected: () => void;
   save: () => Promise<void>;
   undo: () => void;
   redo: () => void;
-
-  /* escape hatch (intentional) */
-  setAnnotations: React.Dispatch<React.SetStateAction<Annotation[]>>;
 }
 
 export interface EditorMutators {

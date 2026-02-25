@@ -1,8 +1,8 @@
 import type { MediaType } from '../../types/intern/media.ts';
 import type { Annotation } from '../../types/intern/annotation.ts';
-import { Constants } from '../../utils/Constants.ts';
 import TextAnnotationShape from './TextAnnotationShape.tsx';
 import PolylineAnnotationShape from './PolylineAnnotation.tsx';
+import { isAnnotationVisible } from '../../utils/mediaAsset.utils.ts';
 
 interface Props {
   annotations: Annotation[];
@@ -19,22 +19,13 @@ interface Props {
 
 export const AnnotationsLayer = ({
   annotations,
-  mediaType,
   currentTime,
   onCommit,
   isEditing,
-  isActive,
   selectedId,
   onSelect,
 }: Props) => {
-  const filtered = annotations
-    .filter((a) => a.visible)
-    .filter((a) => {
-      if (mediaType === Constants.IMAGE_ASSET_TYPE_LABEL) return true;
-      if (!isActive) return true;
-      if (a.time.start == null || a.time.end == null) return true;
-      return a.time.start <= currentTime && a.time.end >= currentTime;
-    });
+  const filtered = annotations.filter((a) => isAnnotationVisible(a, currentTime));
 
   return (
     <>

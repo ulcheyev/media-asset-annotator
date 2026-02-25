@@ -1,26 +1,68 @@
 import * as ScrollArea from '@radix-ui/react-scroll-area';
 import { AnnotationListItem } from './AnnotationListItem';
-import type { Annotation } from '../../../../types/intern/annotation.ts';
+import type {
+  Annotation,
+  AnnotationPatch,
+  AnnotationView,
+} from '../../../../types/intern/annotation.ts';
+import { isAnnotationVisible } from '../../../../utils/mediaAsset.utils.ts';
+import clsx from 'clsx';
+import { Unlock, Lock } from 'lucide-react';
 
 interface AnnotationListProps {
   annotations: Annotation[];
+  currentTime: number;
   selectedId: string | null;
   onSelect: (id: string) => void;
-  onToggleVisibility: (id: string) => void;
+  updateAnnotation: (id: string, patch: AnnotationPatch) => void;
+  isLocked: boolean;
+  onToggleLock: () => void;
 }
 
 export const AnnotationList = ({
   annotations,
+  currentTime,
   selectedId,
   onSelect,
-  onToggleVisibility,
+  updateAnnotation,
+  isLocked,
+  onToggleLock,
 }: AnnotationListProps) => {
+  const currentAnnotations: AnnotationView[] = annotations.map((a) => ({
+    ...a,
+    isVisibleNow: isAnnotationVisible(a, currentTime),
+  }));
+
   const isEmpty = annotations.length === 0;
+
+  const onForceVisibility = (id: string, visible: boolean) => {
+    updateAnnotation(id, {
+      visibilityMode: { type: 'force', value: visible },
+    });
+  };
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      <div className="shrink-0 px-4 py-2 text-xs font-semibold text-neutral-400 border-b border-neutral-700">
-        Annotations ({annotations.length})
+      <div className="shrink-0 px-5 py-2 border-b border-neutral-700 flex items-center justify-between">
+        <span className="text-xs font-semibold text-neutral-400">
+          Annotations ({annotations.length})
+        </span>
+
+        <button
+          type="button"
+          onClick={(e) => {
+            onToggleLock();
+            e.stopPropagation();
+          }}
+          className={clsx(
+            'p-1 rounded transition-colors',
+            'hover:bg-neutral-700',
+            !isLocked ? 'text-green-500 hover:text-green-400' : 'text-red-500 hover:text-red-400',
+          )}
+          title={isLocked ? 'Unlock current view' : 'Lock current view'}
+        >
+          {isLocked ? <Lock size={24} /> : <Unlock size={24} />}
+        </button>
       </div>
 
       <div className="flex-1 min-h-0">
@@ -34,13 +76,13 @@ export const AnnotationList = ({
           <ScrollArea.Root className="h-full">
             <ScrollArea.Viewport className="h-full">
               <div className="p-2 space-y-1">
-                {annotations.map((annotation) => (
+                {currentAnnotations.map((annotation) => (
                   <AnnotationListItem
                     key={annotation.id}
                     annotation={annotation}
                     isSelected={selectedId === annotation.id}
                     onSelect={onSelect}
-                    onToggleVisibility={onToggleVisibility}
+                    onForceVisibility={onForceVisibility}
                   />
                 ))}
               </div>
