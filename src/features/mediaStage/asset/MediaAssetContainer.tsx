@@ -9,6 +9,7 @@ import ImageAsset from './image/ImageAsset.tsx';
 interface MediaAssetContainerProps {
   asset: MediaAsset;
   setAsset: (asset: MediaAsset) => void;
+  setTime: (time: number) => void;
   layout: MediaLayout | null;
   onAssetSrcReady: (mediaResolution: MediaResolution) => void;
   annotations: Annotation[];
@@ -27,6 +28,7 @@ export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
   const {
     asset,
     setAsset,
+    setTime,
     layout,
     onAssetSrcReady,
     annotations,
@@ -73,6 +75,7 @@ export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
       <VideoAsset
         layout={layout}
         setActive={setActive}
+        setTime={setTime}
         onAssetSrcReady={onAssetSrcReady}
         asset={asset}
         setAsset={setAsset}
