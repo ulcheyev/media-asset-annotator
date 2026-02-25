@@ -24,7 +24,7 @@ interface VideoAssetProps {
 export default function VideoAsset({
   asset,
   setAsset,
-    setTime,
+  setTime,
   layout,
   onAssetSrcReady,
   selectedAnnotation,

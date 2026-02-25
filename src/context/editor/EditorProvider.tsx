@@ -1,7 +1,7 @@
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { EditorContext } from './EditorContext.ts';
 import type { EditorState } from './EditorContext.types.ts';
-import {usePlaybackInternal} from '../playback/usePlayback.ts';
+import { usePlaybackInternal } from '../playback/usePlayback.ts';
 
 import type { Annotation } from '../../types/intern/annotation.ts';
 import { Constants } from '../../utils/Constants.ts';
@@ -12,9 +12,9 @@ import { UpdateAnnotationCommand } from '../../features/toolbox/commands/stateCo
 import { AddAnnotationCommand } from '../../features/toolbox/commands/stateCommands/AddAnnotationStateCommand.ts';
 import { RemoveAnnotationCommand } from '../../features/toolbox/commands/stateCommands/RemoveAnnotationStateCommand.ts';
 import { exportAsSFormsObject } from '../../api/exporters/sFormsExporter.ts';
-import {useEditorAnnotations} from "../../hooks/useEditorAnnotations.ts";
-import {useEditorCommands} from "../../hooks/useEditorCommands.ts";
-import {useToolSystem} from "../../hooks/useToolSystem.ts";
+import { useEditorAnnotations } from '../../hooks/useEditorAnnotations.ts';
+import { useEditorCommands } from '../../hooks/useEditorCommands.ts';
+import { useToolSystem } from '../../hooks/useToolSystem.ts';
 
 export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -33,53 +33,55 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
     freezeCurrentVisibility,
     restoreAutoVisibility,
     forceVisibility,
-    syncVisibilityOnTimeChange
+    syncVisibilityOnTimeChange,
   } = useEditorAnnotations(asset, layout);
   const { execute, undo, redo } = useEditorCommands();
 
-
-  const addAnnotation = useCallback((a: Annotation) => {
-   execute(
+  const addAnnotation = useCallback(
+    (a: Annotation) => {
+      execute(
         new AddAnnotationCommand(
-            a,
-            (a) => add(a),
-            (id) => {
-              remove(id);
-              setSelectedId(prev => (prev === id ? null : prev));
-            },
+          a,
+          (a) => add(a),
+          (id) => {
+            remove(id);
+            setSelectedId((prev) => (prev === id ? null : prev));
+          },
         ),
-    );
-  }, [execute, add, remove]);
-
-  const commitUpdateAnnotation = useCallback(
-      (before: Annotation, after: Annotation) => {
-        if (!before) return;
-        execute(
-            new UpdateAnnotationCommand(before, after, update)
-        );
-      },
-      [execute, update]
+      );
+    },
+    [execute, add, remove],
   );
 
+  const commitUpdateAnnotation = useCallback(
+    (before: Annotation, after: Annotation) => {
+      if (!before) return;
+      execute(new UpdateAnnotationCommand(before, after, update));
+    },
+    [execute, update],
+  );
 
-  const removeAnnotation = useCallback((id: string) => {
-    const annotation = annotations.find(a => a.id === id);
-    if (!annotation) return;
+  const removeAnnotation = useCallback(
+    (id: string) => {
+      const annotation = annotations.find((a) => a.id === id);
+      if (!annotation) return;
 
-    execute(
+      execute(
         new RemoveAnnotationCommand(
-            annotation,
-            (a) => {
-              add(a);
-              setSelectedId(a.id);
-            },
-            (id) => {
-              remove(id);
-              setSelectedId(prev => (prev === id ? null : prev));
-            },
+          annotation,
+          (a) => {
+            add(a);
+            setSelectedId(a.id);
+          },
+          (id) => {
+            remove(id);
+            setSelectedId((prev) => (prev === id ? null : prev));
+          },
         ),
-    );
-  }, [execute, annotations, add, remove]);
+      );
+    },
+    [execute, annotations, add, remove],
+  );
 
   const removeSelected = useCallback(() => {
     if (selectedId) {
@@ -93,12 +95,7 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
 
   const saveAnnotations = useCallback(async (): Promise<void> => {
     if (asset && layout) {
-      const result = exportAsSFormsObject(
-          asset,
-          layout.width,
-          layout.height,
-          annotations
-      );
+      const result = exportAsSFormsObject(asset, layout.width, layout.height, annotations);
       console.log(result);
     }
 
@@ -119,14 +116,12 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
     if (!v) setSelectedId(null);
   };
 
-
   const handleSetTime = useCallback(
-      (t: number) => {
-        setTimeInternal(t);
-      },
-      [setTimeInternal]
+    (t: number) => {
+      setTimeInternal(t);
+    },
+    [setTimeInternal],
   );
-
 
   const { getToolController } = useToolSystem({
     addAnnotation,
@@ -145,57 +140,58 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
     syncVisibilityOnTimeChange(cursor.t, isLocked);
   }, [cursor.t, isLocked]);
 
+  const value = useMemo<EditorState>(
+    () => ({
+      annotations,
+      selectedId,
+      isEditing,
+      isLocked,
+      activeTool,
 
-  const value = useMemo<EditorState>(() => ({
-    annotations,
-    selectedId,
-    isEditing,
-    isLocked,
-    activeTool,
+      getToolController,
+      setActiveTool,
+      setTime: handleSetTime,
 
-    getToolController,
-    setActiveTool,
-    setTime: handleSetTime,
+      setEditing,
+      setIsLocked,
+      selectAnnotation,
 
-    setEditing,
-    setIsLocked,
-    selectAnnotation,
+      addAnnotation,
+      updateAnnotation: update,
+      commitAnnotation: commitUpdateAnnotation,
+      removeAnnotation,
+      removeSelected,
+      save: saveAnnotations,
+      undo: undoProvider,
+      redo: redoProvider,
 
-    addAnnotation,
-    updateAnnotation: update,
-    commitAnnotation: commitUpdateAnnotation,
-    removeAnnotation,
-    removeSelected,
-    save: saveAnnotations,
-    undo: undoProvider,
-    redo: redoProvider,
-
-    freezeCurrentVisibility,
-    restoreAutoVisibility,
-    forceVisibility,
-
-  }), [
-    annotations,
-    selectedId,
-    isEditing,
-    isLocked,
-    activeTool,
-    handleSetTime,
-    addAnnotation,
-    update,
-    commitUpdateAnnotation,
-    removeAnnotation,
-    removeSelected,
-    saveAnnotations,
-    undo,
-    redo,
-    freezeCurrentVisibility,
-    restoreAutoVisibility,
-    forceVisibility,
-    setAnnotations,
+      freezeCurrentVisibility,
+      restoreAutoVisibility,
+      forceVisibility,
+    }),
+    [
+      annotations,
+      selectedId,
+      isEditing,
+      isLocked,
+      activeTool,
+      handleSetTime,
+      addAnnotation,
+      update,
+      commitUpdateAnnotation,
+      removeAnnotation,
+      removeSelected,
+      saveAnnotations,
+      undo,
+      redo,
+      freezeCurrentVisibility,
+      restoreAutoVisibility,
+      forceVisibility,
+      setAnnotations,
       undoProvider,
       redoProvider,
-      getToolController
-  ]);
+      getToolController,
+    ],
+  );
   return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>;
 };

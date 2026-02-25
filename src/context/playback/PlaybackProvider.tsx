@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { PlaybackContext } from './PlaybackContext.ts';
-import type {PlaybackCursor, PlaybackInternalState} from './PlaybackContext.types.ts';
+import type { PlaybackCursor, PlaybackInternalState } from './PlaybackContext.types.ts';
 
 export const PlaybackProvider = ({ children }: { children: React.ReactNode }) => {
   const [cursor, setCursorState] = useState<PlaybackCursor>({

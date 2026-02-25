@@ -2,7 +2,7 @@ import type { MediaType } from '../../types/intern/media.ts';
 import type { Annotation } from '../../types/intern/annotation.ts';
 import TextAnnotationShape from './TextAnnotationShape.tsx';
 import PolylineAnnotationShape from './PolylineAnnotation.tsx';
-import {isAnnotationVisible} from "../../utils/mediaAsset.utils.ts";
+import { isAnnotationVisible } from '../../utils/mediaAsset.utils.ts';
 
 interface Props {
   annotations: Annotation[];
@@ -25,10 +25,7 @@ export const AnnotationsLayer = ({
   selectedId,
   onSelect,
 }: Props) => {
-
-  const filtered = annotations.filter((a) =>
-      isAnnotationVisible(a, currentTime)
-  );
+  const filtered = annotations.filter((a) => isAnnotationVisible(a, currentTime));
 
   return (
     <>

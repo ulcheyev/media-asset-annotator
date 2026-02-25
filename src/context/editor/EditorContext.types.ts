@@ -8,7 +8,7 @@ export interface EditorState extends EditorMutators {
   selectedId: string | null;
   isEditing: boolean;
   activeTool: Tool;
-  isLocked: boolean
+  isLocked: boolean;
 
   /* playback integration */
   setTime: (t: number) => void;

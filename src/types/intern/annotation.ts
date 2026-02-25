@@ -13,8 +13,8 @@ type AnnotationStyle = {
 };
 
 export type VisibilityMode =
-    | { type: 'auto' }      // based on time
-    | { type: 'force'; value: boolean } // forced by user
+  | { type: 'auto' } // based on time
+  | { type: 'force'; value: boolean }; // forced by user
 
 type BaseAnnotation = {
   id: string;
@@ -24,8 +24,6 @@ type BaseAnnotation = {
   style: AnnotationStyle;
   visibilityMode?: VisibilityMode;
 };
-
-
 
 export type PolylineAnnotation = BaseAnnotation & {
   kind: 'polyline';
