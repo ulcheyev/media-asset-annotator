@@ -1,8 +1,8 @@
 import { Constants } from '../../../utils/Constants.ts';
 import type { ToolContextInterface, ToolStrategy } from './ToolContextInterface.ts';
 import type { Point } from '../../../types/geometry.ts';
-import {AbstractDrawTool} from "./AbstractDrawTool.ts";
-import {AnnotationFactory} from "./AnnotationFactory.ts";
+import { AbstractDrawTool } from './AbstractDrawTool.ts';
+import { AnnotationFactory } from './AnnotationFactory.ts';
 
 export class FreehandDrawTool extends AbstractDrawTool implements ToolStrategy {
   private annotationId: string | null = null;
@@ -11,10 +11,7 @@ export class FreehandDrawTool extends AbstractDrawTool implements ToolStrategy {
   onPointerDown(point: Point, ctx: ToolContextInterface) {
     if (this.annotationId) return;
 
-    const base = AnnotationFactory.createBase(
-        ctx,
-        this.nextLabel('Polyline')
-    );
+    const base = AnnotationFactory.createBase(ctx, this.nextLabel('Polyline'));
 
     ctx.createAnnotation({
       ...base,
@@ -31,7 +28,6 @@ export class FreehandDrawTool extends AbstractDrawTool implements ToolStrategy {
     this.annotationId = base.id;
     this.points = [point.x, point.y];
   }
-
 
   onPointerMove(point: Point, ctx: ToolContextInterface) {
     if (!this.annotationId) return;

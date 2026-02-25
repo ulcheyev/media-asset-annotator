@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import type { EditorState } from './EditorContext.types';
+import type { EditorState } from './EditorContext.types.ts';
 import { EditorContext } from './EditorContext.ts';
 
 export const useEditor = (): EditorState => {
