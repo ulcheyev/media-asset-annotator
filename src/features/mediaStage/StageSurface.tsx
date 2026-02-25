@@ -37,7 +37,6 @@ export const StageSurface = ({
   onPointerMove,
   onPointerUp,
 }: StageSurfaceProps) => {
-
   const getStagePoint = (e: KonvaEventObject<MouseEvent>): Point | null => {
     const stage = e.target.getStage();
     if (!stage) return null;

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { VisibilityToggleButton } from './VisibilityToggleButton';
-import type {AnnotationView} from '../../../../types/intern/annotation.ts';
+import type { AnnotationView } from '../../../../types/intern/annotation.ts';
 
 interface AnnotationListItemProps {
   annotation: AnnotationView;
@@ -13,7 +13,7 @@ export const AnnotationListItem = ({
   annotation,
   isSelected,
   onSelect,
-                                     onForceVisibility
+  onForceVisibility,
 }: AnnotationListItemProps) => {
   return (
     <div
@@ -26,14 +26,14 @@ export const AnnotationListItem = ({
       )}
     >
       {/* Label */}
-      <span className={clsx('break-all', !annotation.isVisibleNow  && 'opacity-40 line-through')}>
+      <span className={clsx('break-all', !annotation.isVisibleNow && 'opacity-40 line-through')}>
         {annotation.label ?? `${annotation.kind} annotation`}
       </span>
 
       {/* Visibility */}
       <VisibilityToggleButton
-          isVisibleNow={annotation.isVisibleNow}
-          onForceVisible={(v) => onForceVisibility(annotation.id, v)}
+        isVisibleNow={annotation.isVisibleNow}
+        onForceVisible={(v) => onForceVisibility(annotation.id, v)}
       />
     </div>
   );

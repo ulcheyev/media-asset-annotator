@@ -9,15 +9,15 @@ import { ErrorSnackbar } from '../snack/ErrorSnackbar.tsx';
 import { SuccessSnackbar } from '../snack/SuccessSnackbar.tsx';
 import { useSnackbar } from '../snack/useSnackbar.ts';
 import { useMediaAsset } from '../../context/mediaAsset/useMediaAsset.ts';
-import {usePlayback} from "../../context/playback/usePlayback.ts";
+import { usePlayback } from '../../context/playback/usePlayback.ts';
 
 export const Toolbox = () => {
   const {
     annotations,
     selectedId,
     isEditing,
-      isLocked,
-      setIsLocked,
+    isLocked,
+    setIsLocked,
     freezeCurrentVisibility,
     restoreAutoVisibility,
     activeTool,
@@ -31,7 +31,6 @@ export const Toolbox = () => {
     redo,
     save,
   } = useEditor();
-
 
   const selectedAnnotation = annotations.find((a) => a.id === selectedId) ?? null;
   const { snackbar, showSuccess, showError } = useSnackbar();
@@ -73,7 +72,6 @@ export const Toolbox = () => {
     }
   };
 
-
   const handleToggleLock = () => {
     if (!isLocked) {
       freezeCurrentVisibility(cursor.t);
@@ -83,7 +81,6 @@ export const Toolbox = () => {
       setIsLocked(false);
     }
   };
-
 
   return (
     <div className="relative bg-neutral-900 text-white flex flex-col h-full overflow-hidden">
@@ -117,19 +114,18 @@ export const Toolbox = () => {
 
       <div className="shrink-0 h-60">
         <AnnotationList
-            annotations={annotations}
-            isLocked={isLocked}
-            onToggleLock={handleToggleLock}
-            currentTime={cursor.t}
-            selectedId={selectedId}
-            onSelect={selectAnnotation}
-            updateAnnotation={updateAnnotation}
+          annotations={annotations}
+          isLocked={isLocked}
+          onToggleLock={handleToggleLock}
+          currentTime={cursor.t}
+          selectedId={selectedId}
+          onSelect={selectAnnotation}
+          updateAnnotation={updateAnnotation}
         />
       </div>
 
       {snackbar?.type === 'success' && <SuccessSnackbar message={snackbar.message} />}
       {snackbar?.type === 'error' && <ErrorSnackbar message={snackbar.message} />}
-
     </div>
   );
 };

@@ -13,7 +13,7 @@ export const MediaStage = () => {
     annotations,
     selectedId,
     isEditing,
-      setTime,
+    setTime,
     updateAnnotation,
     commitAnnotation,
     selectAnnotation,

@@ -25,11 +25,10 @@ interface MediaAssetContainerProps {
 }
 
 export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
-
   const {
     asset,
     setAsset,
-      setTime,
+    setTime,
     layout,
     onAssetSrcReady,
     annotations,
@@ -43,8 +42,6 @@ export const MediaAssetContainer = (props: MediaAssetContainerProps) => {
     onCommitAnnotation,
     onSelectAnnotation,
   } = props;
-
-
 
   const overlay = (size: { width: number; height: number }) => (
     <StageSurface
