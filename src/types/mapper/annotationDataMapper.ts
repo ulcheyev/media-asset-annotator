@@ -71,6 +71,6 @@ const mapPolylineAnnotation = (
     color: annotation.style.color,
     opacity: annotation.style.opacity,
     fill: annotation.style.fill,
-    strokeWidth: annotation.style.strokeWidth,
+    strokeWidth: annotation.style.strokeWidth / width,
   };
 };
