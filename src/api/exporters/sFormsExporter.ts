@@ -62,7 +62,7 @@ export const exportAsSFormsObject = (
             [NS.hasFontWeight]: a.fontWeight,
           }),
           ...(a.kind === 'polyline' && {
-            [NS.strokeWidth]: a.style.strokeWidth/containerWidth,
+            [NS.strokeWidth]: a.style.strokeWidth / containerWidth,
             [NS.fillColor]: a.style?.fill ?? 'none',
           }),
         };
