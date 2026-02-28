@@ -57,7 +57,7 @@ export const getPolylineAnnotationFromAnnotationData = (
     color: annotationData.color ?? Constants.POLYLINE_DEFAULT_COLOR,
     opacity: annotationData.opacity ?? Constants.POLYLINE_DEFAULT_OPACITY,
     fill: annotationData.fill ?? Constants.POLYLINE_DEFAULT_FILL,
-    strokeWidth: annotationData.strokeWidth ?? Constants.POLYLINE_DEFAULT_STROKE_WIDTH,
+    strokeWidth: (annotationData.strokeWidth ?? Constants.POLYLINE_DEFAULT_STROKE_WIDTH) * mediaAssetWidth,
   };
   const points = denormalizePoints(
     typeof annotationData.points === 'string'
