@@ -11,7 +11,7 @@ export const mockAnnotations: AnnotationData[] = [
     timeEnd: 10,
     color: '#ff0000',
     opacity: 0.8,
-    strokeWidth: 3,
+    strokeWidth: 0.006557291666666667,
   },
   {
     id: 'a2',
