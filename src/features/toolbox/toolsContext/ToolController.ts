@@ -35,6 +35,9 @@ export class ToolController implements ToolContextInterface {
   /* ---------------- pointer events ---------------- */
 
   onPointerDown(point: Point) {
+    if (this.activeToolStrategy) {
+      this.mutators.selectAnnotation(null);
+    }
     this.activeToolStrategy?.onPointerDown(point, this);
   }
 
