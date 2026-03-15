@@ -1,11 +1,11 @@
 import type { ToolContextInterface } from './ToolContextInterface.ts';
 import { Constants } from '../../../utils/Constants.ts';
-import {generateUUID} from "../../../utils/base.utils.ts";
+import { generateUUID } from '../../../utils/base.utils.ts';
 
 export class AnnotationFactory {
   static createBase(ctx: ToolContextInterface, label: string) {
     const id = generateUUID();
-    console.log(id)
+    console.log(id);
     const { currentTime, duration } = ctx.getTimeContext();
 
     return {
